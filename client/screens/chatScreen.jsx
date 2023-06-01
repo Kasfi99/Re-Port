@@ -9,15 +9,8 @@ export default function ChatScreen() {
   const [text, onChangeText] = React.useState("");
 
   const handleInput = () => {
-    // navigation.navigate("Job Page", { searchQuery: text });
     onChangeText("");
   };
-
-  const [Text, setText] = useState("");
-
-  function handleOnEnter(text) {
-    console.log("enter", text);
-  }
 
   console.log(text);
 
@@ -30,15 +23,6 @@ export default function ChatScreen() {
         placeholder="Send Your Message..."
         onSubmitEditing={handleInput}
       />
-      {/* <Text>
-        <InputEmoji
-          value={text}
-          onChange={setText}
-          cleanOnEnter
-          onEnter={handleOnEnter}
-          placeholder="Type a message"
-        />
-      </Text> */}
     </View>
   );
 }
