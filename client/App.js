@@ -1,17 +1,27 @@
+import "react-native-gesture-handler";
 import * as React from "react";
 import { Text, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import ChatScreen from "./screens/chatScreen";
 import HomeScreen from "./screens/homeScreen";
 import BoardingScreen from "./screens/boardingScreen";
+import LoginScreen from "./screens/loginScreen";
 
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <BoardingScreen />
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="onBoarding" component={BoardingScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+
     // <NavigationContainer>
     //   <Tab.Navigator
     //     screenOptions={({ route }) => ({

@@ -14,6 +14,7 @@ import NextButton from "../components/NextButton";
 import images1 from "../assets/1.png";
 import images2 from "../assets/2.png";
 import images3 from "../assets/3.png";
+import { useNavigation } from "@react-navigation/native";
 
 const slides = [
   {
@@ -38,10 +39,12 @@ const slides = [
   },
 ];
 
-export default function onBoardingScreen() {
+export default function OnBoardingScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
+
+  const navigation = useNavigation();
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
@@ -75,7 +78,7 @@ export default function onBoardingScreen() {
         {isLastSlide && (
           <TouchableOpacity
             activeOpacity={0.6}
-            onPress={() => navigation.navigate("Info")}
+            onPress={() => navigation.navigate("Login")}
           >
             <View
               style={{
