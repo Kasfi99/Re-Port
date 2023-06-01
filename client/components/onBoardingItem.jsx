@@ -12,7 +12,7 @@ export default function OnBoardingItem({ item }) {
   return (
     <View style={[styles.container, { width }]}>
       <Image
-        source={{ uri: item.image }}
+        source={item.image}
         style={[styles.image, { width, resizeMode: "contain" }]}
       />
 
@@ -33,7 +33,9 @@ const styles = StyleSheet.create({
 
   image: {
     flex: 0.7,
-    justifyContent: "center",
+    position: "relative",
+    top: "5%",
+    left: "0%",
   },
 
   title: {
@@ -43,6 +45,8 @@ const styles = StyleSheet.create({
     color: "#CEF249",
     textAlign: "center",
     marginTop: 20,
+    position: "relative",
+    top: "-40%",
   },
 
   description: {
@@ -50,5 +54,7 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     paddingHorizontal: 64,
+    position: "relative",
+    top: "-40%",
   },
 });
