@@ -50,7 +50,7 @@ export default function AddEventFormScreen() {
   };
 
   const handleDecreaseParticipants = () => {
-    if (participants > 1) {
+    if (participants > 2) {
       setParticipants(participants - 1);
     }
   };
@@ -77,9 +77,11 @@ export default function AddEventFormScreen() {
       />
       <Text style={styles.label}>Participants:</Text>
       <View style={styles.participantsContainer}>
-        <TouchableOpacity onPress={handleDecreaseParticipants}>
-          <Text style={styles.participantsButton}>-</Text>
-        </TouchableOpacity>
+        {participants > 2 && (
+          <TouchableOpacity onPress={handleDecreaseParticipants}>
+            <Text style={styles.participantsButton}>-</Text>
+          </TouchableOpacity>
+        )}
         <Text style={styles.participantsText}>{participants}</Text>
         <TouchableOpacity onPress={handleIncreaseParticipants}>
           <Text style={styles.participantsButton}>+</Text>
