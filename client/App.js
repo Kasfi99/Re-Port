@@ -52,7 +52,6 @@ export default function App() {
         >
           <Tab.Screen name="Home" component={ChatScreen} />
           <Tab.Screen name="addEvent" component={AddEventFormScreen} />
-          <Tab.Screen name="calendartest" component={CalendarTest} />
           <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator>
       </NavigationContainer>
