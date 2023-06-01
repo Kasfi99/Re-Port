@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ChatScreen from "./screens/chatScreen";
 import AddEventFormScreen from "./screens/addEventFormScreen";
+import CalendarTest from "./screens/calendarText";
 
 function HomeScreen() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
         >
           <Tab.Screen name="Home" component={ChatScreen} />
           <Tab.Screen name="addEvent" component={AddEventFormScreen} />
+          <Tab.Screen name="calendartest" component={CalendarTest} />
           <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator>
       </NavigationContainer>
