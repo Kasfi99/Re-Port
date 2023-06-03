@@ -19,25 +19,33 @@ export default function AddEventFormScreen() {
   const [courtPrice, setCourtPrice] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showStartTimePicker, setShowStartTimePicker] = useState(false);
+  const [showEndTimePicker, setShowEndTimePicker] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
       setDate(selectedDate);
-      setShowTimePicker(true);
+      setShowStartTimePicker(true);
     }
   };
 
-  const handleTimeChange = (event, selectedTime) => {
-    setShowTimePicker(false);
+  const handleStartTimeChange = (event, selectedTime) => {
+    setShowStartTimePicker(false);
     if (selectedTime) {
-      const selectedDate = new Date(date);
-      selectedDate.setHours(selectedTime.getHours());
-      selectedDate.setMinutes(selectedTime.getMinutes());
-      setDate(selectedDate);
+      setStartTime(selectedTime);
+      setShowEndTimePicker(true);
+    }
+  };
+
+  const handleEndTimeChange = (event, selectedTime) => {
+    setShowEndTimePicker(false);
+    if (selectedTime) {
+      setEndTime(selectedTime);
     }
   };
 
@@ -45,12 +53,20 @@ export default function AddEventFormScreen() {
     setShowDatePicker(true);
   };
 
+  const handleShowStartTimePicker = () => {
+    setShowStartTimePicker(true);
+  };
+
+  const handleShowEndTimePicker = () => {
+    setShowEndTimePicker(true);
+  };
+
   const handleIncreaseParticipants = () => {
     setParticipants(participants + 1);
   };
 
   const handleDecreaseParticipants = () => {
-    if (participants > 2) {
+    if (participants > 1) {
       setParticipants(participants - 1);
     }
   };
@@ -61,6 +77,8 @@ export default function AddEventFormScreen() {
       participants,
       courtPrice,
       date,
+      startTime,
+      endTime,
       selectedLocation,
     };
     console.log("Event Data:", eventData);
@@ -77,7 +95,7 @@ export default function AddEventFormScreen() {
       />
       <Text style={styles.label}>Participants:</Text>
       <View style={styles.participantsContainer}>
-        {participants > 2 && (
+        {participants > 1 && (
           <TouchableOpacity onPress={handleDecreaseParticipants}>
             <Text style={styles.participantsButton}>-</Text>
           </TouchableOpacity>
@@ -107,7 +125,13 @@ export default function AddEventFormScreen() {
             month: "long",
             day: "numeric",
           })}{" "}
-          {date.toLocaleTimeString("id-ID", {
+          {startTime.toLocaleTimeString("id-ID", {
+            hour12: true,
+            hour: "2-digit",
+            minute: "2-digit",
+          })}{" "}
+          -{" "}
+          {endTime.toLocaleTimeString("id-ID", {
             hour12: true,
             hour: "2-digit",
             minute: "2-digit",
@@ -122,19 +146,22 @@ export default function AddEventFormScreen() {
           onChange={handleDateChange}
         />
       )}
-      {showTimePicker && (
+      {showStartTimePicker && (
         <DateTimePicker
-          value={date}
+          value={startTime}
           mode="time"
           display="default"
-          onChange={handleTimeChange}
+          onChange={handleStartTimeChange}
         />
       )}
-      <TextInput
-        style={styles.hiddenInput}
-        value={date.toLocaleString()}
-        editable={false}
-      />
+      {showEndTimePicker && (
+        <DateTimePicker
+          value={endTime}
+          mode="time"
+          display="default"
+          onChange={handleEndTimeChange}
+        />
+      )}
 
       <Text style={styles.label}>Location:</Text>
       <TouchableOpacity
