@@ -10,7 +10,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ChatScreen from "./screens/chatScreen";
 import AddEventFormScreen from "./screens/addEventFormScreen";
 import CalendarTest from "./screens/calendarText";
-
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
