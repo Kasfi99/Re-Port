@@ -1,13 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Text, View, TextInput, StyleSheet, Image } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  StyleSheet,
+  Image,
+  Touchable,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
-export default function SportList() {
-  const [selectedSports, setSelectedSports] = useState([]);
-  const navigation = useNavigation();
 
-  console.log(selectedSports);
-  const sportList = [
+export default function SportList() {
+  const [sportList, setSportList] = useState([
     {
       id: 1,
       name: "Badminton",
@@ -118,30 +123,73 @@ export default function SportList() {
       ),
       isChecked: false,
     },
-  ];
+  ]);
+  const navigation = useNavigation();
+  const handleClick = (id) => {
+    setSportList((prevSportList) => {
+      return prevSportList.map((sport) => {
+        if (sport.id === id) {
+          return {
+            ...sport,
+            isChecked: !sport.isChecked,
+          };
+        }
+        return sport;
+      });
+    });
+  };
 
-  console.log(sportList[0].isChecked, "<<<");
+  const handleSubmit = async () => {
+    let data = [];
+    sportList.forEach((el) => {
+      if (el.isChecked) {
+        let newObj = {
+          id: el.id,
+          name: el.name,
+          isPressed: "Beginner",
+        };
+        data.push(newObj);
+        el.isChecked = false;
+      }
+    });
+
+    setSportList((prevSportList) => {
+      return prevSportList.map((sport) => {
+        return {
+          ...sport,
+          isChecked: false,
+        };
+      });
+    });
+
+    // Store the data in AsyncStorage
+    try {
+      await AsyncStorage.setItem("sportData", JSON.stringify(data));
+      console.log("Data stored successfully");
+    } catch (error) {
+      console.log("Failed to store data:", error);
+    }
+
+    navigation.navigate("WelcomeProfile");
+  };
+
   return (
     <View>
-      {sportList.map((s) => {
-        return (
-          <TouchableOpacity>
-            <View
-              key={s.id}
-              style={
-                s.isChecked ? styles.checkedContainer : styles.cardContainer
-              }
-              onPress={() => {
-                s.isChecked ? (s.isChecked = false) : (s.isChecked = true);
-                navigation.navigate("WelcomeSport");
-              }}
-            >
-              {s?.icon}
-              <Text style={styles.cardText}>{s.name}</Text>
-            </View>
-          </TouchableOpacity>
-        );
-      })}
+      {sportList.map((sport) => (
+        <TouchableOpacity
+          key={sport.id}
+          style={
+            sport.isChecked ? styles.checkedContainer : styles.cardContainer
+          }
+          onPress={() => handleClick(sport.id)}
+        >
+          {sport.icon}
+          <Text style={styles.cardText}>{sport.name}</Text>
+        </TouchableOpacity>
+      ))}
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.submitText}>Submit</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -167,7 +215,7 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginTop: 10,
     marginBottom: 10,
-    backgroundColor: "red",
+    backgroundColor: "#CEF249",
     width: 320,
     height: 40,
     borderRadius: 5,
@@ -209,5 +257,30 @@ const styles = StyleSheet.create({
     height: 30,
     marginLeft: 15,
     marginRight: 10,
+  },
+  submitButton: {
+    marginLeft: "60%",
+    marginTop: 10,
+    marginBottom: 30,
+    backgroundColor: "#CEF249",
+    width: 110,
+    height: 40,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
+    elevation: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  submitText: {
+    fontSize: 18,
+    fontFamily: "IBM-Plex-Sans",
+    fontWeight: "800",
+    textAlign: "center",
+    lineHeight: 40,
+    position: "relative",
+    left: 25,
   },
 });

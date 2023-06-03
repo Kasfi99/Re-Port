@@ -12,6 +12,8 @@ import HomeScreen from "./screens/homeScreen";
 import BoardingScreen from "./screens/boardingScreen";
 import LoginScreen from "./screens/loginScreen";
 import WelcomeSport from "./screens/welcomeSportScreen";
+import WelcomeProfile from "./screens/welcomeProfileScreen";
+import WelcomeLevel from "./screens/welcomeLevelScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,6 +41,8 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="WelcomeSport" component={WelcomeSport} />
+          <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
+          <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
           <Stack.Screen name="onBoarding" component={BoardingScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
         </Stack.Navigator>
