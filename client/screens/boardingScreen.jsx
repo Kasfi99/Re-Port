@@ -83,18 +83,20 @@ export default function OnBoardingScreen() {
             <View
               style={{
                 backgroundColor: "#CEF249",
-                width: 100,
+                width: "30%",
                 height: "20%",
                 borderRadius: 10,
                 position: "relative",
-                left: "37%",
+                left: "35%",
                 bottom: "100%",
               }}
             >
               <Text
                 style={{
-                  paddingLeft: "15%",
+                  paddingLeft: "17%",
                   paddingTop: "5%",
+                  fontFamily: "IBM-Plex-Sans",
+                  fontWeight: "800", // Use a string value for fontWeight
                 }}
               >
                 Get Started

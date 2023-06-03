@@ -1,6 +1,8 @@
 import "react-native-gesture-handler";
-import * as React from "react";
+import { React, useCallback, useState, useEffect } from "react";
 import { Text, View } from "react-native";
+import * as Font from "expo-font";
+import { useFonts } from "expo-font";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -9,18 +11,39 @@ import ChatScreen from "./screens/chatScreen";
 import HomeScreen from "./screens/homeScreen";
 import BoardingScreen from "./screens/boardingScreen";
 import LoginScreen from "./screens/loginScreen";
+import WelcomeSport from "./screens/welcomeSportScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  const loadFonts = async () => {
+    await Font.loadAsync({
+      "IBM-Plex-Sans": require("./fonts/IBMPlexSans-Regular.ttf"),
+    });
+    setFontsLoaded(true);
+  };
+
+  useEffect(() => {
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>;
+  }
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="onBoarding" component={BoardingScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="WelcomeSport" component={WelcomeSport} />
+          <Stack.Screen name="onBoarding" component={BoardingScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
 
     // <NavigationContainer>
     //   <Tab.Navigator
