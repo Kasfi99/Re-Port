@@ -47,24 +47,38 @@ export default function App() {
     <View style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="Main" options={{ headerShown: false }}>
+            {() => (
+              <Tab.Navigator
+                screenOptions={({ route }) => ({
+                  tabBarIcon: ({ color, size }) => {
+                    let iconName;
+
+                    if (route.name === "Home") {
+                      iconName = "home";
+                    } else if (route.name === "Chat") {
+                      iconName = "chatbox";
+                    }
+
+                    // Return the icon component
+                    return (
+                      <Ionicons name={iconName} size={size} color={color} />
+                    );
+                  },
+                })}
+              >
+                <Tab.Screen name="Home" component={HomeScreen} />
+                <Tab.Screen name="Chat" component={ChatScreen} />
+                <Tab.Screen name="Review" component={AdminReview} />
+              </Tab.Navigator>
+            )}
+          </Stack.Screen>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="WelcomeSport" component={WelcomeSport} />
           <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
           <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
           <Stack.Screen name="onBoarding" component={BoardingScreen} />
-          <Stack.Screen name="Main" options={{ headerShown: false }}>
-            {() => (
-              <Tab.Navigator>
-                <Tab.Screen
-                  name="Home"
-                  component={HomeScreen}
-                  // options={{ headerShown: false }}
-                />
-                <Tab.Screen name="Chat" component={ChatScreen} />
-              </Tab.Navigator>
-            )}
-          </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     </View>

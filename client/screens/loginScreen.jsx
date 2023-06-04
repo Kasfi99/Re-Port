@@ -13,7 +13,7 @@ export default function LoginScreen() {
   const handleInput = () => {
     onChangeEmail("");
     onChangePassword("");
-    navigation.navigate("Main", { screen: "Home" });
+    return navigation.navigate("WelcomeSport");
   };
 
   const handleRegister = () => {

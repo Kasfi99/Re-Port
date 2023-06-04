@@ -79,57 +79,61 @@ export default function AdminReview() {
   };
 
   return (
-    <View style={styles.container}>
-      <View>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Who's Coming?</Text>
-          <TouchableOpacity onPress={handleSelectAll}>
-            <Text style={styles.selectAllText}>
-              {Object.keys(checkedItems).length === teamData.length
-                ? "Unselect All"
-                : "Select All"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView>
-          {teamData.map((item) => (
-            <View style={styles.item} key={item.id}>
-              <View>
-                <Text style={styles.itemText}>{item.name}</Text>
-              </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <View>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Who's Coming?</Text>
+            <TouchableOpacity onPress={handleSelectAll}>
+              <Text style={styles.selectAllText}>
+                {Object.keys(checkedItems).length === teamData.length
+                  ? "Unselect All"
+                  : "Select All"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView>
+            {teamData.map((item) => (
+              <View style={styles.item} key={item.id}>
+                <View>
+                  <Text style={styles.itemText}>{item.name}</Text>
+                </View>
 
-              <Checkbox
-                status={checkedItems[item.id] ? "checked" : "unchecked"}
-                onPress={() => handleSelectItem(item.id)}
-                color={COLORS.primaryGreen}
-              />
-            </View>
-          ))}
-        </ScrollView>
+                <Checkbox
+                  status={checkedItems[item.id] ? "checked" : "unchecked"}
+                  onPress={() => handleSelectItem(item.id)}
+                  color={COLORS.primaryGreen}
+                />
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+        <View style={{ flex: 1, marginTop: 30 }}>
+          <Text style={styles.headerText}>Review Your Teammates</Text>
+          <ScrollView>
+            {teamData.map((item) => (
+              <View style={styles.card} key={item.id}>
+                <Text style={styles.cardTitle}>{item.name}</Text>
+                <Rating
+                  type="star"
+                  fractions={1}
+                  startingValue={item.rating}
+                  imageSize={30}
+                  onFinishRating={(rating) =>
+                    handleRatingChange(item.id, rating)
+                  }
+                  containerStyle={{ backgroundColor: "transparent" }}
+                  style={{ backgroundColor: "transparent" }}
+                />
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <Text style={styles.submitButtonText}>Submit</Text>
+        </TouchableOpacity>
       </View>
-      <View style={{ flex: 1, marginTop: 30 }}>
-        <Text style={styles.headerText}>Review Your Teammates</Text>
-        <ScrollView>
-          {teamData.map((item) => (
-            <View style={styles.card} key={item.id}>
-              <Text style={styles.cardTitle}>{item.name}</Text>
-              <Rating
-                type="star"
-                fractions={1}
-                startingValue={item.rating}
-                imageSize={30}
-                onFinishRating={(rating) => handleRatingChange(item.id, rating)}
-                containerStyle={{ backgroundColor: "transparent" }}
-                style={{ backgroundColor: "transparent" }}
-              />
-            </View>
-          ))}
-        </ScrollView>
-      </View>
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
