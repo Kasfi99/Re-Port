@@ -1,50 +1,94 @@
-import React from "react";
-import { Text, View, TextInput, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import {
+  Text,
+  View,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import InputEmoji from "react-input-emoji-native";
 
 export default function ChatScreen() {
   const navigation = useNavigation();
-  const [text, onChangeText] = React.useState("");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
 
-  const handleInput = () => {
-    // navigation.navigate("Job Page", { searchQuery: text });
-    onChangeText("");
+  const handleSend = () => {
+    console.log("Pesan yang dikirim:", message);
+    setMessages([...messages, { id: messages.length, text: message }]);
+    setMessage("");
   };
 
-  const [Text, setText] = useState("");
-
-  function handleOnEnter(text) {
-    console.log("enter", text);
-  }
-
-  console.log(text);
+  const renderMessage = ({ item }) => {
+    return (
+      <View style={styles.messageContainer}>
+        <View style={styles.messageBubble}>
+          <Text style={styles.messageText}>{item.text}</Text>
+        </View>
+      </View>
+    );
+  };
 
   return (
-    <View
-      style={{ position: "absolute", bottom: 0, height: 60, marginStart: 15 }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
     >
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeText}
-        value={text}
-        placeholder="Send Your Message..."
-        onSubmitEditing={handleInput}
+      <FlatList
+        style={styles.messageList}
+        data={messages}
+        renderItem={renderMessage}
+        keyExtractor={(item) => item.id.toString()}
       />
-    </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          onChangeText={setMessage}
+          value={message}
+          placeholder="Ketik pesan Anda..."
+          returnKeyType="send"
+          onSubmitEditing={handleSend}
+        />
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#F5F5F5",
+  },
+  messageList: {
+    flex: 1,
+  },
+  messageContainer: {
+    flexDirection: "row",
+    marginVertical: 5,
+  },
+  messageBubble: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    padding: 10,
+    maxWidth: "80%",
+  },
+  messageText: {
+    fontSize: 16,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    padding: 5,
+    borderRadius: 20,
+  },
   input: {
-    width: 380,
-    height: 50,
-    textAlign: "center",
-    // marginHorizontal: 40,
-    // alignContent: "center",
-    borderWidth: 1,
-    // paddingLeft: 50,
-    borderRadius: 50,
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 10,
+    fontSize: 16,
   },
 });
