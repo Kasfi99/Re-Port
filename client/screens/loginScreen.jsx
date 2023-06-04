@@ -15,6 +15,14 @@ export default function LoginScreen() {
     return navigation.navigate("WelcomeSport");
   };
 
+  const handleRegister = () => {
+    navigation.navigate("Register");
+  };
+
+  const handleGuest = () => {
+    console.log("masuk sebagai user"); // Jangan lupa ditambah ganti
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.textHeader}>Enter Your Mobile Number</Text>
@@ -86,6 +94,55 @@ export default function LoginScreen() {
       >
         <Text style={styles.loginText}>Login by Google</Text>
       </TouchableOpacity>
+
+      <View style={{ width: "95%", position: "absolute", bottom: 30 }}>
+        <Text
+          style={{
+            marginTop: 10,
+            marginLeft: "28%",
+            color: "#565966",
+            fontFamily: "IBM-Plex-Sans",
+          }}
+        >
+          Don't have an account yet?
+        </Text>
+        <View style={{ flexDirection: "row", marginLeft: "23%" }}>
+          <TouchableOpacity onPress={handleRegister}>
+            <Text
+              style={{
+                marginTop: 10,
+                color: "black",
+                textDecorationLine: "underline",
+                fontFamily: "IBM-Plex-Sans",
+              }}
+            >
+              Register here
+            </Text>
+          </TouchableOpacity>
+          <Text
+            style={{
+              marginTop: 10,
+              color: "#565966",
+              fontFamily: "IBM-Plex-Sans",
+            }}
+          >
+            {" "}
+            or{" "}
+          </Text>
+          <TouchableOpacity onPress={handleGuest}>
+            <Text
+              style={{
+                marginTop: 10,
+                color: "black",
+                textDecorationLine: "underline",
+                fontFamily: "IBM-Plex-Sans",
+              }}
+            >
+              Continue as Guest
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }

@@ -11,6 +11,7 @@ import ChatScreen from "./screens/chatScreen";
 import HomeScreen from "./screens/homeScreen";
 import BoardingScreen from "./screens/boardingScreen";
 import LoginScreen from "./screens/loginScreen";
+import RegisterScreen from "./screens/registerScreen";
 import WelcomeSport from "./screens/welcomeSportScreen";
 import WelcomeProfile from "./screens/welcomeProfileScreen";
 import WelcomeLevel from "./screens/welcomeLevelScreen";
@@ -40,11 +41,12 @@ export default function App() {
     <View style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="WelcomeSport" component={WelcomeSport} />
           <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
           <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
           <Stack.Screen name="onBoarding" component={BoardingScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>
