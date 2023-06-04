@@ -22,7 +22,9 @@ export default function ChatScreen() {
   console.log(text);
 
   return (
-    <View>
+    <View
+      style={{ position: "absolute", bottom: 0, height: 60, marginStart: 15 }}
+    >
       <TextInput
         style={styles.input}
         onChangeText={onChangeText}
@@ -30,25 +32,19 @@ export default function ChatScreen() {
         placeholder="Send Your Message..."
         onSubmitEditing={handleInput}
       />
-      {/* <Text>
-        <InputEmoji
-          value={text}
-          onChange={setText}
-          cleanOnEnter
-          onEnter={handleOnEnter}
-          placeholder="Type a message"
-        />
-      </Text> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   input: {
-    height: "25%",
-    margin: "3%",
+    width: 380,
+    height: 50,
+    textAlign: "center",
+    // marginHorizontal: 40,
+    // alignContent: "center",
     borderWidth: 1,
-    paddingLeft: "5%",
+    // paddingLeft: 50,
     borderRadius: 50,
   },
 });

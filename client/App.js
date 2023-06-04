@@ -57,6 +57,7 @@ export default function App() {
         >
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="addEvent" component={AddEventFormScreen} />
+          <Tab.Screen name="chatScreen" component={ChatScreen} />
           {/* <Tab.Screen name="Settings" component={SettingsScreen} /> */}
           <Tab.Screen name="UserProfile" component={UserProfile} />
           {/* <Tab.Screen name="ThankYou" component={ThankYouScreen} /> */}

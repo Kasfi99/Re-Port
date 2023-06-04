@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   View,
   Text,
@@ -15,7 +16,7 @@ const GOOGLE_PLACES_API_KEY = "AIzaSyDJCBwVAW27Z24KW63gvImv4NZVNIwaqSA";
 
 export default function AddEventFormScreen() {
   const [eventTitle, setEventTitle] = useState("");
-  const [participants, setParticipants] = useState(2);
+  const [participants, setParticipants] = useState(1);
   const [courtPrice, setCourtPrice] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -71,7 +72,7 @@ export default function AddEventFormScreen() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const eventData = {
       eventTitle,
       participants,
@@ -81,7 +82,26 @@ export default function AddEventFormScreen() {
       endTime,
       selectedLocation,
     };
-    console.log("Event Data:", eventData);
+    try {
+      const { data } = await axios({
+        method: "post",
+        url: "http://localhost:3000/event",
+        headers: {
+          access_token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2MxNjU0YmJmMTJlMDc5NzlmMWNiYiIsImVtYWlsIjoibmFkZWxAbWFpbC5jb20iLCJpYXQiOjE2ODU4NTM4MjR9.x-3mB6FA4EZFSriVV-_VLrFmsRm9cUFhEo53EwH3-6s",
+        },
+        data: {
+          title: eventTitle,
+          location: selectedLocation,
+          date: { date, startTime, endTime },
+          courtPrice,
+          limitParticipants: participants,
+        },
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
