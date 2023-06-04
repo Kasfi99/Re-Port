@@ -2,6 +2,7 @@ import React from "react";
 import { Text, View, TextInput, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Divider from "../components/Divider";
 
 export default function RegisterScreen() {
@@ -11,10 +12,23 @@ export default function RegisterScreen() {
   const [name, setName] = React.useState("");
   const [username, setUsername] = React.useState("");
 
-  const handleInput = () => {
+  const handleInput = async () => {
+    let newObj = {
+      email: email,
+    };
+
+    try {
+      await AsyncStorage.setItem("Email", JSON.stringify(newObj));
+      console.log("Data stored successfully");
+    } catch (error) {
+      console.log("Failed to store data:", error);
+    }
+
     onChangeEmail("");
     onChangePassword("");
-    return navigation.navigate("WelcomeSport");
+    setName("");
+    setUsername("");
+    return navigation.navigate("Login");
   };
 
   const handleLogin = () => {
