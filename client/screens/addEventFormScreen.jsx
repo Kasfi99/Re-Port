@@ -84,8 +84,8 @@ export default function AddEventFormScreen() {
     };
     try {
       const { data } = await axios({
-        method: "post",
-        url: "http://localhost:3000/event",
+        method: "get",
+        url: "https://b5ad-118-99-106-71.ngrok-free.app/eventlist",
         headers: {
           access_token:
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2MxNjU0YmJmMTJlMDc5NzlmMWNiYiIsImVtYWlsIjoibmFkZWxAbWFpbC5jb20iLCJpYXQiOjE2ODU4NTM4MjR9.x-3mB6FA4EZFSriVV-_VLrFmsRm9cUFhEo53EwH3-6s",
