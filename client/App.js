@@ -6,14 +6,19 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ChatScreen from "./screens/chatScreen";
 import AddEventFormScreen from "./screens/addEventFormScreen";
 import CalendarTest from "./screens/calendarText";
+import HomeScreen from "./screens/homeScreen";
+import DetailsRoom from "./screens/DetailsRoomScreen";
+import UserProfile from "./screens/userProfileScreen";
+import ThankYouScreen from "./screens/thankYouScreen";
+import AdminReview from "./screens/reviewAdminScreen";
 
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
+// function HomeScreen() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+//       <Text>Home!</Text>
+//     </View>
+//   );
+// }
 
 function SettingsScreen() {
   return (
@@ -50,9 +55,13 @@ export default function App() {
             tabBarInactiveTintColor: "gray",
           })}
         >
-          <Tab.Screen name="Home" component={ChatScreen} />
+          <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="addEvent" component={AddEventFormScreen} />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
+          {/* <Tab.Screen name="Settings" component={SettingsScreen} /> */}
+          <Tab.Screen name="UserProfile" component={UserProfile} />
+          {/* <Tab.Screen name="ThankYou" component={ThankYouScreen} /> */}
+          {/* <Tab.Screen name="AdminReview" component={AdminReview} /> */}
+          <Tab.Screen name="DetailsRoom" component={DetailsRoom} />
         </Tab.Navigator>
       </NavigationContainer>
     </SafeAreaView>
