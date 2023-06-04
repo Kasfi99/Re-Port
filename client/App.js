@@ -53,10 +53,20 @@ export default function App() {
           <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
           <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
           <Stack.Screen name="onBoarding" component={BoardingScreen} />
+          <Stack.Screen name="Main" options={{ headerShown: false }}>
+            {() => (
+              <Tab.Navigator>
+                <Tab.Screen
+                  name="Home"
+                  component={HomeScreen}
+                  // options={{ headerShown: false }}
+                />
+                <Tab.Screen name="Chat" component={ChatScreen} />
+              </Tab.Navigator>
+            )}
+          </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     </View>
-
-   
   );
 }
