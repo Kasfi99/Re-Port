@@ -7,11 +7,14 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/core";
 
 export default function WelcomeLevel() {
   const [level, setLevel] = useState([]);
 
+  const navigation = useNavigation()
   const retrieveData = async () => {
     try {
       const dataString = await AsyncStorage.getItem("sportData");
@@ -35,7 +38,7 @@ export default function WelcomeLevel() {
   };
 
   const handleSubmit = () => {
-    console.log(level, "<< kita submit yah");
+    navigation.navigate('Home')
   };
   useEffect(() => {
     retrieveData();
