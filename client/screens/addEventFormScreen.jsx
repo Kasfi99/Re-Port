@@ -15,6 +15,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 const GOOGLE_PLACES_API_KEY = "AIzaSyDJCBwVAW27Z24KW63gvImv4NZVNIwaqSA";
 
 export default function AddEventFormScreen() {
+  const SERVER_URL = "http://localhost:3000";
   const [eventTitle, setEventTitle] = useState("");
   const [participants, setParticipants] = useState(1);
   const [courtPrice, setCourtPrice] = useState("");
@@ -83,24 +84,25 @@ export default function AddEventFormScreen() {
       selectedLocation,
     };
     try {
-      const { data } = await axios({
-        method: "post",
-        url: "http://localhost:3000/event",
-        headers: {
-          access_token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2MxNjU0YmJmMTJlMDc5NzlmMWNiYiIsImVtYWlsIjoibmFkZWxAbWFpbC5jb20iLCJpYXQiOjE2ODU4NTM4MjR9.x-3mB6FA4EZFSriVV-_VLrFmsRm9cUFhEo53EwH3-6s",
-        },
-        data: {
+      const response = await axios.post(
+        "http://10.0.2.2:3000/event",
+        {
           title: eventTitle,
           location: selectedLocation,
           date: { date, startTime, endTime },
           courtPrice,
           limitParticipants: participants,
         },
-      });
-      console.log(data);
+        {
+          headers: {
+            access_token:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2MxNjU0YmJmMTJlMDc5NzlmMWNiYiIsImVtYWlsIjoibmFkZWxAbWFpbC5jb20iLCJpYXQiOjE2ODU4NzE4MTl9.YYZbs3bmSIGJh10papu2jIuQtsbsop4wN-iLlttXVVI",
+          },
+        }
+      );
+      console.log(response.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
