@@ -58,6 +58,8 @@ export default function App() {
                       iconName = "home";
                     } else if (route.name === "Chat") {
                       iconName = "chatbox";
+                    } else if (route.name === "AddEvent") {
+                      iconName = "add-outline";
                     } else if (route.name === "userProfile") {
                       iconName = "person-circle";
                     }
@@ -72,6 +74,27 @@ export default function App() {
                   name="Home"
                   component={HomeScreen}
                   options={{ headerShown: false }}
+                />
+                <Tab.Screen name="Detail" component={DetailsRoom} />
+                <Tab.Screen
+                  name="AddEvent"
+                  component={AddEventFormScreen}
+                  options={{
+                    tabBarIconStyle: {
+                      position: "relative",
+                      top: -13,
+                      backgroundColor: "white",
+                      paddingHorizontal: -3,
+                      shadowColor: "#000",
+                      shadowOpacity: 0.8,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowRadius: 2,
+                      elevation: 3,
+                      width: 40,
+                      transform: [{ scale: 1.4 }],
+                      borderRadius: 100,
+                    },
+                  }}
                 />
                 <Tab.Screen name="Chat" component={ChatScreen} />
                 <Tab.Screen name="userProfile" component={UserProfile} />
