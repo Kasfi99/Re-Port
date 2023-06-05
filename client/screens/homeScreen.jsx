@@ -33,8 +33,9 @@ export default function HomeScreen() {
         <ScrollView>
           <View
             style={{
-              height: "10%",
+              height: 220,
               width: "100%",
+              paddingBottom: 20,
               backgroundColor: "#A5DC281C",
               borderBottomRightRadius: 50,
               borderBottomLeftRadius: 50,
@@ -167,7 +168,11 @@ export default function HomeScreen() {
               </Text>
             </TouchableOpacity>
           </View>
-          <View>
+          <View
+            style={{
+              marginBottom: 300,
+            }}
+          >
             <CardHome filter={filter} />
           </View>
         </ScrollView>
@@ -205,6 +210,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 100,
     paddingLeft: 20,
+    marginBottom: 20,
   },
   addToCard: {
     height: 40,

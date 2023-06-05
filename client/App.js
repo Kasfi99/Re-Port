@@ -58,11 +58,10 @@ export default function App() {
                       iconName = "home";
                     } else if (route.name === "Chat") {
                       iconName = "chatbox";
-                    } else if (route.name === "Review") {
+                    } else if (route.name === "userProfile") {
                       iconName = "person-circle";
                     }
 
-                    // Return the icon component
                     return (
                       <Ionicons name={iconName} size={size} color={color} />
                     );
@@ -75,7 +74,7 @@ export default function App() {
                   options={{ headerShown: false }}
                 />
                 <Tab.Screen name="Chat" component={ChatScreen} />
-                <Tab.Screen name="Review" component={AdminReview} />
+                <Tab.Screen name="userProfile" component={UserProfile} />
               </Tab.Navigator>
             )}
           </Stack.Screen>

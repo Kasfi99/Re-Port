@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Touchable,
+} from "react-native";
 import COLORS from "../consts/colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import PrimaryButton from "../components/button";
@@ -6,10 +12,15 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { CardDivider } from "./Divider";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function CardHome({ filter }) {
   const navigation = useNavigation();
   const [filteredData, setFilteredData] = useState(dummyData);
+
+  const handleJoinEvent = (id) => {
+    console.log(id + "Bisa Ditekan");
+  };
 
   const dummyData = [
     {
@@ -116,8 +127,9 @@ export default function CardHome({ filter }) {
   return (
     <View
       style={{
-        width: 400,
+        width: "100%",
         height: "100%",
+        alignItems: "center",
       }}
     >
       {filteredData &&
@@ -129,11 +141,9 @@ export default function CardHome({ filter }) {
             <View
               key={el.id}
               style={{
-                height: 260,
-                width: "70%",
+                width: "85%",
                 backgroundColor: "white",
-                marginHorizontal: 50,
-                marginTop: 20,
+                marginTop: 30,
                 borderRadius: 30,
                 shadowColor: "#000",
                 shadowOpacity: 0.8,
@@ -199,7 +209,7 @@ export default function CardHome({ filter }) {
                     fontFamily: "IBM-Plex-Sans",
                   }}
                 >
-                  {remainingSlots}/8 Playing
+                  {el.participant.length}/8 Playing
                 </Text>
                 <Text
                   style={{
@@ -236,7 +246,7 @@ export default function CardHome({ filter }) {
                   style={{
                     fontSize: 9,
                     fontFamily: "IBM-Plex-Sans",
-                    marginBottom: 10,
+                    marginBottom: 5,
                   }}
                 >
                   {el.status}
@@ -250,15 +260,38 @@ export default function CardHome({ filter }) {
                   Court Booked - {el.place}
                 </Text>
               </View>
+              <TouchableOpacity onPress={() => handleJoinEvent(el.id)}>
+                <View
+                  style={{
+                    width: "30%",
+                    backgroundColor: "black",
+                    borderRadius: 10,
+                    marginLeft: "65%",
+                    marginTop: 15,
+                    marginBottom: 15,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontFamily: "IBM-Plex-Sans",
+                      fontWeight: "700",
+                      marginLeft: "12%",
+                    }}
+                  >
+                    Join Now
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              {/* <PrimaryButton
+                onPress={() => {
+                  navigation.navigate("DetailsRoom");
+                }}
+                title="Join Event"
+              /> */}
             </View>
           );
         })}
-      {/* <PrimaryButton
-              onPress={() => {
-                navigation.navigate("DetailsRoom");
-              }}
-              title="Join Event"
-            /> */}
     </View>
   );
 }
