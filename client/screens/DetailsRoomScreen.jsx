@@ -16,6 +16,7 @@ import COLORS from "../consts/colors";
 
 export default function DetailsRoom({ route }) {
   const { event } = route.params;
+  console.log(event, "<<<<<");
   const [perEvent, setPerEvent] = useState({});
   // console.log(perEvent);
   // const creatorId = perEvent.creator._id;
@@ -67,7 +68,7 @@ export default function DetailsRoom({ route }) {
         setPerEvent(data);
         if (data.location) {
           const location = JSON.parse(data.location);
-          console.log(location.address, "LOCATIONN");
+          // console.log(location.address, "LOCATIONN");
           setAddress(location.address);
           setLatitude(location.latitude);
           setLongitude(location.longitude);
@@ -88,7 +89,7 @@ export default function DetailsRoom({ route }) {
     fetchByEvent();
   }, []);
   // console.log(creatorId, "<<");
-  console.log(address, "<<<<<<");
+  console.log(perEvent);
 
   return (
     <ScrollView>
