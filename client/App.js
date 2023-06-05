@@ -48,7 +48,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="WelcomeSport">
+        <Stack.Navigator>
           <Stack.Screen name="Main" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator
@@ -72,11 +72,6 @@ export default function App() {
                   },
                 })}
               >
-                {/* <Tab.Screen name="Home" component={HomeScreen} /> */}
-                {/* <Tab.Screen name="Chat" component={ChatScreen} /> */}
-                {/* <Tab.Screen name="Review" component={AdminReview} /> */}
-                {/* <Tab.Screen name="AddEvent" component={AddEventFormScreen} /> */}
-
                 <Tab.Screen
                   name="Home"
                   component={HomeScreen}
@@ -105,8 +100,11 @@ export default function App() {
                     },
                   }}
                 />
-                {/* <Tab.Screen name="Chat" component={ChatScreen} /> */}
-                <Tab.Screen name="userProfile" component={UserProfile} />
+                <Tab.Screen
+                  name="userProfile"
+                  component={UserProfile}
+                  options={{ headerShown: false }}
+                />
               </Tab.Navigator>
             )}
           </Stack.Screen>
