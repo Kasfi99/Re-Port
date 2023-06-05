@@ -28,7 +28,7 @@ export default function WelcomeSport(props) {
         </Text>
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.Passwordinput}
+            style={styles.search}
             onChangeText={(text) => setSearch(text)}
             value={search}
             placeholder="Search"
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  Passwordinput: {
+  search: {
     height: 40,
     borderWidth: 1,
     borderRadius: 5,

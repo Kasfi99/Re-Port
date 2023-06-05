@@ -58,6 +58,8 @@ export default function App() {
                       iconName = "home";
                     } else if (route.name === "Chat") {
                       iconName = "chatbox";
+                    } else if (route.name === "Review") {
+                      iconName = "person-circle";
                     }
 
                     // Return the icon component
@@ -67,7 +69,11 @@ export default function App() {
                   },
                 })}
               >
-                <Tab.Screen name="Home" component={HomeScreen} />
+                <Tab.Screen
+                  name="Home"
+                  component={HomeScreen}
+                  options={{ headerShown: false }}
+                />
                 <Tab.Screen name="Chat" component={ChatScreen} />
                 <Tab.Screen name="Review" component={AdminReview} />
               </Tab.Navigator>
