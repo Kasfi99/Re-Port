@@ -6,19 +6,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Divider from "../components/Divider";
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
+import axios from 'axios';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function RegisterScreen() {
   //GOOGLE LOGIN
   const [userInfo, setUserInfo] = React.useState(null);
-  const [request, response, promtAsync] = Google.useAuthRequest({
+  const [request, response, promtAsync] = Google.useIdTokenAuthRequest({
+    // responseType: "id_token",
     androidClientId: "673981833907-hpcfc6nvmlatirbpse2pc6a64rbc63om.apps.googleusercontent.com",
     iosClientId: "673981833907-f3pnklja2jc6a5l55upagun0q768lhod.apps.googleusercontent.com",
     expoClientId: "673981833907-c2ggq92tb6lt4esirpdnekca34q6kmaj.apps.googleusercontent.com",
     webClientId: "673981833907-8sod9lmftobam1ec9ie0sg37a9a6hbnu.apps.googleusercontent.com"
   })
-
+console.log(response)
   React.useEffect(() => {
     handleSignInWithGoogle()
   }, [response])
@@ -28,7 +30,7 @@ export default function RegisterScreen() {
     const user = await AsyncStorage.getItem("@user")
     if(!user){
       if(response?.type === "success"){
-        await getUserInfo(response.authentication.accessToken)
+        await getUserInfo(response.params.id_token)
       }
     } else{
       setUserInfo(JSON.parse(user))
@@ -38,16 +40,15 @@ export default function RegisterScreen() {
   const getUserInfo = async (token) => {
     if(!token) return;
     try {
-      const response = await fetch(
-        "https://www.googleapis.com/userinfo/v2/me",
-        {
-          headers: { Authorization: `Bearer ${token}` },
+      const { data } = await axios({
+        url: `http://localhost:3000/user/googleLogin`,
+        method: "POST",
+        headers: {
+          googletoken: token
         }
-      );
+      });
+      await AsyncStorage.setItem('@user', JSON.stringify(data));
 
-      const user = await response.json();
-      await AsyncStorage.setItem("@user", JSON.stringify(user));
-      setUserInfo(user)
     } catch (error) {
       console.log(error)
     }
