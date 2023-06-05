@@ -48,7 +48,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="WelcomeSport">
           <Stack.Screen name="Main" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator
@@ -60,7 +60,7 @@ export default function App() {
                       iconName = "home";
                     } else if (route.name === "Chat") {
                       iconName = "chatbox";
-                    } else if (route.name === "AddEvent") {
+                    } else if (route.name === "AddSport") {
                       iconName = "add-outline";
                     } else if (route.name === "userProfile") {
                       iconName = "person-circle";
@@ -84,8 +84,9 @@ export default function App() {
                 />
                 {/* <Tab.Screen name="Detail" component={DetailsRoom} /> */}
                 <Tab.Screen
-                  name="AddEvent"
-                  component={AddEventFormScreen}
+                  name="AddSport"
+                  component={WelcomeSport}
+                  initialParams={{ isAddEvent: true }}
                   options={{
                     tabBarIconStyle: {
                       position: "relative",
@@ -111,10 +112,15 @@ export default function App() {
           </Stack.Screen>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="WelcomeSport" component={WelcomeSport} />
+          <Stack.Screen
+            name="WelcomeSport"
+            component={WelcomeSport}
+            initialParams={{ isAddEvent: false }}
+          />
           <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
           <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
           <Stack.Screen name="onBoarding" component={BoardingScreen} />
+          <Stack.Screen name="addEvent" component={AddEventFormScreen} />
           <Stack.Screen
             name="eventRoom"
             component={EventRoom}

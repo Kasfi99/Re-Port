@@ -11,10 +11,13 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import COLORS from "../consts/colors";
 
 const GOOGLE_PLACES_API_KEY = "AIzaSyDJCBwVAW27Z24KW63gvImv4NZVNIwaqSA";
 
-export default function AddEventFormScreen({ navigation }) {
+export default function AddEventFormScreen({ navigation, route }) {
+  // console.log(route.params.sportName, "*(&**^&*^*&");
+  const sport = route.params.sportName;
   const SERVER_URL = "http://localhost:3000";
   const [eventTitle, setEventTitle] = useState("");
   const [participants, setParticipants] = useState(1);
@@ -70,6 +73,9 @@ export default function AddEventFormScreen({ navigation }) {
   const handleDecreaseParticipants = () => {
     if (participants > 1) {
       setParticipants(participants - 1);
+    } else {
+      // Disable the "minus" button
+      return;
     }
   };
 
@@ -82,10 +88,10 @@ export default function AddEventFormScreen({ navigation }) {
       startTime,
       endTime,
       selectedLocation,
+      sport,
     };
-    console.log(eventData);
+    // console.log(eventData);
     try {
-      console.log("masuk sini,<<");
       const response = await fetch(
         "https://868c-2404-8000-1001-2edf-c58d-cc18-e93-19dd.ngrok-free.app/event",
         {
@@ -101,11 +107,12 @@ export default function AddEventFormScreen({ navigation }) {
             date: JSON.stringify({ date, startTime, endTime }),
             courtPrice,
             limitParticipants: participants,
+            sport,
           }),
         }
       );
       const data = await response.json();
-      console.log(data, "<<add data");
+      // console.log(data, "<<add data");
     } catch (error) {
       console.error(error);
     } finally {
@@ -124,7 +131,7 @@ export default function AddEventFormScreen({ navigation }) {
       />
       <Text style={styles.label}>Participants:</Text>
       <View style={styles.participantsContainer}>
-        {participants > 1 && (
+        {participants >= 1 && (
           <TouchableOpacity onPress={handleDecreaseParticipants}>
             <Text style={styles.participantsButton}>-</Text>
           </TouchableOpacity>
@@ -134,6 +141,7 @@ export default function AddEventFormScreen({ navigation }) {
           <Text style={styles.participantsButton}>+</Text>
         </TouchableOpacity>
       </View>
+
       <Text style={styles.label}>Court Price:</Text>
       <TextInput
         style={styles.input}
@@ -283,30 +291,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: "#fff",
   },
   label: {
-    fontSize: 16,
+    fontSize: 20, // increased from 16
     fontWeight: "bold",
     marginTop: 20,
   },
   input: {
-    height: 40,
+    height: 50,
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
     marginTop: 10,
-    fontSize: 16,
+    marginBottom: 20,
+    fontSize: 16, // decreased from 20
   },
   participantsContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 10,
+    marginBottom: 20,
   },
   participantsButton: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "bold",
     marginHorizontal: 10,
+    borderColor: "#0077cc", // changed from "gray"
   },
   participantsText: {
     fontSize: 20,
@@ -314,18 +326,19 @@ const styles = StyleSheet.create({
   },
   locationButton: {
     height: 40,
-    borderColor: "gray",
+    borderColor: COLORS.dark, // changed from "gray"
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
     marginTop: 10,
     justifyContent: "center",
+    paddingVertical: 5,
   },
   locationButtonText: {
     fontSize: 16,
   },
   submitButton: {
-    backgroundColor: "#007aff",
+    backgroundColor: COLORS.dark, // changed from "#007aff"
     borderRadius: 10,
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -348,6 +361,15 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingHorizontal: 15,
     marginTop: 20,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   modalHeader: {
     flexDirection: "row",
@@ -363,11 +385,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   datePickerButton: {
-    backgroundColor: "#f0f0f0",
+    height: 40,
+    borderColor: COLORS.dark, // changed from "gray"
+    borderWidth: 1,
     borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
     marginTop: 10,
+    justifyContent: "center",
+    paddingVertical: 5,
   },
   datePickerButtonText: {
     fontSize: 16,

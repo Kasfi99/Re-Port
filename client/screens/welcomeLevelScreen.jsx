@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function WelcomeLevel() {
+export default function WelcomeLevel({ navigation }) {
   const [level, setLevel] = useState([]);
 
   const retrieveData = async () => {
@@ -35,7 +35,7 @@ export default function WelcomeLevel() {
   };
 
   const handleSubmit = () => {
-    console.log(level, "<< kita submit yah");
+    navigation.navigate("Main", { screen: "Home" });
   };
   useEffect(() => {
     retrieveData();
