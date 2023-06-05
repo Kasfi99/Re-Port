@@ -9,14 +9,14 @@ const ChatBubble = ({ message, isMe, senderName, avatar }) => {
         isMe ? styles.rightMessageContainer : styles.leftMessageContainer,
       ]}
     >
-      {!isMe && <Image source={{ uri: avatar }} style={styles.avatar} />}
+      <Image source={{ uri: avatar }} style={styles.avatar} />
       <View
         style={[
           styles.messageBubble,
           isMe ? styles.rightMessageBubble : styles.leftMessageBubble,
         ]}
       >
-        {!isMe && <Text style={styles.senderName}>{senderName}</Text>}
+        <Text style={styles.senderName}>{senderName}</Text>
         <Text style={styles.messageText}>{message}</Text>
       </View>
     </View>
@@ -25,14 +25,17 @@ const ChatBubble = ({ message, isMe, senderName, avatar }) => {
 
 const styles = StyleSheet.create({
   messageContainer: {
+    flex: 1,
     flexDirection: "row",
     marginVertical: 5,
   },
   leftMessageContainer: {
-    alignItems: "flex-start",
+    // alignItems: "flex-start",
+    justifyContent: "flex-start",
   },
   rightMessageContainer: {
-    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    // backgroundColor: "red",
   },
   messageBubble: {
     backgroundColor: "#FFFFFF",
@@ -45,6 +48,7 @@ const styles = StyleSheet.create({
   },
   rightMessageBubble: {
     borderTopRightRadius: 0,
+    // backgroundColor: "green",
   },
   messageText: {
     fontSize: 16,

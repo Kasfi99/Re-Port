@@ -17,19 +17,19 @@ import COLORS from "../consts/colors";
 export default function DetailsRoom({ route }) {
   const { event } = route.params;
   const [perEvent, setPerEvent] = useState({});
-  console.log(perEvent);
+  // console.log(perEvent);
   // const creatorId = perEvent.creator._id;
   // console.log(perEvent, "perEvent");
   const [creatorId, setCreatorId] = useState();
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
+  const [address, setAddress] = useState("");
   const [region, setRegion] = useState({
     latitude: 0,
     longitude: 0,
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   });
-  let address;
 
   const date = moment(perEvent.date).format("dddd, D MMMM YYYY");
 
@@ -67,7 +67,8 @@ export default function DetailsRoom({ route }) {
         setPerEvent(data);
         if (data.location) {
           const location = JSON.parse(data.location);
-          address = location.address;
+          console.log(location.address, "LOCATIONN");
+          setAddress(location.address);
           setLatitude(location.latitude);
           setLongitude(location.longitude);
           setRegion({
@@ -87,6 +88,7 @@ export default function DetailsRoom({ route }) {
     fetchByEvent();
   }, []);
   // console.log(creatorId, "<<");
+  console.log(address, "<<<<<<");
 
   return (
     <ScrollView>
@@ -100,7 +102,7 @@ export default function DetailsRoom({ route }) {
           </View>
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.titleDesc}>Date</Text>
-            <Text style={{ fontSize: 20, fontWeight: 500 }}>date</Text>
+            <Text style={{ fontSize: 20, fontWeight: 500 }}>{date}</Text>
           </View>
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.titleDesc}>Location</Text>
