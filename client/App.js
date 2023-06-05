@@ -7,7 +7,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import ChatScreen from "./screens/chatScreen";
+// import ChatScreen from "./screens/chatScreen";
 import HomeScreen from "./screens/homeScreen";
 import BoardingScreen from "./screens/boardingScreen";
 import LoginScreen from "./screens/loginScreen";
@@ -21,6 +21,7 @@ import DetailsRoom from "./screens/DetailsRoomScreen";
 import UserProfile from "./screens/userProfileScreen";
 import ThankYouScreen from "./screens/thankYouScreen";
 import AdminReview from "./screens/reviewAdminScreen";
+import EventRoom from "./screens/eventRoom";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,8 +69,14 @@ export default function App() {
                 })}
               >
                 <Tab.Screen name="Home" component={HomeScreen} />
-                <Tab.Screen name="Chat" component={ChatScreen} />
-                <Tab.Screen name="Review" component={AdminReview} />
+                {/* <Tab.Screen name="Chat" component={ChatScreen} /> */}
+                {/* <Tab.Screen name="Review" component={AdminReview} /> */}
+                <Tab.Screen name="AddEvent" component={AddEventFormScreen} />
+                <Tab.Screen
+                  options={{ headerShown: false }}
+                  name="event"
+                  component={EventRoom}
+                />
               </Tab.Navigator>
             )}
           </Stack.Screen>
@@ -79,6 +86,11 @@ export default function App() {
           <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
           <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
           <Stack.Screen name="onBoarding" component={BoardingScreen} />
+          <Stack.Screen
+            name="eventRoom"
+            component={EventRoom}
+            // options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

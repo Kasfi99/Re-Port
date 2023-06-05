@@ -14,7 +14,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 
 const GOOGLE_PLACES_API_KEY = "AIzaSyDJCBwVAW27Z24KW63gvImv4NZVNIwaqSA";
 
-export default function AddEventFormScreen() {
+export default function AddEventFormScreen({ navigation }) {
   const SERVER_URL = "http://localhost:3000";
   const [eventTitle, setEventTitle] = useState("");
   const [participants, setParticipants] = useState(1);
@@ -83,26 +83,33 @@ export default function AddEventFormScreen() {
       endTime,
       selectedLocation,
     };
+    console.log(eventData);
     try {
-      const response = await axios.post(
-        "http://10.0.2.2:3000/event",
+      console.log("masuk sini,<<");
+      const response = await fetch(
+        "https://868c-2404-8000-1001-2edf-c58d-cc18-e93-19dd.ngrok-free.app/event",
         {
-          title: eventTitle,
-          location: selectedLocation,
-          date: { date, startTime, endTime },
-          courtPrice,
-          limitParticipants: participants,
-        },
-        {
+          method: "POST",
           headers: {
+            "Content-Type": "application/json",
             access_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2MxNjU0YmJmMTJlMDc5NzlmMWNiYiIsImVtYWlsIjoibmFkZWxAbWFpbC5jb20iLCJpYXQiOjE2ODU4NzE4MTl9.YYZbs3bmSIGJh10papu2jIuQtsbsop4wN-iLlttXVVI",
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODU5MDM2MTB9.wTXqGh0tNPxL4gWfOY4KQmkjYdEfCCbH6OiE93pXvio",
           },
+          body: JSON.stringify({
+            title: eventTitle,
+            location: JSON.stringify(selectedLocation),
+            date: JSON.stringify({ date, startTime, endTime }),
+            courtPrice,
+            limitParticipants: participants,
+          }),
         }
       );
-      console.log(response.data);
+      const data = await response.json();
+      console.log(data, "<<add data");
     } catch (error) {
       console.error(error);
+    } finally {
+      navigation.navigate("Home");
     }
   };
 

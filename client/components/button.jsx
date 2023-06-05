@@ -30,14 +30,12 @@ const styles = StyleSheet.create({
     width: 280,
     alignSelf: "center",
     marginTop: 40,
+    justifyContent: "center", // menengahkan tombol secara horizontal
+    alignItems: "center", // menengahkan tombol secara vertical
   },
   title: {
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
-    position: "absolute",
-    top: 14,
-    left: 55,
   },
 });
