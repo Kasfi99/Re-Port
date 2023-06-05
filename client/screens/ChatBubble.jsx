@@ -9,16 +9,26 @@ const ChatBubble = ({ message, isMe, senderName, avatar }) => {
         isMe ? styles.rightMessageContainer : styles.leftMessageContainer,
       ]}
     >
-      <Image source={{ uri: avatar }} style={styles.avatar} />
       <View
         style={[
           styles.messageBubble,
           isMe ? styles.rightMessageBubble : styles.leftMessageBubble,
         ]}
       >
-        <Text style={styles.senderName}>{senderName}</Text>
+        {isMe ? (
+          <Text style={styles.senderName}>You</Text>
+        ) : (
+          <Text style={styles.senderName}>{senderName}</Text>
+        )}
         <Text style={styles.messageText}>{message}</Text>
       </View>
+      <Image
+        source={{ uri: avatar }}
+        style={[
+          styles.avatar,
+          isMe ? { alignSelf: "flex-end" } : { alignSelf: "flex-start" },
+        ]}
+      />
     </View>
   );
 };
@@ -58,10 +68,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   avatar: {
-    width: 40,
-    height: 40,
+    width: 32,
+    height: 32,
     borderRadius: 20,
     marginRight: 10,
+    marginLeft: 15,
   },
 });
 

@@ -22,6 +22,7 @@ import UserProfile from "./screens/userProfileScreen";
 import ThankYouScreen from "./screens/thankYouScreen";
 import AdminReview from "./screens/reviewAdminScreen";
 import EventRoom from "./screens/eventRoom";
+import COLORS from "./consts/colors";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -74,21 +75,21 @@ export default function App() {
                 {/* <Tab.Screen name="Home" component={HomeScreen} /> */}
                 {/* <Tab.Screen name="Chat" component={ChatScreen} /> */}
                 {/* <Tab.Screen name="Review" component={AdminReview} /> */}
-                <Tab.Screen name="AddEvent" component={AddEventFormScreen} />
+                {/* <Tab.Screen name="AddEvent" component={AddEventFormScreen} /> */}
 
                 <Tab.Screen
                   name="Home"
                   component={HomeScreen}
                   options={{ headerShown: false }}
                 />
-                <Tab.Screen name="Detail" component={DetailsRoom} />
+                {/* <Tab.Screen name="Detail" component={DetailsRoom} /> */}
                 <Tab.Screen
                   name="AddEvent"
                   component={AddEventFormScreen}
                   options={{
                     tabBarIconStyle: {
                       position: "relative",
-                      top: -13,
+                      top: -15,
                       backgroundColor: "white",
                       paddingHorizontal: -3,
                       shadowColor: "#000",
@@ -97,12 +98,13 @@ export default function App() {
                       shadowRadius: 2,
                       elevation: 3,
                       width: 40,
-                      transform: [{ scale: 1.4 }],
+                      // color: COLORS.primaryGreen,
+                      transform: [{ scale: 1.3 }],
                       borderRadius: 100,
                     },
                   }}
                 />
-                <Tab.Screen name="Chat" component={ChatScreen} />
+                {/* <Tab.Screen name="Chat" component={ChatScreen} /> */}
                 <Tab.Screen name="userProfile" component={UserProfile} />
               </Tab.Navigator>
             )}

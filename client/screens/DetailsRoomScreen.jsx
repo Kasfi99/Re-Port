@@ -15,12 +15,9 @@ import { useState } from "react";
 import COLORS from "../consts/colors";
 
 export default function DetailsRoom({ route }) {
-  const { event } = route.params;
-  console.log(event, "<<<<<");
+  const { id } = route.params;
+  // console.log(id, "<<<<<");
   const [perEvent, setPerEvent] = useState({});
-  // console.log(perEvent);
-  // const creatorId = perEvent.creator._id;
-  // console.log(perEvent, "perEvent");
   const [creatorId, setCreatorId] = useState();
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
@@ -31,13 +28,6 @@ export default function DetailsRoom({ route }) {
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   });
-
-  const date = moment(perEvent.date).format("dddd, D MMMM YYYY");
-
-  // Memformat waktu mulai
-  const startTime = moment(perEvent.startTime).format("HH.mm A");
-  // Memformat waktu selesai
-  const endTime = moment(perEvent.endTime).format("HH.mm A");
 
   const currentParticipant = 1;
   const userId = 1;
@@ -53,7 +43,7 @@ export default function DetailsRoom({ route }) {
     async function fetchByEvent() {
       try {
         const response = await fetch(
-          `https://868c-2404-8000-1001-2edf-c58d-cc18-e93-19dd.ngrok-free.app/event/${event._id}`,
+          `https://868c-2404-8000-1001-2edf-c58d-cc18-e93-19dd.ngrok-free.app/event/${id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -64,7 +54,7 @@ export default function DetailsRoom({ route }) {
           }
         );
         const data = await response.json();
-        // console.log(data);
+        // console.log(data.date, " DATA DATE <<<");
         setPerEvent(data);
         if (data.location) {
           const location = JSON.parse(data.location);
@@ -88,12 +78,25 @@ export default function DetailsRoom({ route }) {
     }
     fetchByEvent();
   }, []);
+  const date = moment(perEvent.date).format("dddd, D MMMM");
+  // console.log(perEvent.date, "<<< DATENYA ");
+  const startTime = moment(perEvent.startTime).format("hh.mm A");
+  const endTime = moment(perEvent.endTime).format("hh.mm A");
+  const output = `${date} | ${startTime} - ${endTime}`;
+  console.log(output, "<<< OUTPUT");
   // console.log(creatorId, "<<");
-  console.log(perEvent);
+  // console.log(perEvent);
 
   return (
     <ScrollView>
-      <SafeAreaView style={{ flex: 1, paddingHorizontal: 15, marginTop: 20 }}>
+      <SafeAreaView
+        style={{
+          // flex: 1,
+          paddingHorizontal: 15,
+          paddingTop: 20,
+          backgroundColor: "white",
+        }}
+      >
         <View style={{ flex: 1 }}>
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.titleDesc}>Sport</Text>
