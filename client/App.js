@@ -47,7 +47,7 @@ export default function App() {
     <View style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Main" options={{ headerShown: false }}>
+          {/* <Stack.Screen name="Main" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator
                 screenOptions={({ route }) => ({
@@ -72,7 +72,7 @@ export default function App() {
                 <Tab.Screen name="Review" component={AdminReview} />
               </Tab.Navigator>
             )}
-          </Stack.Screen>
+          </Stack.Screen> */}
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="WelcomeSport" component={WelcomeSport} />
