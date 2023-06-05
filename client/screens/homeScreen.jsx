@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -11,11 +11,13 @@ import {
   SafeAreaView,
   ImageBackground,
 } from "react-native";
+import axios from "axios";
 import COLORS from "../consts/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import CardHome from "../components/cards";
 import { ScrollView } from "react-native-gesture-handler";
+import { useEffect, useState } from "react";
 
 export default function HomeScreen() {
   const [filter, setfilter] = useState("");

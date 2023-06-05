@@ -11,15 +11,21 @@ import { Rating } from "react-native-elements";
 import COLORS from "../consts/colors";
 
 const data = [
-  { id: 1, name: "Jennie Kim", rating: null },
-  { id: 2, name: "Budi Bubur", rating: null },
-  { id: 3, name: "Bob Smith", rating: null },
-  { id: 4, name: "Alice Jones", rating: null },
-  { id: 5, name: "Tom Brown", rating: null },
+  { id: 1, name: "Jennie Kim", rating: 0 },
+  { id: 2, name: "Budi Bubur", rating: 0 },
+  { id: 3, name: "Bob Smith", rating: 0 },
+  { id: 4, name: "Alice Jones", rating: 0 },
+  { id: 5, name: "Tom Brown", rating: 0 },
 ];
 
 export default function AdminReview() {
-  const [checkedItems, setCheckedItems] = useState({});
+  const [checkedItems, setCheckedItems] = useState(
+    // Inisialisasi checkedItems dengan nilai awal false pada semua id
+    data.reduce((acc, curr) => {
+      acc[curr.id] = false;
+      return acc;
+    }, {})
+  );
   const [teamData, setTeamData] = useState(data);
 
   const handleSelectAll = () => {
@@ -45,10 +51,10 @@ export default function AdminReview() {
   };
 
   const handleRatingChange = (id, rating) => {
-    const newData = [...teamData];
+    const newData = [...teamData]; // membuat copy baru dari teamData
     const index = newData.findIndex((item) => item.id === id);
     newData[index].rating = rating;
-    setTeamData(newData);
+    setTeamData(newData); // memperbarui state teamData dengan copy yang baru
   };
 
   const handleSubmit = () => {
@@ -117,7 +123,7 @@ export default function AdminReview() {
                 <Rating
                   type="star"
                   fractions={1}
-                  startingValue={item.rating}
+                  startingValue={item.rating || 0}
                   imageSize={30}
                   onFinishRating={(rating) =>
                     handleRatingChange(item.id, rating)

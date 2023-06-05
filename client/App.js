@@ -21,6 +21,7 @@ import DetailsRoom from "./screens/DetailsRoomScreen";
 import UserProfile from "./screens/userProfileScreen";
 import ThankYouScreen from "./screens/thankYouScreen";
 import AdminReview from "./screens/reviewAdminScreen";
+import EventRoom from "./screens/eventRoom";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -70,6 +71,11 @@ export default function App() {
                   },
                 })}
               >
+                {/* <Tab.Screen name="Home" component={HomeScreen} /> */}
+                {/* <Tab.Screen name="Chat" component={ChatScreen} /> */}
+                {/* <Tab.Screen name="Review" component={AdminReview} /> */}
+                <Tab.Screen name="AddEvent" component={AddEventFormScreen} />
+
                 <Tab.Screen
                   name="Home"
                   component={HomeScreen}
@@ -107,6 +113,11 @@ export default function App() {
           <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
           <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
           <Stack.Screen name="onBoarding" component={BoardingScreen} />
+          <Stack.Screen
+            name="eventRoom"
+            component={EventRoom}
+            // options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

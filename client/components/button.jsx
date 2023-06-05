@@ -27,18 +27,15 @@ const styles = StyleSheet.create({
     height: 30,
     paddingHorizontal: 30,
     borderRadius: 30,
-    width: 80,
-    position: "absolute",
-    right: 10,
-    top: -220,
+    width: 280,
+    alignSelf: "center",
+    marginTop: 40,
+    justifyContent: "center", // menengahkan tombol secara horizontal
+    alignItems: "center", // menengahkan tombol secara vertical
   },
   title: {
     color: "white",
     fontSize: 12,
     fontWeight: "bold",
-    width: 80,
-    position: "absolute",
-    top: 7,
-    left: 10,
   },
 });

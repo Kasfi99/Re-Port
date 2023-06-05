@@ -7,33 +7,53 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import ChatBubble from "./ChatBubble";
 
 export default function ChatScreen() {
   const navigation = useNavigation();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
+  // const handleSend = () => {
+  //   console.log("Pesan yang dikirim:", message);
+  //   setMessages([
+  //     ...messages,
+  //     { id: messages.length, text: message, isMe: true },
+  //   ]);
+  //   setMessage("");
+  // };
   const handleSend = () => {
     console.log("Pesan yang dikirim:", message);
-    setMessages([...messages, { id: messages.length, text: message }]);
+    setMessages([
+      ...messages,
+      {
+        id: messages.length,
+        text: message,
+        isMe: true,
+        senderName: "Marimar",
+        avatar: "https://img.freepik.com/free-icon/user_318-159711.jpg",
+      },
+    ]);
     setMessage("");
   };
 
   const renderMessage = ({ item }) => {
     return (
-      <View style={styles.messageContainer}>
-        <View style={styles.messageBubble}>
-          <Text style={styles.messageText}>{item.text}</Text>
-        </View>
-      </View>
+      <ChatBubble
+        message={item.text}
+        isMe={item.isMe}
+        senderName={item.senderName}
+        avatar={item.avatar}
+      />
     );
   };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      // behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <FlatList
