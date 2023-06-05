@@ -31,12 +31,12 @@ export default function DetailsRoom({ route }) {
   });
   let address;
 
-  // const date = moment(perEvent.date).format("dddd, D MMMM YYYY");
+  const date = moment(perEvent.date).format("dddd, D MMMM YYYY");
 
-  // // Memformat waktu mulai
-  // const startTime = moment(perEvent.startTime).format("HH.mm A");
-  // // Memformat waktu selesai
-  // const endTime = moment(perEvent.endTime).format("HH.mm A");
+  // Memformat waktu mulai
+  const startTime = moment(perEvent.startTime).format("HH.mm A");
+  // Memformat waktu selesai
+  const endTime = moment(perEvent.endTime).format("HH.mm A");
 
   const currentParticipant = 1;
   const userId = 1;
