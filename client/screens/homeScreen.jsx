@@ -117,15 +117,6 @@ export default function HomeScreen() {
               </View>
             </View>
             <View style={styles.inputContainer}>
-              {/* <Ionicons
-              name="search-outline"
-              size={30}
-              style={{
-                position: "absolute",
-                top: 70,
-                right: 30,
-              }}
-            /> */}
               <TextInput
                 style={styles.search}
                 onChangeText={(text) => setfilter(text)}

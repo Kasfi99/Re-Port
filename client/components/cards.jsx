@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { CardDivider } from "./Divider";
 
-export default function CardHome({ filter }) {
+export default function CardHome({ filter, item, itemPast, horizontal }) {
   const navigation = useNavigation();
   const [filteredData, setFilteredData] = useState(dummyData);
 
@@ -123,61 +123,20 @@ export default function CardHome({ filter }) {
     }
   }, [filter]);
 
+  const greenSlots = item?.participant.length;
+  const remainingSlots = 8 - greenSlots;
+
   return (
     <>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("eventRoom", { event })}
-      >
-        <View style={styles.card}>
-          <ImageBackground
-            source={{
-              uri: "https://plus.unsplash.com/premium_photo-1677543938005-6e0eb736dc19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2232&q=80",
-            }}
-            style={styles.backgroundImage}
-            resizeMode="cover"
-          />
-          <View style={{ marginHorizontal: 20 }}>
-            <Text style={{ fontSize: 14 }}>SPORT</Text>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "bold",
-                marginTop: 2,
-                color: COLORS.dark,
-              }}
-            >
-              Event Title
-            </Text>
-          </View>
-          <View
-            style={{
-              marginTop: 10,
-              marginHorizontal: 20,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>Rp price</Text>
-            <View style={styles.addToCard}>
-              <Icon name="add" size={20} color={"white"} />
-            </View>
-          </View>
-          <PrimaryButton
-            onPress={() => {
-              navigation.navigate("DetailsRoom");
-            }}
-            title="Join Event"
-          />
-        </View>
-      </TouchableOpacity>
       <View
         style={{
-          width: "100%",
+          width: horizontal ? 350 : "100%",
           height: "100%",
           alignItems: "center",
         }}
       >
         {filteredData &&
+          !horizontal &&
           filteredData.map((el) => {
             const greenSlots = el.participant.length;
             const remainingSlots = 8 - greenSlots;
@@ -199,7 +158,7 @@ export default function CardHome({ filter }) {
               >
                 <Text
                   style={{
-                    fontFamily: "IBM-Plex-sans",
+                    fontFamily: "IBM-Plex-Sans",
                     fontWeight: "600",
                     marginTop: 20,
                     marginLeft: 10,
@@ -209,7 +168,7 @@ export default function CardHome({ filter }) {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: "IBM-Plex-sans",
+                    fontFamily: "IBM-Plex-Sans",
                     fontWeight: "700",
                     marginTop: 5,
                     marginLeft: 10,
@@ -337,6 +296,162 @@ export default function CardHome({ filter }) {
               </View>
             );
           })}
+
+        {horizontal && item && (
+          <View
+            key={item.id}
+            style={{
+              width: "85%",
+              backgroundColor: "white",
+              marginTop: 30,
+              borderRadius: 30,
+              shadowColor: "#000",
+              shadowOpacity: 0.8,
+              shadowOffset: { width: 0, height: 2 },
+              shadowRadius: 2,
+              elevation: 10,
+              marginBottom: 30,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "IBM-Plex-Sans",
+                fontWeight: "600",
+                marginTop: 20,
+                marginLeft: 10,
+              }}
+            >
+              {item.sport} Meetup
+            </Text>
+            <Text
+              style={{
+                fontFamily: "IBM-Plex-Sans",
+                fontWeight: "700",
+                marginTop: 5,
+                marginLeft: 10,
+                width: "95%",
+              }}
+            >
+              {item.name}
+            </Text>
+            <View
+              style={{ flexDirection: "row", marginLeft: 10, marginTop: 5 }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                {[...Array(greenSlots)].map((_, index) => (
+                  <Ionicons
+                    key={index}
+                    name="person-circle-outline"
+                    size={28}
+                    color={"green"}
+                  />
+                ))}
+                {[...Array(remainingSlots)].map((_, index) => (
+                  <Ionicons
+                    key={index + greenSlots}
+                    name="person-circle-outline"
+                    size={28}
+                    color={"black"}
+                  />
+                ))}
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 25,
+                marginTop: 10,
+                marginLeft: 15,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontFamily: "IBM-Plex-Sans",
+                }}
+              >
+                {item.participant.length}/8 Playing
+              </Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontFamily: "IBM-Plex-Sans",
+                }}
+              >
+                {item.price} IDR/Person
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 20,
+              }}
+            >
+              <CardDivider />
+            </View>
+            <View
+              style={{
+                marginLeft: 10,
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontFamily: "IBM-Plex-Sans",
+                  fontWeight: "700",
+                }}
+              >
+                Date : {item.time}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 9,
+                  fontFamily: "IBM-Plex-Sans",
+                  marginBottom: 5,
+                }}
+              >
+                {item.status}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontFamily: "IBM-Plex-Sans",
+                }}
+              >
+                Court Booked - {item.place}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={() => handleJoinEvent(item.id)}>
+              <View
+                style={{
+                  width: "30%",
+                  backgroundColor: "black",
+                  borderRadius: 10,
+                  marginLeft: "65%",
+                  marginTop: 15,
+                  marginBottom: 15,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontFamily: "IBM-Plex-Sans",
+                    fontWeight: "700",
+                    marginLeft: "12%",
+                  }}
+                >
+                  Join Now
+                </Text>
+              </View>
+            </TouchableOpacity>
+            {/* <PrimaryButton
+                onPress={() => {
+                  navigation.navigate("DetailsRoom");
+                }}
+                title="Join Event"
+              /> */}
+          </View>
+        )}
       </View>
     </>
   );

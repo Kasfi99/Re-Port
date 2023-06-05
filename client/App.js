@@ -71,17 +71,11 @@ export default function App() {
                   },
                 })}
               >
-                {/* <Tab.Screen name="Home" component={HomeScreen} /> */}
-                {/* <Tab.Screen name="Chat" component={ChatScreen} /> */}
-                {/* <Tab.Screen name="Review" component={AdminReview} /> */}
-                <Tab.Screen name="AddEvent" component={AddEventFormScreen} />
-
                 <Tab.Screen
                   name="Home"
                   component={HomeScreen}
                   options={{ headerShown: false }}
                 />
-                <Tab.Screen name="Detail" component={DetailsRoom} />
                 <Tab.Screen
                   name="AddEvent"
                   component={AddEventFormScreen}
@@ -102,8 +96,11 @@ export default function App() {
                     },
                   }}
                 />
-                <Tab.Screen name="Chat" component={ChatScreen} />
-                <Tab.Screen name="userProfile" component={UserProfile} />
+                <Tab.Screen
+                  name="userProfile"
+                  component={UserProfile}
+                  options={{ headerShown: false }}
+                />
               </Tab.Navigator>
             )}
           </Stack.Screen>
