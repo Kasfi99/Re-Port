@@ -24,7 +24,7 @@ export default function PrimaryButton({ title, onPress = () => {} }) {
 const styles = StyleSheet.create({
   btnContainer: {
     backgroundColor: COLORS.dark,
-    height: 50,
+    height: 30,
     paddingHorizontal: 30,
     borderRadius: 30,
     width: 280,
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "white",
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: "bold",
   },
 });

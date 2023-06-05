@@ -7,7 +7,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-// import ChatScreen from "./screens/chatScreen";
+import ChatScreen from "./screens/chatScreen";
 import HomeScreen from "./screens/homeScreen";
 import BoardingScreen from "./screens/boardingScreen";
 import LoginScreen from "./screens/loginScreen";
@@ -59,24 +59,28 @@ export default function App() {
                       iconName = "home";
                     } else if (route.name === "Chat") {
                       iconName = "chatbox";
+                    } else if (route.name === "userProfile") {
+                      iconName = "person-circle";
                     }
 
-                    // Return the icon component
                     return (
                       <Ionicons name={iconName} size={size} color={color} />
                     );
                   },
                 })}
               >
-                <Tab.Screen name="Home" component={HomeScreen} />
+                {/* <Tab.Screen name="Home" component={HomeScreen} /> */}
                 {/* <Tab.Screen name="Chat" component={ChatScreen} /> */}
                 {/* <Tab.Screen name="Review" component={AdminReview} /> */}
                 <Tab.Screen name="AddEvent" component={AddEventFormScreen} />
+
                 <Tab.Screen
+                  name="Home"
+                  component={HomeScreen}
                   options={{ headerShown: false }}
-                  name="event"
-                  component={EventRoom}
                 />
+                <Tab.Screen name="Chat" component={ChatScreen} />
+                <Tab.Screen name="userProfile" component={UserProfile} />
               </Tab.Navigator>
             )}
           </Stack.Screen>

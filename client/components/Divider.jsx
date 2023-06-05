@@ -1,11 +1,19 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const Divider = ({ text }) => {
+export const Divider = ({ text }) => {
   return (
     <View style={styles.container}>
       <View style={styles.line} />
       <Text style={styles.text}>{text}</Text>
+      <View style={styles.line} />
+    </View>
+  );
+};
+
+export const CardDivider = () => {
+  return (
+    <View style={styles.container}>
       <View style={styles.line} />
     </View>
   );
@@ -20,7 +28,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 1,
     borderWidth: 0.5,
-    // borderStyle: "dashed",
     borderColor: "#000",
   },
   text: {
@@ -29,5 +36,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export default Divider;

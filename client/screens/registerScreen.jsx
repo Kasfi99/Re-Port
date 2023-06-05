@@ -3,7 +3,7 @@ import { Text, View, TextInput, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Divider from "../components/Divider";
+import { Divider } from "../components/Divider";
 
 export default function RegisterScreen() {
   const navigation = useNavigation();
