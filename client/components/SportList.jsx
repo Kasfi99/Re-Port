@@ -169,7 +169,7 @@ export default function SportList() {
     } catch (error) {
       console.log(error);
     } finally {
-      // navigation.navigate("WelcomeProfile");
+      navigation.navigate("WelcomeProfile");
     }
   };
 

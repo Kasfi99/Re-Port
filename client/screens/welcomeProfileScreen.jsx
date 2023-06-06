@@ -10,9 +10,15 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import axios from "axios";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
+import COLORS from "../consts/colors";
 
 export default function WelcomeProfile() {
+  const [image, setImage] = useState(null);
+
+  console.log(image, "<<<ini images");
   const [profiles, setProfiles] = useState([
     {
       id: 1,
@@ -32,6 +38,22 @@ export default function WelcomeProfile() {
     },
   ]);
   const navigation = useNavigation();
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const handleLocation = () => {
     //write here for lo.name
@@ -99,27 +121,40 @@ export default function WelcomeProfile() {
       >
         Gender
       </Text>
-      <View
+      <TouchableOpacity onPress={() => pickImage()}>
+        <View
+          style={{
+            height: 180,
+            width: 180,
+            borderRadius: 100,
+            borderColor: "black",
+            borderWidth: 3,
+            overflow: "hidden",
+            marginLeft: "23%",
+            marginTop: 30,
+            marginBottom: 20,
+          }}
+        >
+          {profiles[0].isPressed ? profiles[0].image : profiles[1].image}
+        </View>
+      </TouchableOpacity>
+      <Ionicons
+        name="create"
+        size={40}
         style={{
-          height: 180,
-          width: 180,
-          borderRadius: 100,
-          borderColor: "black",
-          borderWidth: 3,
-          overflow: "hidden",
-          marginLeft: "23%",
-          marginTop: 30,
-          marginBottom: 20,
+          color: COLORS.primaryGreen,
+          position: "relative",
+          top: -40,
+          left: 230,
         }}
-      >
-        {profiles[0].isPressed ? profiles[0].image : profiles[1].image}
-      </View>
+        onPress={() => pickImage()}
+      />
       <View
         style={{
           width: "60%",
           flexDirection: "row",
           marginLeft: "18%",
-          marginTop: 20,
+          marginTop: 0,
         }}
       >
         <TouchableOpacity

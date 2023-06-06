@@ -77,6 +77,10 @@ export default function LoginScreen() {
 
   const handleInput = async () => {
     try {
+      if (!email || !password) {
+        throw new Error("Input Can't be Empty");
+      }
+
       const { data } = await axios.post(
         "https://932d-139-228-111-126.ngrok-free.app/user/login",
         { email, password }
@@ -89,12 +93,11 @@ export default function LoginScreen() {
       console.log("Data stored successfully");
 
       console.log(data, "<<<<<<");
-    } catch (error) {
-      console.log("Failed to login & store data: ", error);
-    } finally {
       onChangeEmail("");
       onChangePassword("");
       return navigation.navigate("WelcomeSport");
+    } catch (error) {
+      console.log("Failed to login & store data: ", error);
     }
   };
 

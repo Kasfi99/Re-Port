@@ -79,19 +79,22 @@ export default function RegisterScreen() {
 
   const handleInput = async () => {
     try {
+      if (!email || !password || !username || !name) {
+        throw new Error("Input Can't be Empty");
+      }
+
       const { data } = await axios.post(
         "https://932d-139-228-111-126.ngrok-free.app/user",
         { name, username, email, password }
       );
       console.log(data, "<<<<<");
-    } catch (error) {
-      console.log(error);
-    } finally {
       onChangeEmail("");
       onChangePassword("");
       setName("");
       setUsername("");
       return navigation.navigate("Login");
+    } catch (error) {
+      console.log(error);
     }
   };
 
