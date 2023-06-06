@@ -24,20 +24,18 @@ export default function PrimaryButton({ title, onPress = () => {} }) {
 const styles = StyleSheet.create({
   btnContainer: {
     backgroundColor: COLORS.dark,
-    height: 50,
+    height: 30,
     paddingHorizontal: 30,
     borderRadius: 30,
     width: 280,
     alignSelf: "center",
     marginTop: 40,
+    justifyContent: "center", // menengahkan tombol secara horizontal
+    alignItems: "center", // menengahkan tombol secara vertical
   },
   title: {
     color: "white",
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: "bold",
-    textAlign: "center",
-    position: "absolute",
-    top: 14,
-    left: 55,
   },
 });
