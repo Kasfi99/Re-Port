@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 export default function HomeScreen() {
   const [filter, setfilter] = useState("");
   const handleNotification = () => {
-    console.log("udah bisa di click");
+    // console.log("udah bisa di click");
   };
 
   const handleSeeAllEvents = () => {
@@ -33,7 +33,7 @@ export default function HomeScreen() {
     async function fetchEvents() {
       try {
         const response = await fetch(
-          "https://a810-139-228-111-126.ngrok-free.app/eventlist"
+          "https://5ea3-139-228-111-126.ngrok-free.app/eventlist"
         );
         const data = await response.json(); // parsing respons JSON
         // console.log(data); // hasil respons JSON

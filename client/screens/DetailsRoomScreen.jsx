@@ -45,12 +45,12 @@ export default function DetailsRoom({ route }) {
       try {
         console.log("useEffect pertama Masuk Ke Try");
         const response = await fetch(
-          `https://a810-139-228-111-126.ngrok-free.app/event/${id}`,
+          `https://5ea3-139-228-111-126.ngrok-free.app/event/${id}`,
           {
             headers: {
               "Content-Type": "application/json",
               access_token:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODU5MDM2MTB9.wTXqGh0tNPxL4gWfOY4KQmkjYdEfCCbH6OiE93pXvio",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODYwNDU2MTl9.VuMJmgR26rJmsfVQsgqcefisbQ3pynoHKkupnCYMIdU",
               // 'Content-Type': 'application/x-www-form-urlencoded',
             },
           }

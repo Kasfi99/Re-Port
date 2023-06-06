@@ -23,17 +23,18 @@ export default function UserProfile() {
   const slidesRef = useRef(null);
   const [myUpcomingEvents, setUpcomingEvents] = useState([]);
   const [myPreviousEvents, setmyPreviousEvents] = useState([]);
+  const [profile, setMyProfile] = useState();
 
   useEffect(() => {
     async function getMyEvents() {
       try {
         const response = await fetch(
-          `https://a810-139-228-111-126.ngrok-free.app/event/myevents`,
+          `https://5ea3-139-228-111-126.ngrok-free.app/event/myevents`,
           {
             headers: {
               "Content-Type": "application/json",
               access_token:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODU5MDM2MTB9.wTXqGh0tNPxL4gWfOY4KQmkjYdEfCCbH6OiE93pXvio",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODYwNDU2MTl9.VuMJmgR26rJmsfVQsgqcefisbQ3pynoHKkupnCYMIdU",
               // 'Content-Type': 'application/x-www-form-urlencoded',
             },
           }
@@ -43,10 +44,9 @@ export default function UserProfile() {
         if (data.upcomingEvents) {
           console.log("MASHOOOk");
           setUpcomingEvents(data.upcomingEvents);
+        } else if (data.previousEvent) {
+          setmyPreviousEvents(data.previousEvent);
         }
-        // } else if (data?.previousEvent) {
-        //   setmyPreviousEvents(data.previousEvent);
-        // }
         // console.log(data.upcomingEvents, "<<<");
       } catch (error) {
         console.log(error);
@@ -55,7 +55,7 @@ export default function UserProfile() {
     getMyEvents();
   }, []);
 
-  // console.log(myUpcomingEvents, "<<");
+  // console.log(myUpcomingEvents, "MY Upcoming");
   const handleEdit = () => {
     console.log("bisa edit");
   };
@@ -277,12 +277,16 @@ export default function UserProfile() {
             Current Activities
           </Text>
           <View>
-            {console.log(myUpcomingEvents, "<<<")}
+            {/* {console.log(myUpcomingEvents, "<<<")} */}
             <FlatList
               data={myUpcomingEvents}
               renderItem={({ item }) => (
-                // <Text>{item.courtPrice}</Text>
-                <CardHome item={item} horizontal={true} />
+                <CardHome
+                  key={item.id}
+                  item={item}
+                  idEvent={item._id}
+                  horizontal={true}
+                />
               )}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
@@ -320,15 +324,20 @@ export default function UserProfile() {
               marginBottom: 80,
             }}
           >
-            {/* <FlatList
+            <FlatList
               data={myPreviousEvents} //kirim beda data
               renderItem={({ item }) => (
-                <CardHome key={item.id} item={item} horizontal={true} />
+                <CardHome
+                  key={item.id}
+                  item={item}
+                  idEvent={item._id}
+                  horizontal={true}
+                />
               )}
               horizontal
               showsHorizontalScrollIndicator={false}
-              // pagingEnabled
-              // bounces={false}
+              pagingEnabled
+              bounces={false}
               keyExtractor={(item) => item.id}
               onScroll={Animated.event(
                 [{ nativeEvent: { contentOffset: { x: scrollX } } }],
@@ -338,7 +347,7 @@ export default function UserProfile() {
               onViewableItemsChanged={viewableItemsChanged}
               viewabilityConfig={viewConfig}
               ref={slidesRef}
-            /> */}
+            />
           </View>
         </View>
       </SafeAreaView>
