@@ -24,6 +24,33 @@ export default function UserProfile() {
   const [myUpcomingEvents, setUpcomingEvents] = useState([]);
   const [myPreviousEvents, setmyPreviousEvents] = useState([]);
 
+  useEffect(() => {
+    async function getMyEvents() {
+      try {
+        const response = await fetch(
+          `https://a810-139-228-111-126.ngrok-free.app/event/myevents`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              access_token:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODU5MDM2MTB9.wTXqGh0tNPxL4gWfOY4KQmkjYdEfCCbH6OiE93pXvio",
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+        const data = await response.json();
+        if (data.upcomingEvents) {
+          setUpcomingEvents(data.upcomingEvents);
+        } else if (data.previousEvent) {
+          setmyPreviousEvents(data.previousEvent);
+        }
+        // console.log(data, "<<<");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getMyEvents();
+  }, []);
   const handleEdit = () => {
     console.log("bisa edit");
   };

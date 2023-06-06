@@ -47,7 +47,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Register">
+        <Stack.Navigator>
           <Stack.Screen name="Main" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator

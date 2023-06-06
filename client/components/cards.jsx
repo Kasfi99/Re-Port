@@ -57,7 +57,7 @@ export default function CardHome({ filter, item, horizontal }) {
     async function fetchEvents() {
       try {
         const response = await fetch(
-          "https://8530-139-228-111-126.ngrok-free.app/eventlist"
+          "https://a810-139-228-111-126.ngrok-free.app/eventlist"
         );
         const data = await response.json(); // parsing respons JSON
         // console.log(data); // hasil respons JSON
