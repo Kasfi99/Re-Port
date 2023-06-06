@@ -10,7 +10,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ChatScreen from "./screens/chatScreen";
 import HomeScreen from "./screens/homeScreen";
 import BoardingScreen from "./screens/boardingScreen";
-import LoginScreen from "./screens/loginScreen";
 import RegisterScreen from "./screens/registerScreen";
 import WelcomeSport from "./screens/welcomeSportScreen";
 import WelcomeProfile from "./screens/welcomeProfileScreen";
@@ -22,7 +21,7 @@ import UserProfile from "./screens/userProfileScreen";
 import ThankYouScreen from "./screens/thankYouScreen";
 import AdminReview from "./screens/reviewAdminScreen";
 import EventRoom from "./screens/eventRoom";
-import COLORS from "./consts/colors";
+import LoginScreen from "./screens/loginScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -48,7 +47,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="Register">
           <Stack.Screen name="Main" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator
@@ -60,7 +59,7 @@ export default function App() {
                       iconName = "home";
                     } else if (route.name === "Chat") {
                       iconName = "chatbox";
-                    } else if (route.name === "AddSport") {
+                    } else if (route.name === "AddEvent") {
                       iconName = "add-outline";
                     } else if (route.name === "userProfile") {
                       iconName = "person-circle";
@@ -77,15 +76,13 @@ export default function App() {
                   component={HomeScreen}
                   options={{ headerShown: false }}
                 />
-                {/* <Tab.Screen name="Detail" component={DetailsRoom} /> */}
                 <Tab.Screen
-                  name="AddSport"
-                  component={WelcomeSport}
-                  initialParams={{ isAddEvent: true }}
+                  name="AddEvent"
+                  component={AddEventFormScreen}
                   options={{
                     tabBarIconStyle: {
                       position: "relative",
-                      top: -15,
+                      top: -13,
                       backgroundColor: "white",
                       paddingHorizontal: -3,
                       shadowColor: "#000",
@@ -94,8 +91,7 @@ export default function App() {
                       shadowRadius: 2,
                       elevation: 3,
                       width: 40,
-                      // color: COLORS.primaryGreen,
-                      transform: [{ scale: 1.3 }],
+                      transform: [{ scale: 1.4 }],
                       borderRadius: 100,
                     },
                   }}
@@ -110,15 +106,10 @@ export default function App() {
           </Stack.Screen>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen
-            name="WelcomeSport"
-            component={WelcomeSport}
-            initialParams={{ isAddEvent: false }}
-          />
+          <Stack.Screen name="WelcomeSport" component={WelcomeSport} />
           <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
           <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
           <Stack.Screen name="onBoarding" component={BoardingScreen} />
-          <Stack.Screen name="addEvent" component={AddEventFormScreen} />
           <Stack.Screen
             name="eventRoom"
             component={EventRoom}
