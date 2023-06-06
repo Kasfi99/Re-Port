@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Divider } from "../components/Divider";
-
+import axios from "axios";
 export default function RegisterScreen() {
   const navigation = useNavigation();
   const [email, onChangeEmail] = React.useState("");
@@ -13,22 +13,21 @@ export default function RegisterScreen() {
   const [username, setUsername] = React.useState("");
 
   const handleInput = async () => {
-    let newObj = {
-      email: email,
-    };
-
     try {
-      await AsyncStorage.setItem("Email", JSON.stringify(newObj));
-      console.log("Data stored successfully");
+      const { data } = await axios.post(
+        "https://feff-139-228-111-126.ngrok-free.app/user",
+        { name, username, email, password }
+      );
+      console.log(data, "<<<<<");
     } catch (error) {
-      console.log("Failed to store data:", error);
+      console.log(error);
+    } finally {
+      onChangeEmail("");
+      onChangePassword("");
+      setName("");
+      setUsername("");
+      return navigation.navigate("Login");
     }
-
-    onChangeEmail("");
-    onChangePassword("");
-    setName("");
-    setUsername("");
-    return navigation.navigate("Login");
   };
 
   const handleLogin = () => {
@@ -62,7 +61,7 @@ export default function RegisterScreen() {
           style={styles.usernameInput}
           onChangeText={(text) => setUsername(text)}
           value={username}
-          placeholder="Choose Your Cool Name Here"
+          placeholder="Cool UserName Here"
         />
       </View>
 
@@ -71,7 +70,7 @@ export default function RegisterScreen() {
           style={styles.Emailinput}
           onChangeText={(text) => onChangeEmail(text)}
           value={email}
-          placeholder="Set Your Awesome Email Here!"
+          placeholder="Awesome Email Here!"
         />
       </View>
 

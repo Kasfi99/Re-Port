@@ -4,16 +4,34 @@ import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Divider } from "../components/Divider";
+import axios from "axios";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
 
-  const handleInput = () => {
-    onChangeEmail("");
-    onChangePassword("");
-    return navigation.navigate("WelcomeSport");
+  const handleInput = async () => {
+    try {
+      const { data } = await axios.post(
+        "https://feff-139-228-111-126.ngrok-free.app/user/login",
+        { email, password }
+      );
+
+      await AsyncStorage.setItem(
+        "access_token",
+        JSON.stringify(data.access_token)
+      );
+      console.log("Data stored successfully");
+
+      console.log(data, "<<<<<<");
+    } catch (error) {
+      console.log("Failed to login & store data: ", error);
+    } finally {
+      onChangeEmail("");
+      onChangePassword("");
+      return navigation.navigate("WelcomeSport");
+    }
   };
 
   const handleRegister = () => {
