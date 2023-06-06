@@ -185,7 +185,6 @@ export default function UserProfile() {
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 0 }).current;
 
-  const isLastSlide = currentIndex === dummyData.length - 1;
   return (
     <ScrollView>
       <SafeAreaView style={{ flex: 1 }}>

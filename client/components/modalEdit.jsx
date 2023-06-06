@@ -6,19 +6,38 @@ import {
   Text,
   Pressable,
   View,
+  Image,
   TextInput,
   TouchableOpacity,
 } from "react-native";
 import COLORS from "../consts/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import * as ImagePicker from "expo-image-picker";
 
 const ModalEdit = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [image, setImage] = useState(null);
 
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("Male");
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const handleSubmitEdit = async () => {
     setName("");
@@ -71,6 +90,56 @@ const ModalEdit = () => {
                   marginLeft: "10%",
                 }}
               >
+                <Pressable onPress={() => pickImage()}>
+                  {!image && (
+                    <Image
+                      source={{ uri: "https://via.placeholder.com/150" }}
+                      style={{
+                        width: 85,
+                        height: 85,
+                        borderRadius: 50,
+                        marginLeft: "32%",
+                        marginRight: 20,
+                        marginTop: 10,
+                      }}
+                    />
+                  )}
+                  {image && (
+                    <Image
+                      source={{ uri: image }}
+                      style={{
+                        width: 85,
+                        height: 85,
+                        borderRadius: 50,
+                        marginLeft: "32%",
+                        marginRight: 20,
+                        marginTop: 10,
+                      }}
+                    />
+                  )}
+                  <Ionicons
+                    name="create"
+                    size={32}
+                    style={{
+                      color: COLORS.primaryGreen,
+                      position: "relative",
+                      top: -25,
+                      left: 185,
+                    }}
+                  />
+                </Pressable>
+                <Text
+                  style={[
+                    styles.inputText,
+                    {
+                      position: "relative",
+                      top: -20,
+                      left: 80,
+                    },
+                  ]}
+                >
+                  Change Profile Image
+                </Text>
                 <View>
                   <Text style={styles.inputText}>Name</Text>
                   <TextInput
@@ -112,7 +181,7 @@ const ModalEdit = () => {
                 <View
                   style={{
                     backgroundColor: "white",
-                    width: "68%",
+                    width: 300,
                     height: 40,
                     flexDirection: "row",
                     borderRadius: 10,
@@ -124,7 +193,7 @@ const ModalEdit = () => {
                     style={{
                       backgroundColor:
                         gender === "Male" ? COLORS.primaryGreen : "white",
-                      width: "60%",
+                      width: 140,
                       height: "100%",
                       borderRadius: 10,
                       borderTopRightRadius: 0,
@@ -149,7 +218,7 @@ const ModalEdit = () => {
                     style={{
                       backgroundColor:
                         gender === "Female" ? COLORS.primaryGreen : "white",
-                      width: "70%",
+                      width: 160,
                       height: "100%",
                       borderRadius: 10,
                       borderTopLeftRadius: 0,
@@ -162,7 +231,7 @@ const ModalEdit = () => {
                         fontFamily: "IBM-Plex-Sans",
                         fontSize: 16,
                         position: "absolute",
-                        color: gender === "Female" ? "white" : "black",
+                        color: gender === "Female" ? "black" : "black",
                         fontWeight: gender === "Female" ? "bold" : "400",
                         top: 8,
                         left: 10,
@@ -181,8 +250,8 @@ const ModalEdit = () => {
                   style={{
                     color: "red",
                     position: "absolute",
-                    right: -5,
-                    top: -420,
+                    right: -10,
+                    top: -570,
                   }}
                 />
               </Pressable>
@@ -229,11 +298,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    marginTop: -30,
   },
   modalView: {
     width: "95%",
-    height: 500,
+    height: 630,
     backgroundColor: "#191B23",
     borderRadius: 20,
 
@@ -248,10 +317,10 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 70,
-    height: 20,
+    height: 25,
     borderRadius: 20,
     position: "absolute",
-    top: -20,
+    top: 30,
     left: -70,
   },
   buttonOpen: {
@@ -264,6 +333,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
     textAlign: "center",
+    marginTop: 2,
   },
   modalText: {
     marginBottom: 15,
