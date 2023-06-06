@@ -47,7 +47,7 @@ export default function RegisterScreen() {
     try {
       console.log("hei");
       const { data } = await axios({
-        url: `https://87da-139-228-111-126.ngrok-free.app/user/googleLogin`,
+        url: `https://932d-139-228-111-126.ngrok-free.app/user/googleLogin`,
         method: "POST",
         headers: {
           googletoken: token,
@@ -80,7 +80,7 @@ export default function RegisterScreen() {
   const handleInput = async () => {
     try {
       const { data } = await axios.post(
-        "https://87da-139-228-111-126.ngrok-free.app/user",
+        "https://932d-139-228-111-126.ngrok-free.app/user",
         { name, username, email, password }
       );
       console.log(data, "<<<<<");

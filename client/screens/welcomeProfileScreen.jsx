@@ -9,6 +9,8 @@ import {
   Touchable,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function WelcomeProfile() {
   const [profiles, setProfiles] = useState([
@@ -32,18 +34,30 @@ export default function WelcomeProfile() {
   const navigation = useNavigation();
 
   const handleLocation = () => {
-    //write here for location
+    //write here for lo.name
   };
 
-  const onSubmit = () => {
-    const data = profiles.find((el) => el.isPressed === true);
-    let newObj = {
-      id: data.id,
-      name: data.name,
-    };
-    console.log(">>>>", newObj, "<<<<");
-    // write here for onSubmit
-    navigation.navigate("WelcomeLevel");
+  const onSubmit = async () => {
+    try {
+      const gender = profiles.find((el) => el.isPressed === true);
+      // console.log(gender.name);
+
+      const dataString = await AsyncStorage.getItem("access_token");
+      const access_token = JSON.parse(dataString);
+
+      // console.log(access_token);
+      const { data } = await axios.put(
+        "https://932d-139-228-111-126.ngrok-free.app/user/editGenderProf",
+        { gender: gender.name },
+        { headers: { access_token } }
+      );
+
+      console.log(data, "<<<< masuk");
+      // write here for onSubmit
+      // navigation.navigate("WelcomeLevel");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

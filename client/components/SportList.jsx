@@ -163,12 +163,13 @@ export default function SportList() {
         });
       });
 
-      await AsyncStorage.setItem("sportData", JSON.stringify(data));
+      console.log(data);
+      // await AsyncStorage.setItem("sportData", JSON.stringify(data));
       console.log("Data stored successfully");
     } catch (error) {
       console.log(error);
     } finally {
-      navigation.navigate("WelcomeProfile");
+      // navigation.navigate("WelcomeProfile");
     }
   };
 
