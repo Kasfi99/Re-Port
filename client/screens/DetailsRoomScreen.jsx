@@ -89,7 +89,8 @@ export default function DetailsRoom({ navigation, route }) {
           headers: {
             "Content-Type": "application/json",
 
-            access_token: accessToken, // 'Content-Type': 'application/x-www-form-urlencoded',
+            access_token:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2YwZmUwZDI4OGJkYjM4ZjBjN2E2ZCIsImVtYWlsIjoiYmFtYmFuZ0BtYWlsLmNvbSIsImlhdCI6MTY4NjA3Mzg1MH0.0dxO5Fqq6Zd47I-szt1u0L7bOd0ofBXmVo8RXyYoYfo", // 'Content-Type': 'application/x-www-form-urlencoded',
           },
         }
       );
