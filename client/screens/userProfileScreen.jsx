@@ -10,12 +10,14 @@ import {
   Animated,
   FlatList,
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import COLORS from "../consts/colors";
 import CardHome from "../components/cards";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ModalEdit from "../components/modalEdit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const dummyData = [
   {
     id: 1,
@@ -167,6 +169,7 @@ const dummyData2 = [
 
 export default function UserProfile() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [image, setImage] = useState(null);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
 
@@ -185,6 +188,22 @@ export default function UserProfile() {
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 0 }).current;
 
+  const getImage = async () => {
+    try {
+      const dataString = await AsyncStorage.getItem("profile_picture");
+      const profPict = JSON.parse(dataString);
+      // console.log(profPict, "<<<<<");
+
+      setImage(<Image source={{ uri: profPict }} style={styles.icon} />);
+    } catch (error) {
+      console.log("failed to retrieve data : " + error);
+    }
+  };
+
+  useEffect(() => {
+    getImage();
+  }, []);
+
   return (
     <ScrollView>
       <SafeAreaView style={{ flex: 1 }}>
@@ -202,17 +221,14 @@ export default function UserProfile() {
               alignItems: "center",
             }}
           >
-            <Image
-              source={{ uri: "https://via.placeholder.com/150" }}
-              style={{
-                width: 65,
-                height: 65,
-                borderRadius: 50,
-                marginLeft: 20,
-                marginRight: 20,
-                marginTop: 30,
-              }}
-            />
+            {image ? (
+              image
+            ) : (
+              <Image
+                source={{ uri: "https://via.placeholder.com/150" }}
+                style={styles.icon}
+              />
+            )}
             <View
               style={{
                 flex: 1,
@@ -489,4 +505,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
   },
+  icon: {
+    width: 65,
+    height: 65,
+    borderRadius: 50,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 30,
+  },
 });
+
+/*
+---------------Important Note--------
+- Untuk melakukan pengetasan pick image, silahkan download dulu sebuah gambar
+  di ponsel kalian entah melalui google chrome dan semacamnya
+- Ketika melakukan pick image dan ternyata gambarnya belum keganti, coba pick image sekali lagi, seharusnya berganti.
+
+*/

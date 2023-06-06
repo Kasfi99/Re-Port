@@ -14,9 +14,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import COLORS from "../consts/colors";
+import baseUrl from "../consts/ngrokUrl";
 
 export default function WelcomeProfile() {
   const [image, setImage] = useState(null);
+  const [profImage, setProfImage] = useState(null);
 
   console.log(image, "<<<ini images");
   const [profiles, setProfiles] = useState([
@@ -40,7 +42,6 @@ export default function WelcomeProfile() {
   const navigation = useNavigation();
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -50,6 +51,9 @@ export default function WelcomeProfile() {
 
     console.log(result);
 
+    setProfImage(<Image source={{ uri: image }} style={styles.icon} />);
+
+    await AsyncStorage.setItem("profile_picture", JSON.stringify(image));
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -62,21 +66,19 @@ export default function WelcomeProfile() {
   const onSubmit = async () => {
     try {
       const gender = profiles.find((el) => el.isPressed === true);
-      // console.log(gender.name);
 
       const dataString = await AsyncStorage.getItem("access_token");
       const access_token = JSON.parse(dataString);
 
-      // console.log(access_token);
       const { data } = await axios.put(
-        "https://932d-139-228-111-126.ngrok-free.app/user/editGenderProf",
-        { gender: gender.name },
+        `${baseUrl}/user/editGenderProf`,
+        { gender: gender.name, pic: image },
         { headers: { access_token } }
       );
 
-      console.log(data, "<<<< masuk");
+      // console.log(data, "<<<< masuk");
       // write here for onSubmit
-      // navigation.navigate("WelcomeLevel");
+      navigation.navigate("WelcomeLevel");
     } catch (error) {
       console.log(error);
     }
@@ -135,7 +137,11 @@ export default function WelcomeProfile() {
             marginBottom: 20,
           }}
         >
-          {profiles[0].isPressed ? profiles[0].image : profiles[1].image}
+          {image
+            ? profImage
+            : profiles[0].isPressed
+            ? profiles[0].image
+            : profiles[1].image}
         </View>
       </TouchableOpacity>
       <Ionicons
@@ -318,3 +324,11 @@ const styles = StyleSheet.create({
     left: 25,
   },
 });
+
+/*
+---------------Important Note--------
+- Untuk melakukan pengetasan pick image, silahkan download dulu sebuah gambar
+  di ponsel kalian entah melalui google chrome dan semacamnya
+- Ketika melakukan pick image dan ternyata gambarnya belum keganti, coba pick image sekali lagi, seharusnya berganti.
+
+*/

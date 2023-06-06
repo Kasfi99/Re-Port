@@ -7,6 +7,7 @@ import axios from "axios";
 import { Divider } from "../components/Divider";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
+import baseUrl from "../consts/ngrokUrl";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -47,7 +48,7 @@ export default function LoginScreen() {
     try {
       console.log("hei");
       const { data } = await axios({
-        url: `https://932d-139-228-111-126.ngrok-free.app/user/googleLogin`,
+        url: `${baseUrl}/user/googleLogin`,
         method: "POST",
         headers: {
           googletoken: token,
@@ -81,10 +82,10 @@ export default function LoginScreen() {
         throw new Error("Input Can't be Empty");
       }
 
-      const { data } = await axios.post(
-        "https://932d-139-228-111-126.ngrok-free.app/user/login",
-        { email, password }
-      );
+      const { data } = await axios.post(`${baseUrl}/user/login`, {
+        email,
+        password,
+      });
 
       await AsyncStorage.setItem(
         "access_token",
@@ -135,6 +136,7 @@ export default function LoginScreen() {
           onChangeText={(text) => onChangePassword(text)}
           value={password}
           placeholder="Your Password"
+          secureTextEntry={true}
         />
       </View>
 
@@ -197,7 +199,14 @@ export default function LoginScreen() {
         >
           Don't have an account yet?
         </Text>
-        <View style={{ flexDirection: "row", marginLeft: "23%" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            marginLeft: "23%",
+            position: "absolute",
+            bottom: 0,
+          }}
+        >
           <TouchableOpacity onPress={handleRegister}>
             <Text
               style={{
