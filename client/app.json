@@ -15,16 +15,30 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.chrischangki.GOOGLE",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "673981833907-f3pnklja2jc6a5l55upagun0q768lhod.apps.googleusercontent.com"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.chrischangki.GOOGLE",
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyBEbHH3KnWnnvBxgufTiOHykl9kGwOevLs",
+          "certificateHash": "239F3C2073CBAFB661A4A0219AE17DE135C05FED"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "scheme": ["myGoogleApp"]
   }
 }

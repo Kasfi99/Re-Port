@@ -1,11 +1,76 @@
-import React from "react";
-import { Text, View, TextInput, StyleSheet } from "react-native";
+import * as React from "react";
+import { Text, View, TextInput, StyleSheet, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Divider } from "../components/Divider";
 import axios from "axios";
+import { Divider } from "../components/Divider";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+
+WebBrowser.maybeCompleteAuthSession();
+
 export default function RegisterScreen() {
+  //GOOGLE LOGIN
+  const [userInfo, setUserInfo] = React.useState(null);
+  const [request, response, promtAsync] = Google.useIdTokenAuthRequest({
+    // responseType: "id_token",
+    androidClientId:
+      "673981833907-hpcfc6nvmlatirbpse2pc6a64rbc63om.apps.googleusercontent.com",
+    iosClientId:
+      "673981833907-f3pnklja2jc6a5l55upagun0q768lhod.apps.googleusercontent.com",
+    expoClientId:
+      "673981833907-c2ggq92tb6lt4esirpdnekca34q6kmaj.apps.googleusercontent.com",
+    webClientId:
+      "673981833907-8sod9lmftobam1ec9ie0sg37a9a6hbnu.apps.googleusercontent.com",
+  });
+
+  React.useEffect(() => {
+    // console.log(response);
+    handleSignInWithGoogle();
+  }, [response]);
+
+  async function handleSignInWithGoogle() {
+    console.log("MASUK PAK");
+    // await AsyncStorage.removeItem("@user");
+
+    if (response?.type === "success") {
+      await getUserInfo(response.params.id_token);
+    } else if (response?.type === "error") {
+      navigation.navigate("Register");
+    }
+  }
+
+  const getUserInfo = async (token) => {
+    console.log("hei wak");
+    if (!token) return;
+    try {
+      console.log("hei");
+      const { data } = await axios({
+        url: `https://87da-139-228-111-126.ngrok-free.app/user/googleLogin`,
+        method: "POST",
+        headers: {
+          googletoken: token,
+        },
+      });
+      // console.log(data, "<< ini data");
+      // await AsyncStorage.setItem("@user", JSON.stringify(data));
+      await AsyncStorage.setItem(
+        "access_token",
+        JSON.stringify(data.access_token)
+      );
+
+      if (data.score > 0) {
+        navigation.navigate("Main", { screen: "Home" });
+      } else {
+        navigation.navigate("WelcomeSport");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //GOOGLE LOGIN END
+
   const navigation = useNavigation();
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
@@ -15,7 +80,7 @@ export default function RegisterScreen() {
   const handleInput = async () => {
     try {
       const { data } = await axios.post(
-        "https://feff-139-228-111-126.ngrok-free.app/user",
+        "https://87da-139-228-111-126.ngrok-free.app/user",
         { name, username, email, password }
       );
       console.log(data, "<<<<<");
@@ -129,10 +194,19 @@ export default function RegisterScreen() {
 
       <TouchableOpacity
         style={styles.googleButton}
-        onPress={() => navigation.navigate("Login")}
+        onPress={async () => {
+          await promtAsync();
+          // return navigation.navigate("WelcomeSport");
+        }}
       >
         <Text style={styles.loginText}>Register by Google</Text>
       </TouchableOpacity>
+      {/* <Button
+        title="delete localStorage"
+        onPress={() => AsyncStorage.removeItem("@user")}
+      />
+
+      <Text>{JSON.stringify(userInfo, null, 2)}</Text> */}
 
       <View style={{ width: "95%", position: "absolute", bottom: 30 }}>
         <Text
