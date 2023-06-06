@@ -24,6 +24,38 @@ export default function UserProfile() {
   const [myUpcomingEvents, setUpcomingEvents] = useState([]);
   const [myPreviousEvents, setmyPreviousEvents] = useState([]);
 
+  useEffect(() => {
+    async function getMyEvents() {
+      try {
+        const response = await fetch(
+          `https://a810-139-228-111-126.ngrok-free.app/event/myevents`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              access_token:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODU5MDM2MTB9.wTXqGh0tNPxL4gWfOY4KQmkjYdEfCCbH6OiE93pXvio",
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+        const data = await response.json();
+        // console.log(typeof data);
+        if (data.upcomingEvents) {
+          console.log("MASHOOOk");
+          setUpcomingEvents(data.upcomingEvents);
+        }
+        // } else if (data?.previousEvent) {
+        //   setmyPreviousEvents(data.previousEvent);
+        // }
+        // console.log(data.upcomingEvents, "<<<");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getMyEvents();
+  }, []);
+
+  // console.log(myUpcomingEvents, "<<");
   const handleEdit = () => {
     console.log("bisa edit");
   };
@@ -245,16 +277,21 @@ export default function UserProfile() {
             Current Activities
           </Text>
           <View>
+            {console.log(myUpcomingEvents, "<<<")}
             <FlatList
               data={myUpcomingEvents}
               renderItem={({ item }) => (
+                // <Text>{item.courtPrice}</Text>
                 <CardHome item={item} horizontal={true} />
               )}
-              horizontal
+              horizontal={true}
               showsHorizontalScrollIndicator={false}
               // pagingEnabled
               // bounces={false}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => {
+                // console.log(item._id, "key");
+                return item._id;
+              }}
               onScroll={Animated.event(
                 [{ nativeEvent: { contentOffset: { x: scrollX } } }],
                 { useNativeDriver: false }
@@ -283,10 +320,10 @@ export default function UserProfile() {
               marginBottom: 80,
             }}
           >
-            <FlatList
+            {/* <FlatList
               data={myPreviousEvents} //kirim beda data
               renderItem={({ item }) => (
-                <CardHome item={item} horizontal={true} />
+                <CardHome key={item.id} item={item} horizontal={true} />
               )}
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -301,7 +338,7 @@ export default function UserProfile() {
               onViewableItemsChanged={viewableItemsChanged}
               viewabilityConfig={viewConfig}
               ref={slidesRef}
-            />
+            /> */}
           </View>
         </View>
       </SafeAreaView>

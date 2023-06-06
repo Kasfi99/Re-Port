@@ -45,7 +45,7 @@ export default function DetailsRoom({ route }) {
       try {
         console.log("useEffect pertama Masuk Ke Try");
         const response = await fetch(
-          `https://8530-139-228-111-126.ngrok-free.app/event/${id}`,
+          `https://a810-139-228-111-126.ngrok-free.app/event/${id}`,
           {
             headers: {
               "Content-Type": "application/json",

@@ -147,6 +147,7 @@ export default function AddEventFormScreen({ navigation, route }) {
     console.log(eventData, "<< KIRIM DATA");
 
     try {
+<<<<<<< HEAD
       const { data } = await axios({
         method: "get",
         url: "https://b5ad-118-99-106-71.ngrok-free.app/eventlist",
@@ -169,6 +170,35 @@ export default function AddEventFormScreen({ navigation, route }) {
       }
     
       
+=======
+      const response = await fetch(
+        "https://a810-139-228-111-126.ngrok-free.app/event",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            access_token:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODU5MDM2MTB9.wTXqGh0tNPxL4gWfOY4KQmkjYdEfCCbH6OiE93pXvio",
+          },
+          body: JSON.stringify({
+            title: eventTitle,
+            location: JSON.stringify(selectedLocation),
+            date: JSON.stringify(eventData.date),
+            courtPrice,
+            limitParticipants: participants,
+            sport,
+          }),
+        }
+      );
+      const data = await response.json();
+      // console.log(data, "<<add data");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      navigation.navigate("Home");
+    }
+  };
+>>>>>>> 031bd08e39f300aa11e30f4cee3459a68b6453eb
 
   return (
     <View style={styles.container}>
