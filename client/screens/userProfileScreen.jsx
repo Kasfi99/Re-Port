@@ -39,18 +39,23 @@ export default function UserProfile() {
           }
         );
         const data = await response.json();
+        // console.log(typeof data);
         if (data.upcomingEvents) {
+          console.log("MASHOOOk");
           setUpcomingEvents(data.upcomingEvents);
-        } else if (data.previousEvent) {
-          setmyPreviousEvents(data.previousEvent);
         }
-        // console.log(data, "<<<");
+        // } else if (data?.previousEvent) {
+        //   setmyPreviousEvents(data.previousEvent);
+        // }
+        // console.log(data.upcomingEvents, "<<<");
       } catch (error) {
         console.log(error);
       }
     }
     getMyEvents();
   }, []);
+
+  // console.log(myUpcomingEvents, "<<");
   const handleEdit = () => {
     console.log("bisa edit");
   };
@@ -272,16 +277,21 @@ export default function UserProfile() {
             Current Activities
           </Text>
           <View>
+            {console.log(myUpcomingEvents, "<<<")}
             <FlatList
               data={myUpcomingEvents}
               renderItem={({ item }) => (
+                // <Text>{item.courtPrice}</Text>
                 <CardHome item={item} horizontal={true} />
               )}
-              horizontal
+              horizontal={true}
               showsHorizontalScrollIndicator={false}
               // pagingEnabled
               // bounces={false}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => {
+                // console.log(item._id, "key");
+                return item._id;
+              }}
               onScroll={Animated.event(
                 [{ nativeEvent: { contentOffset: { x: scrollX } } }],
                 { useNativeDriver: false }
@@ -310,10 +320,10 @@ export default function UserProfile() {
               marginBottom: 80,
             }}
           >
-            <FlatList
+            {/* <FlatList
               data={myPreviousEvents} //kirim beda data
               renderItem={({ item }) => (
-                <CardHome item={item} horizontal={true} />
+                <CardHome key={item.id} item={item} horizontal={true} />
               )}
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -328,7 +338,7 @@ export default function UserProfile() {
               onViewableItemsChanged={viewableItemsChanged}
               viewabilityConfig={viewConfig}
               ref={slidesRef}
-            />
+            /> */}
           </View>
         </View>
       </SafeAreaView>

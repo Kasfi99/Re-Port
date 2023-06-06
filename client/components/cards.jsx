@@ -249,9 +249,10 @@ export default function CardHome({ filter, item, horizontal }) {
             );
           })}
 
+        {console.log(item, "iteeem")}
         {horizontal && item && (
           <View
-            key={item.id}
+            // key={item.id}
             style={{
               width: "85%",
               backgroundColor: "white",
@@ -273,7 +274,7 @@ export default function CardHome({ filter, item, horizontal }) {
                 marginLeft: 10,
               }}
             >
-              {item.sport} Meetup
+              {item.sport?.name} Meetup
             </Text>
             <Text
               style={{
@@ -284,7 +285,7 @@ export default function CardHome({ filter, item, horizontal }) {
                 width: "95%",
               }}
             >
-              {item.name}
+              {item.creator?.name}
             </Text>
             <View
               style={{ flexDirection: "row", marginLeft: 10, marginTop: 5 }}
