@@ -10,7 +10,7 @@ import {
   Animated,
   FlatList,
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import COLORS from "../consts/colors";
 import CardHome from "../components/cards";
@@ -169,6 +169,8 @@ export default function UserProfile() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
+  const [myUpcomingEvents, setUpcomingEvents] = useState([]);
+  const [myPreviousEvents, setmyPreviousEvents] = useState([]);
 
   const handleEdit = () => {
     console.log("bisa edit");
@@ -186,6 +188,37 @@ export default function UserProfile() {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 0 }).current;
 
   const isLastSlide = currentIndex === dummyData.length - 1;
+
+  useEffect(() => {
+    async function myEvents() {
+      try {
+        const response = await fetch(
+          `https://8530-139-228-111-126.ngrok-free.app/event/myevents`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              access_token:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODU5MDM2MTB9.wTXqGh0tNPxL4gWfOY4KQmkjYdEfCCbH6OiE93pXvio",
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+        const data = await response.json();
+        // console.log(data.previousEvent, "******");
+        if (data.upcomingEvents) {
+          setUpcomingEvents(data.upcomingEvents);
+        } else if (data.previousEvent) {
+          setmyPreviousEvents(data.previousEvent);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    myEvents();
+  }, []);
+
+  // console.log(myUpcomingEvents, "<<<<<");
+
   return (
     <ScrollView>
       <SafeAreaView style={{ flex: 1 }}>

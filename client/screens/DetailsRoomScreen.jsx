@@ -16,21 +16,21 @@ import COLORS from "../consts/colors";
 
 export default function DetailsRoom({ route }) {
   const { id } = route.params;
+  const currentParticipant = 1;
+  const userId = 4;
   // console.log(id, "<<<<<");
   const [perEvent, setPerEvent] = useState({});
   const [creatorId, setCreatorId] = useState();
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [address, setAddress] = useState("");
+  const [formatDate, setFormattedDate] = useState("");
   const [region, setRegion] = useState({
     latitude: 0,
     longitude: 0,
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   });
-
-  const currentParticipant = 1;
-  const userId = 1;
 
   const handleOpenMaps = () => {
     const { latitude, longitude } = region;
@@ -41,9 +41,11 @@ export default function DetailsRoom({ route }) {
 
   useEffect(() => {
     async function fetchByEvent() {
+      console.log("useEffect pertama dijalankan");
       try {
+        console.log("useEffect pertama Masuk Ke Try");
         const response = await fetch(
-          `https://868c-2404-8000-1001-2edf-c58d-cc18-e93-19dd.ngrok-free.app/event/${id}`,
+          `https://8530-139-228-111-126.ngrok-free.app/event/${id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -54,7 +56,8 @@ export default function DetailsRoom({ route }) {
           }
         );
         const data = await response.json();
-        // console.log(data.date, " DATA DATE <<<");
+        // console.log(data.date, " DATA SEMUA <<<");
+        console.log(data, "Data dari API");
         setPerEvent(data);
         if (data.location) {
           const location = JSON.parse(data.location);
@@ -69,6 +72,32 @@ export default function DetailsRoom({ route }) {
             longitudeDelta: 0.0121,
           });
         }
+        // console.log(
+        //   "Sebelum kondisi if",
+        //   data.date,
+        //   typeof data.date,
+        //   JSON.parse(data.date).start,
+        //   data.date.hasOwnProperty("start"),
+        //   data.date.hasOwnProperty("end"),
+        //   data.date["start"],
+        //   data.date["end"]
+        // );
+
+        let date = JSON.parse(data.date);
+
+        if (data.date && date.start && date.end) {
+          const startDateTime = moment.utc(date.start);
+          const endDateTime = moment.utc(date.end);
+
+          const startMoment = startDateTime.format("dddd, D MMMM");
+          const startTime = startDateTime.format("hh.mm A");
+          const endTime = endDateTime.format("hh.mm A");
+
+          const output = `${startMoment} | ${startTime} - ${endTime}`;
+          console.log(output, "ININIHHH");
+          setFormattedDate(output);
+        }
+
         if (data.creator) {
           setCreatorId(data.creator._id);
         }
@@ -78,14 +107,6 @@ export default function DetailsRoom({ route }) {
     }
     fetchByEvent();
   }, []);
-  const date = moment(perEvent.date).format("dddd, D MMMM");
-  // console.log(perEvent.date, "<<< DATENYA ");
-  const startTime = moment(perEvent.startTime).format("hh.mm A");
-  const endTime = moment(perEvent.endTime).format("hh.mm A");
-  const output = `${date} | ${startTime} - ${endTime}`;
-  console.log(output, "<<< OUTPUT");
-  // console.log(creatorId, "<<");
-  // console.log(perEvent);
 
   return (
     <ScrollView>
@@ -106,7 +127,7 @@ export default function DetailsRoom({ route }) {
           </View>
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.titleDesc}>Date</Text>
-            <Text style={{ fontSize: 20, fontWeight: 500 }}>{date}</Text>
+            <Text style={{ fontSize: 20, fontWeight: 500 }}>{formatDate}</Text>
           </View>
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.titleDesc}>Location</Text>

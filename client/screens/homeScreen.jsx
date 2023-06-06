@@ -29,6 +29,22 @@ export default function HomeScreen() {
     console.log("Ayo kita see all");
   };
 
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch(
+          "https://8530-139-228-111-126.ngrok-free.app/eventlist"
+        );
+        const data = await response.json(); // parsing respons JSON
+        // console.log(data); // hasil respons JSON
+        // setEvents(data); // simpan data ke state events
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchEvents();
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View>
