@@ -49,6 +49,17 @@ export default function App() {
     <View style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen
+            name="WelcomeSport"
+            component={WelcomeSport}
+            initialParams={{ isAddEvent: false }}
+          />
+          <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
+          <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
+          <Stack.Screen name="onBoarding" component={BoardingScreen} />
+          <Stack.Screen name="addEvent" component={AddEventFormScreen} />
           <Stack.Screen name="Main" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator
@@ -80,6 +91,7 @@ export default function App() {
                 <Tab.Screen
                   name="AddSport"
                   component={AddSport}
+                  initialParams={{ isAddEvent: false }}
                   options={{
                     tabBarIconStyle: {
                       position: "relative",
@@ -105,13 +117,6 @@ export default function App() {
               </Tab.Navigator>
             )}
           </Stack.Screen>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="WelcomeSport" component={WelcomeSport} />
-          <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
-          <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
-          <Stack.Screen name="onBoarding" component={BoardingScreen} />
-          <Stack.Screen name="addEvent" component={AddEventFormScreen} />
           <Stack.Screen
             name="eventRoom"
             component={EventRoom}

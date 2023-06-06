@@ -140,37 +140,37 @@ export default function SportList() {
   };
 
   const handleSubmit = async () => {
-    let data = [];
-    sportList.forEach((el) => {
-      if (el.isChecked) {
-        let newObj = {
-          id: el.id,
-          name: el.name,
-          isPressed: "Beginner",
-        };
-        data.push(newObj);
-        el.isChecked = false;
-      }
-    });
-
-    setSportList((prevSportList) => {
-      return prevSportList.map((sport) => {
-        return {
-          ...sport,
-          isChecked: false,
-        };
-      });
-    });
-
-    // Store the data in AsyncStorage
     try {
-      await AsyncStorage.setItem("sportData", JSON.stringify(data));
+      let data = [];
+      sportList.forEach((el) => {
+        if (el.isChecked) {
+          let newObj = {
+            id: el.id,
+            name: el.name,
+            isPressed: "Beginner",
+          };
+          data.push(newObj);
+          el.isChecked = false;
+        }
+      });
+
+      setSportList((prevSportList) => {
+        return prevSportList.map((sport) => {
+          return {
+            ...sport,
+            isChecked: false,
+          };
+        });
+      });
+
+      console.log(data);
+      // await AsyncStorage.setItem("sportData", JSON.stringify(data));
       console.log("Data stored successfully");
     } catch (error) {
-      console.log("Failed to store data:", error);
+      console.log(error);
+    } finally {
+      navigation.navigate("WelcomeProfile");
     }
-
-    navigation.navigate("WelcomeProfile");
   };
 
   return (

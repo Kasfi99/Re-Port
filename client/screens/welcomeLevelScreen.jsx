@@ -26,6 +26,8 @@ export default function WelcomeLevel({ navigation }) {
     }
   };
 
+  console.log(level)
+
   const handleLevelPress = (index, value) => {
     setLevel((prevLevel) => {
       const updatedLevel = [...prevLevel];

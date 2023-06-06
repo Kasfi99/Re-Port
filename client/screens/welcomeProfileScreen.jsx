@@ -9,8 +9,16 @@ import {
   Touchable,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import axios from "axios";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
+import COLORS from "../consts/colors";
 
 export default function WelcomeProfile() {
+  const [image, setImage] = useState(null);
+
+  console.log(image, "<<<ini images");
   const [profiles, setProfiles] = useState([
     {
       id: 1,
@@ -31,19 +39,47 @@ export default function WelcomeProfile() {
   ]);
   const navigation = useNavigation();
 
-  const handleLocation = () => {
-    //write here for location
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
   };
 
-  const onSubmit = () => {
-    const data = profiles.find((el) => el.isPressed === true);
-    let newObj = {
-      id: data.id,
-      name: data.name,
-    };
-    console.log(">>>>", newObj, "<<<<");
-    // write here for onSubmit
-    navigation.navigate("WelcomeLevel");
+  const handleLocation = () => {
+    //write here for lo.name
+  };
+
+  const onSubmit = async () => {
+    try {
+      const gender = profiles.find((el) => el.isPressed === true);
+      // console.log(gender.name);
+
+      const dataString = await AsyncStorage.getItem("access_token");
+      const access_token = JSON.parse(dataString);
+
+      // console.log(access_token);
+      const { data } = await axios.put(
+        "https://932d-139-228-111-126.ngrok-free.app/user/editGenderProf",
+        { gender: gender.name },
+        { headers: { access_token } }
+      );
+
+      // console.log(data, "<<<< masuk");
+      // write here for onSubmit
+      navigation.navigate("WelcomeLevel");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -85,27 +121,40 @@ export default function WelcomeProfile() {
       >
         Gender
       </Text>
-      <View
+      <TouchableOpacity onPress={() => pickImage()}>
+        <View
+          style={{
+            height: 180,
+            width: 180,
+            borderRadius: 100,
+            borderColor: "black",
+            borderWidth: 3,
+            overflow: "hidden",
+            marginLeft: "23%",
+            marginTop: 30,
+            marginBottom: 20,
+          }}
+        >
+          {profiles[0].isPressed ? profiles[0].image : profiles[1].image}
+        </View>
+      </TouchableOpacity>
+      <Ionicons
+        name="create"
+        size={40}
         style={{
-          height: 180,
-          width: 180,
-          borderRadius: 100,
-          borderColor: "black",
-          borderWidth: 3,
-          overflow: "hidden",
-          marginLeft: "23%",
-          marginTop: 30,
-          marginBottom: 20,
+          color: COLORS.primaryGreen,
+          position: "relative",
+          top: -40,
+          left: 230,
         }}
-      >
-        {profiles[0].isPressed ? profiles[0].image : profiles[1].image}
-      </View>
+        onPress={() => pickImage()}
+      />
       <View
         style={{
           width: "60%",
           flexDirection: "row",
           marginLeft: "18%",
-          marginTop: 20,
+          marginTop: 0,
         }}
       >
         <TouchableOpacity
