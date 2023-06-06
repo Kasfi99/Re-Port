@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import COLORS from "../consts/colors";
 import CardHome from "../components/cards";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
+import ModalEdit from "../components/modalEdit";
 const dummyData = [
   {
     id: 1,
@@ -338,28 +338,8 @@ export default function UserProfile() {
                 gap: 10,
               }}
             >
-              <TouchableOpacity
-                style={{
-                  backgroundColor: COLORS.primaryGreen,
-                  width: 70,
-                  height: 25,
-                  paddingHorizontal: 6,
-                  borderRadius: 20,
-                }}
-                onPress={() => handleEdit()}
-              >
-                <Text
-                  style={{
-                    fontFamily: "IBM-Plex-Sans",
-                    marginTop: 2,
-                    marginLeft: 17,
-                    fontWeight: "800",
-                    color: "black",
-                  }}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
+              <ModalEdit />
+
               <TouchableOpacity
                 style={{
                   backgroundColor: "#D21312",
