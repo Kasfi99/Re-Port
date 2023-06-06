@@ -22,6 +22,7 @@ import ThankYouScreen from "./screens/thankYouScreen";
 import AdminReview from "./screens/reviewAdminScreen";
 import EventRoom from "./screens/eventRoom";
 import LoginScreen from "./screens/loginScreen";
+import AddSport from "./components/addSport";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,7 +60,7 @@ export default function App() {
                       iconName = "home";
                     } else if (route.name === "Chat") {
                       iconName = "chatbox";
-                    } else if (route.name === "AddEvent") {
+                    } else if (route.name === "AddSport") {
                       iconName = "add-outline";
                     } else if (route.name === "userProfile") {
                       iconName = "person-circle";
@@ -77,8 +78,8 @@ export default function App() {
                   options={{ headerShown: false }}
                 />
                 <Tab.Screen
-                  name="AddEvent"
-                  component={AddEventFormScreen}
+                  name="AddSport"
+                  component={AddSport}
                   options={{
                     tabBarIconStyle: {
                       position: "relative",
@@ -110,6 +111,7 @@ export default function App() {
           <Stack.Screen name="WelcomeProfile" component={WelcomeProfile} />
           <Stack.Screen name="WelcomeLevel" component={WelcomeLevel} />
           <Stack.Screen name="onBoarding" component={BoardingScreen} />
+          <Stack.Screen name="addEvent" component={AddEventFormScreen} />
           <Stack.Screen
             name="eventRoom"
             component={EventRoom}

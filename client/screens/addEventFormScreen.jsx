@@ -148,7 +148,7 @@ export default function AddEventFormScreen({ navigation, route }) {
 
     try {
       const response = await fetch(
-        "https://8530-139-228-111-126.ngrok-free.app/event",
+        "https://a810-139-228-111-126.ngrok-free.app/event",
         {
           method: "POST",
           headers: {
