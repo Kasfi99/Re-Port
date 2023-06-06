@@ -21,7 +21,7 @@ export default function CardHome({ filter, item, horizontal }) {
   const handleJoinEvent = (id) => {
     console.log(id + "Bisa Ditekan");
   };
-  const greenSlots = item?.participant.length;
+  const greenSlots = !item?.participant ? 0 : item?.participant.length;
   const remainingSlots = 8 - greenSlots;
 
   // FUNCTION VALIDATION UNTUK TRIGGER IS EVENT DONE
@@ -322,7 +322,7 @@ export default function CardHome({ filter, item, horizontal }) {
                   fontFamily: "IBM-Plex-Sans",
                 }}
               >
-                {item.participant.length}/8 Playing
+                {greenSlots}/8 Playing
               </Text>
               <Text
                 style={{

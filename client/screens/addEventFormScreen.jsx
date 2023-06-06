@@ -18,7 +18,6 @@ const GOOGLE_PLACES_API_KEY = "AIzaSyDJCBwVAW27Z24KW63gvImv4NZVNIwaqSA";
 export default function AddEventFormScreen({ navigation, route }) {
   // console.log(route.params.sportName, "*(&**^&*^*&");
   const sport = route.params.sportName;
-  const SERVER_URL = "http://localhost:3000";
   const [eventTitle, setEventTitle] = useState("");
   const [participants, setParticipants] = useState(1);
   const [courtPrice, setCourtPrice] = useState("");
