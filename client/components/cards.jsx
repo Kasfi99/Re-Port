@@ -12,16 +12,50 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { CardDivider } from "./Divider";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CardHome({ filter, item, idEvent, horizontal }) {
   // console.log(idEvent, "ID DI USER PROFILE");
   const navigation = useNavigation();
   const [filteredData, setFilteredData] = useState();
   const [events, setEvents] = useState([]);
+  const [accessToken, setAccessToken] = useState("");
 
-  const handleJoinEvent = (id) => {
-    console.log(id + "Bisa Ditekan");
-  };
+  async function handleJoin(id) {
+    console.log(id, "<<id Handle Join");
+    try {
+      const response = await fetch(
+        `https://5ea3-139-228-111-126.ngrok-free.app/event/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            access_token: accessToken,
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data, "<< Handle Join");
+      navigation.navigate("eventRoom", { id: id });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    getData();
+  }, []);
+
+  async function getData() {
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      setAccessToken(token);
+      // Lakukan sesuatu menggunakan access_token
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const greenSlots = !item?.participant ? 0 : item?.participant.length;
   const remainingSlots = 8 - greenSlots;
 
@@ -217,7 +251,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                       Court Booked - {el.place}
                     </Text>
                   </View>
-                  <TouchableOpacity onPress={() => handleJoinEvent(el.id)}>
+                  <TouchableOpacity onPress={() => handleJoin(el._id)}>
                     <View
                       style={{
                         width: "30%",

@@ -78,7 +78,7 @@ export default function OnBoardingScreen() {
         {isLastSlide && (
           <TouchableOpacity
             activeOpacity={0.6}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate("Main")}
           >
             <View
               style={{

@@ -6,6 +6,7 @@ import {
   Linking,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import moment from "moment";
 import MapView from "react-native-maps";
@@ -13,14 +14,15 @@ import PrimaryButton from "../components/button";
 import { useEffect } from "react";
 import { useState } from "react";
 import COLORS from "../consts/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function DetailsRoom({ route }) {
+export default function DetailsRoom({ navigation, route }) {
   const { id } = route.params;
-  const currentParticipant = 1;
+  const currentParticipant = 4;
   const userId = 4;
   // console.log(id, "<<<<<");
   const [perEvent, setPerEvent] = useState({});
-  const [creatorId, setCreatorId] = useState();
+  const [creator, setCreator] = useState();
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [address, setAddress] = useState("");
@@ -31,6 +33,9 @@ export default function DetailsRoom({ route }) {
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   });
+  const [accessToken, setAccessToken] = useState("");
+  const [currentUserEmail, setCurrentUserEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenMaps = () => {
     const { latitude, longitude } = region;
@@ -39,75 +44,112 @@ export default function DetailsRoom({ route }) {
     Linking.openURL(url);
   };
 
-  useEffect(() => {
-    async function fetchByEvent() {
-      console.log("useEffect pertama dijalankan");
-      try {
-        console.log("useEffect pertama Masuk Ke Try");
-        const response = await fetch(
-          `https://5ea3-139-228-111-126.ngrok-free.app/event/${id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              access_token:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODYwNDU2MTl9.VuMJmgR26rJmsfVQsgqcefisbQ3pynoHKkupnCYMIdU",
-              // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          }
-        );
-        const data = await response.json();
-        // console.log(data.date, " DATA SEMUA <<<");
-        console.log(data, "Data dari API");
-        setPerEvent(data);
-        if (data.location) {
-          const location = JSON.parse(data.location);
-          // console.log(location.address, "LOCATIONN");
-          setAddress(location.address);
-          setLatitude(location.latitude);
-          setLongitude(location.longitude);
-          setRegion({
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-          });
-        }
-        // console.log(
-        //   "Sebelum kondisi if",
-        //   data.date,
-        //   typeof data.date,
-        //   JSON.parse(data.date).start,
-        //   data.date.hasOwnProperty("start"),
-        //   data.date.hasOwnProperty("end"),
-        //   data.date["start"],
-        //   data.date["end"]
-        // );
+  async function getData() {
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      setAccessToken(token);
 
-        let date = JSON.parse(data.date);
-
-        if (data.date && date.start && date.end) {
-          const startDateTime = moment.utc(date.start);
-          const endDateTime = moment.utc(date.end);
-
-          const startMoment = startDateTime.format("dddd, D MMMM");
-          const startTime = startDateTime.format("hh.mm A");
-          const endTime = endDateTime.format("hh.mm A");
-
-          const output = `${startMoment} | ${startTime} - ${endTime}`;
-          console.log(output, "ININIHHH");
-          setFormattedDate(output);
-        }
-
-        if (data.creator) {
-          setCreatorId(data.creator._id);
-        }
-      } catch (error) {
-        console.error(error);
-      }
+      const emailString = await AsyncStorage.getItem("email");
+      const email = JSON.parse(emailString);
+      setCurrentUserEmail(email);
+    } catch (error) {
+      console.log(error);
     }
-    fetchByEvent();
+  }
+  const handleCancel = async () => {
+    try {
+      const response = await fetch(
+        `https://5ea3-139-228-111-126.ngrok-free.app/event/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            access_token: accessToken,
+          },
+        }
+      );
+      const data = await response.json();
+      // console.log(data, "<< Handle Cancel");
+      navigation.navigate("Main");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // console.log(accessToken, "<<EMAIL CURRENT USER");
+  const fetchByEvent = async () => {
+    // console.log("useEffect pertama dijalankan");
+    try {
+      console.log("useEffect pertama Masuk Ke Try");
+      console.log(typeof accessToken, "<<<accessTokennya");
+      const response = await fetch(
+        `https://5ea3-139-228-111-126.ngrok-free.app/event/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+
+            access_token: accessToken, // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+      const data = await response.json();
+      // console.log(data.date, " DATA SEMUA <<<");
+      console.log(data, "Data dari API");
+      setPerEvent(data);
+      if (data.location) {
+        const location = JSON.parse(data.location);
+        // console.log(location.address, "LOCATIONN");
+        setAddress(location.address);
+        setLatitude(location.latitude);
+        setLongitude(location.longitude);
+        setRegion({
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.0121,
+        });
+      }
+      let date = JSON.parse(data.date);
+      // console.log(date, "<<<<");
+
+      if (data.date && date.start && date.end) {
+        const startDateTime = moment.utc(date.start);
+        const endDateTime = moment.utc(date.end);
+
+        const startMoment = startDateTime.format("dddd, D MMMM");
+        const startTime = startDateTime.format("hh.mm A");
+        const endTime = endDateTime.format("hh.mm A");
+
+        const output = `${startMoment} | ${startTime} - ${endTime}`;
+        console.log(output, "ININIHHH");
+        setFormattedDate(output);
+      }
+
+      if (data.creator) {
+        setCreator(data.creator);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      await getData();
+      await fetchByEvent();
+      setIsLoading(false);
+    }
+    fetchData();
   }, []);
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
   return (
     <ScrollView>
       <SafeAreaView
@@ -149,7 +191,7 @@ export default function DetailsRoom({ route }) {
             </Text>
           </View>
           <View style={{ marginBottom: 20 }}>
-            {currentParticipant === userId ? (
+            {creator?.role === "user" ? (
               <PrimaryButton
                 onPress={() => {
                   navigation.navigate("DetailsRoom");

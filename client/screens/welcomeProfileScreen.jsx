@@ -7,7 +7,9 @@ import {
   StyleSheet,
   Image,
   Touchable,
+  Modal,
 } from "react-native";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -17,8 +19,9 @@ import COLORS from "../consts/colors";
 
 export default function WelcomeProfile() {
   const [image, setImage] = useState(null);
-
-  console.log(image, "<<<ini images");
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
+  // console.log(image, "<<<ini images");
   const [profiles, setProfiles] = useState([
     {
       id: 1,
@@ -38,7 +41,7 @@ export default function WelcomeProfile() {
     },
   ]);
   const navigation = useNavigation();
-
+  const GOOGLE_PLACES_API_KEY = "AIzaSyDJCBwVAW27Z24KW63gvImv4NZVNIwaqSA";
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -55,9 +58,9 @@ export default function WelcomeProfile() {
     }
   };
 
-  const handleLocation = () => {
-    //write here for lo.name
-  };
+  // const handleLocation = () => {
+  //   //write here for lo.name
+  // };
 
   const onSubmit = async () => {
     try {
@@ -69,7 +72,7 @@ export default function WelcomeProfile() {
 
       // console.log(access_token);
       const { data } = await axios.put(
-        "https://932d-139-228-111-126.ngrok-free.app/user/editGenderProf",
+        "https://5ea3-139-228-111-126.ngrok-free.app/user/editGenderProf",
         { gender: gender.name },
         { headers: { access_token } }
       );
@@ -223,7 +226,7 @@ export default function WelcomeProfile() {
       >
         Your city or disctrict
       </Text>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{
           borderColor: "#CEF249",
           borderWidth: 2,
@@ -245,7 +248,87 @@ export default function WelcomeProfile() {
         >
           Select Location
         </Text>
+      </TouchableOpacity> */}
+      <TouchableOpacity
+        style={styles.locationButton}
+        onPress={() => setIsLocationModalVisible(true)}
+      >
+        <Text style={styles.locationButtonText}>
+          {selectedLocation ? selectedLocation.address : "Enter Location"}
+        </Text>
       </TouchableOpacity>
+      <Modal visible={isLocationModalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalHeader}>
+            <TouchableOpacity onPress={() => setIsLocationModalVisible(false)}>
+              <Text style={styles.modalHeaderText}>Cancel</Text>
+            </TouchableOpacity>
+            {/* <Text style={styles.modalHeaderText}>Select Location</Text>
+            <TouchableOpacity onPress={() => setIsLocationModalVisible(false)}>
+              <Text style={styles.modalHeaderText}>Done yaa</Text>
+            </TouchableOpacity> */}
+          </View>
+          <GooglePlacesAutocomplete
+            placeholder="Enter Location"
+            minLength={1}
+            autoFocus={false}
+            returnKeyType={"default"}
+            fetchDetails={true}
+            onPress={(data, details = null) => {
+              const location = details.geometry.location;
+              setSelectedLocation({
+                latitude: location.lat,
+                longitude: location.lng,
+                address: data.description,
+              });
+              setIsLocationModalVisible(false);
+            }}
+            query={{
+              key: GOOGLE_PLACES_API_KEY,
+              language: "en",
+              components: "country:id",
+            }}
+            styles={{
+              textInput: {
+                height: 40,
+                borderColor: "gray",
+                borderWidth: 1,
+                borderRadius: 10,
+                paddingHorizontal: 10,
+                marginTop: 10,
+                fontSize: 16,
+              },
+              predefinedPlacesDescription: {
+                color: "#1faadb",
+              },
+              listView: {
+                backgroundColor: "white",
+                borderRadius: 10,
+                marginTop: 10,
+                zIndex: 1,
+              },
+            }}
+            renderSuggestions={(active, suggestions, onSelectSuggestion) => (
+              <FlatList
+                data={suggestions}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      onSelectSuggestion(item);
+                      setIsLocationModalVisible(false);
+                    }}
+                  >
+                    <Text style={styles.suggestion}>{item.description}</Text>
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item) => item.place_id}
+                keyboardShouldPersistTaps="always"
+              />
+            )}
+          />
+        </View>
+      </Modal>
+
       <View
         style={{
           marginBottom: 70,
@@ -268,7 +351,27 @@ export default function WelcomeProfile() {
             paddingLeft: "45%",
           }}
         >
-          Next
+          Submit
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          width: "90%",
+          backgroundColor: "#6F7380",
+          marginLeft: "5%",
+          borderRadius: 10,
+          paddingVertical: 10,
+        }}
+        onPress={() => navigation.navigate("WelcomeLevel")}
+      >
+        <Text
+          style={{
+            color: "white",
+            fontSize: 18,
+            paddingLeft: "45%",
+          }}
+        >
+          Skip
         </Text>
       </TouchableOpacity>
     </View>
@@ -316,5 +419,50 @@ const styles = StyleSheet.create({
     lineHeight: 40,
     position: "relative",
     left: 25,
+  },
+  suggestion: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingHorizontal: 15,
+    marginTop: 20,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: 50,
+    backgroundColor: "#f8f8f8",
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  modalHeaderText: {
+    fontSize: 16,
+  },
+  locationButton: {
+    borderColor: "#CEF249",
+    borderWidth: 2,
+    marginLeft: "15%",
+    paddingVertical: 10,
+    width: "70%",
+    borderRadius: 10,
+  },
+  locationButtonText: {
+    fontSize: 16,
   },
 });

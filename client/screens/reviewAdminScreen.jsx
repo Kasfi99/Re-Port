@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 import { Checkbox } from "react-native-paper";
 import { Rating } from "react-native-elements";
 import COLORS from "../consts/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const data = [
   { id: 1, name: "Jennie Kim", rating: 0 },
@@ -18,7 +19,9 @@ const data = [
   { id: 5, name: "Tom Brown", rating: 0 },
 ];
 
-export default function AdminReview() {
+export default function AdminReview({ route }) {
+  const { id } = route.params;
+  const [dataReview, setDataReview] = useState({});
   const [checkedItems, setCheckedItems] = useState(
     // Inisialisasi checkedItems dengan nilai awal false pada semua id
     data.reduce((acc, curr) => {
@@ -26,7 +29,7 @@ export default function AdminReview() {
       return acc;
     }, {})
   );
-  const [teamData, setTeamData] = useState(data);
+  const [teamData, setTeamData] = useState([]);
 
   const handleSelectAll = () => {
     const newCheckedItems = {};
@@ -72,32 +75,67 @@ export default function AdminReview() {
       ratings: ratings,
     };
     console.log("Data to be sent:", data);
-
-    // try {
-    //   const response = await axios.post(
-    //     "https://example.com/api/attendance",
-    //     data
-    //   );
-    //   console.log("Server response:", response.data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
 
+  useEffect(() => {
+    async function fetchByEvent() {
+      console.log("useEffect di Review pertama dijalankan");
+      try {
+        console.log("useEffect pertama Masuk Ke Try");
+        const response = await fetch(
+          `https://5ea3-139-228-111-126.ngrok-free.app/event/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              access_token:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODYwNDU2MTl9.VuMJmgR26rJmsfVQsgqcefisbQ3pynoHKkupnCYMIdU",
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+        const data = await response.json();
+        // console.log(" DATA SEMUA <<<");
+        setDataReview(data);
+        // console.log(data.participants, "Data di REVIEW ADMIN");
+        setTeamData[data.participants];
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getData();
+    fetchByEvent();
+  }, []);
+
+  async function getData() {
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const access_token = JSON.parse(dataString);
+      // console.log(access_token, "<<< ACCESS TOKEN");
+      // Lakukan sesuatu menggunakan access_token
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  console.log(dataReview);
   return (
     <ScrollView>
       <View style={styles.container}>
         <View>
-          <View style={styles.header}>
-            <Text style={styles.headerText}>Who's Coming?</Text>
-            <TouchableOpacity onPress={handleSelectAll}>
-              <Text style={styles.selectAllText}>
-                {Object.keys(checkedItems).length === teamData.length
-                  ? "Unselect All"
-                  : "Select All"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {dataReview?.creator?.role === "Admin" && (
+            <View>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>Who's Coming?</Text>
+                <TouchableOpacity onPress={handleSelectAll}>
+                  <Text style={styles.selectAllText}>
+                    {Object.keys(checkedItems).length === teamData.length
+                      ? "Unselect All"
+                      : "Select All"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
           <ScrollView>
             {teamData.map((item) => (
               <View style={styles.item} key={item.id}>

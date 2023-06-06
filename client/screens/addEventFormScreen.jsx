@@ -78,47 +78,6 @@ export default function AddEventFormScreen({ navigation, route }) {
     }
   };
 
-  // const handleSubmit = async () => {
-  //   const eventData = {
-  //     eventTitle,
-  //     participants,
-  //     courtPrice,
-  //     date,
-  //     startTime,
-  //     endTime,
-  //     selectedLocation,
-  //     sport,
-  //   };
-  //   // console.log(eventData);
-  //   try {
-  //     const response = await fetch(
-  //       "https://8530-139-228-111-126.ngrok-free.app/event",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           access_token:
-  //             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODU5MDM2MTB9.wTXqGh0tNPxL4gWfOY4KQmkjYdEfCCbH6OiE93pXvio",
-  //         },
-  //         body: JSON.stringify({
-  //           title: eventTitle,
-  //           location: JSON.stringify(selectedLocation),
-  //           date: { date, startTime, endTime },
-  //           courtPrice,
-  //           limitParticipants: participants,
-  //           sport,
-  //         }),
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     // console.log(data, "<<add data");
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     navigation.navigate("Home");
-  //   }
-  // };
-
   const handleSubmit = async () => {
     const startDateTime = new Date(date);
     const startTimeArray = startTime.toString().split(" ");
@@ -148,7 +107,7 @@ export default function AddEventFormScreen({ navigation, route }) {
 
     try {
       const response = await fetch(
-        "https://a810-139-228-111-126.ngrok-free.app/event",
+        "https://5ea3-139-228-111-126.ngrok-free.app/event",
         {
           method: "POST",
           headers: {

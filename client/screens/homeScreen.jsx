@@ -14,13 +14,16 @@ import {
 import axios from "axios";
 import COLORS from "../consts/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import CardHome from "../components/cards";
 import { ScrollView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function HomeScreen() {
   const [filter, setfilter] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+
   const handleNotification = () => {
     // console.log("udah bisa di click");
   };
@@ -45,6 +48,24 @@ export default function HomeScreen() {
     fetchEvents();
   }, []);
 
+  useEffect(() => {
+    getData();
+  }, []);
+
+  async function getData() {
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      setAccessToken(token);
+      // Lakukan sesuatu menggunakan access_token
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // console.log(accessToken, "<<TOKEEEn");
+
+  // console.log();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View>
