@@ -16,49 +16,76 @@ import * as ImagePicker from "expo-image-picker";
 import PickerSport from "./pickerSport";
 import baseUrl from "../consts/ngrokUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios, { Axios } from "axios";
+import axios from "axios";
 
 const ModalEdit = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
-  const [pic, setPic] = useState(null);
-
+  const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [gender, setGender] = useState("Male");
+  const [gender, setGender] = useState(user?.gender ? user.gender : "Male");
+
+  console.log(image, "<<< ini image anjir");
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-    setPic(result);
-    setImage(<Image source={{ uri: image }} style={styles.icon} />);
+
+    // setImage(<Image source={{ uri: image }} style={styles.icon} />);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      const { uri } = result.assets[0];
+      const ext = uri.split(".").pop();
+      const name = uri.split("/").pop();
+      setImage({
+        uri: uri,
+        type: `image/${ext}`,
+        name,
+      });
     }
   };
 
   const handleSubmitEdit = async () => {
     try {
+      setName(name ? name : user?.name);
+      setUserName(userName ? userName : user?.userName);
+      setEmail(email ? email : user?.email);
+      setGender(gender ? gender : user?.gender);
+      setImage(image ? image.uri : user?.image);
+
+      const body = new FormData();
+      body.append("name", name);
+      body.append("username", userName);
+      body.append("email", email);
+      body.append("gender", gender);
+      body.append("images", image);
+
       const dataString = await AsyncStorage.getItem("access_token");
       const access_token = JSON.parse(dataString);
-      console.log(name, userName, email, pic, access_token, "<<<<< disini cok");
-      const { data } = await axios.put(
-        `${baseUrl}/user/editProfile`,
-        {
-          name,
-          userName,
-          email,
-          pic,
-        },
-        { headers: { access_token } }
+      console.log(
+        name,
+        userName,
+        email,
+        image,
+        access_token,
+        "<<<<< disini cok"
       );
+
+      const { data } = await axios({
+        method: "PUT",
+        url: `${baseUrl}/user/editProfile`,
+        data: body,
+        headers: {
+          access_token,
+          "Content-Type": `multipart/form-data`,
+        },
+      });
 
       console.log(data, "<< ini user habis di edit");
       setName("");
@@ -71,15 +98,34 @@ const ModalEdit = () => {
     }
   };
 
-  const getImage = async () => {
-    const dataString = await AsyncStorage.getItem("profile_picture");
-    const profPict = JSON.parse(dataString);
-    setPic(profPict);
-    setImage(<Image source={{ uri: profPict }} style={styles.icon} />);
+  const getuserData = async () => {
+    try {
+      const dataString = await AsyncStorage.getItem("user");
+      const dataString2 = await AsyncStorage.getItem("access_token");
+      if (dataString) {
+        const user = JSON.parse(dataString);
+        const accessToken = JSON.parse(dataString2);
+
+        console.log(user, "<< ini user");
+        const { data } = await axios({
+          method: "GET",
+          url: `${baseUrl}/user/data/${user.id}`,
+          headers: {
+            accessToken,
+          },
+        });
+        console.log(data, "<<< data user di profile");
+        setUser(data);
+      } else {
+        console.log("No data found");
+      }
+    } catch (error) {
+      console.log("Failed to retrieve data:", error);
+    }
   };
 
   useEffect(() => {
-    getImage();
+    getuserData();
   }, []);
 
   return (
@@ -119,28 +165,15 @@ const ModalEdit = () => {
                 }}
               >
                 <Pressable onPress={() => pickImage()}>
-                  {!image && (
-                    <Image
-                      source={{ uri: "https://via.placeholder.com/150" }}
-                      style={{
-                        width: 85,
-                        height: 85,
-                        borderRadius: 50,
-                        marginLeft: "32%",
-                        marginRight: 20,
-                        marginTop: 10,
-                      }}
-                    />
-                  )}
-                  {image && image}
-                  <Ionicons
-                    name="create"
-                    size={32}
+                  <Image
+                    source={{ uri: image ? image.uri : user?.pic }}
                     style={{
-                      color: COLORS.primaryGreen,
-                      position: "relative",
-                      top: -25,
-                      left: 185,
+                      width: 85,
+                      height: 85,
+                      borderRadius: 50,
+                      marginLeft: "32%",
+                      marginRight: 20,
+                      marginTop: 10,
                     }}
                   />
                 </Pressable>
@@ -149,8 +182,9 @@ const ModalEdit = () => {
                     styles.inputText,
                     {
                       position: "relative",
-                      top: -20,
+                      top: 10,
                       left: 80,
+                      marginBottom: 10,
                     },
                   ]}
                 >
@@ -161,7 +195,7 @@ const ModalEdit = () => {
                   <TextInput
                     style={styles.input}
                     onChangeText={setName}
-                    value={name}
+                    value={name ? name : user?.name}
                     placeholder="Tell us Your Name"
                   />
                 </View>
@@ -170,7 +204,13 @@ const ModalEdit = () => {
                   <TextInput
                     style={styles.input}
                     onChangeText={setUserName}
-                    value={userName}
+                    value={
+                      userName
+                        ? userName
+                        : user?.username
+                        ? user.userName
+                        : "Great Sport Player"
+                    }
                     placeholder="Something like BlackDragon01"
                   />
                 </View>
@@ -179,7 +219,7 @@ const ModalEdit = () => {
                   <TextInput
                     style={styles.input}
                     onChangeText={setEmail}
-                    value={email}
+                    value={email ? email : user?.email}
                     placeholder="DarkLord@Muspelheim.com"
                   />
                 </View>

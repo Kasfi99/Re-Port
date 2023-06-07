@@ -86,9 +86,10 @@ export default function DetailsRoom({ route }) {
     }
   };
 
-  // console.log(accessToken, "<<EMAIL CURRENT USER");
   const fetchByEvent = async () => {
-    // console.log("useEffect pertama dijalankan");
+    const dataString = await AsyncStorage.getItem("access_token");
+    const token = JSON.parse(dataString);
+    // console.log(token, "<<TOKEN USER");
     try {
       // console.log("useEffect pertama Masuk Ke Try");
       // console.log(typeof accessToken, "<<<accessTokennya");
@@ -96,12 +97,12 @@ export default function DetailsRoom({ route }) {
         headers: {
           "Content-Type": "application/json",
 
-          access_token: accessToken,
+          access_token: token,
         },
       });
       const data = await response.json();
       // console.log(data.date, " DATA SEMUA <<<");
-      // console.log(data, "Data dari API");
+      console.log(data, "Data dari API");
       setPerEvent(data);
       if (data.location) {
         const location = JSON.parse(data.location);
@@ -117,7 +118,7 @@ export default function DetailsRoom({ route }) {
         });
       }
       let date = JSON.parse(data.date);
-      // console.log(date, "<<<<");
+      // console.log(data, "<<< SI DATAs");
 
       if (data.date && date.start && date.end) {
         const startDateTime = moment.utc(date.start);
@@ -195,7 +196,7 @@ export default function DetailsRoom({ route }) {
         if (_participant) {
           setIsJoined(true);
         }
-        console.log(perEvent.creator.email, "<<<<< creator email");
+        // console.log(perEvent.creator.email, "<<<<< creator email");
         if (perEvent.creator.email === email) {
           setIsAdmin(true);
         }
@@ -206,13 +207,13 @@ export default function DetailsRoom({ route }) {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+        <ActivityIndicator size="large" color={COLORS.primaryGreen} />
       </View>
     );
   }
 
-  console.log(creator, "DATA CREATOR");
-  console.log(perEvent, "<<EVENT");
+  // console.log(creator, "DATA CREATOR");
+  // console.log(perEvent, "<<EVENT");
 
   return (
     <ScrollView>

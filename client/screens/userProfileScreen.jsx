@@ -16,17 +16,62 @@ import COLORS from "../consts/colors";
 import CardHome from "../components/cards";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ModalEdit from "../components/modalEdit";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import baseUrl from "../consts/ngrokUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function UserProfile() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [image, setImage] = useState(null);
+  const [user, setUser] = useState(null);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [myUpcomingEvents, setUpcomingEvents] = useState([]);
   const [myPreviousEvents, setmyPreviousEvents] = useState([]);
   const [profile, setMyProfile] = useState();
+
+  const getuserData = async () => {
+    try {
+      const dataString = await AsyncStorage.getItem("user");
+      const dataString2 = await AsyncStorage.getItem("access_token");
+      if (dataString) {
+        const user = JSON.parse(dataString);
+        const accessToken = JSON.parse(dataString2);
+
+        console.log(user, "<< ini user");
+        const { data } = await axios({
+          method: "GET",
+          url: `${baseUrl}/user/data/${user.id}`,
+          headers: {
+            accessToken,
+          },
+        });
+        console.log(data, "<<< data user di profile");
+        setUser(data);
+      } else {
+        console.log("No data found");
+      }
+    } catch (error) {
+      console.log("Failed to retrieve data:", error);
+    }
+  };
+
+  const handleEdit = () => {
+    console.log("bisa edit");
+  };
+
+  const handleLogOut = async () => {
+    await AsyncStorage.removeItem("@user");
+    await AsyncStorage.removeItem("user");
+    await AsyncStorage.removeItem("isLogged");
+    return navigation.navigate("Login");
+  };
+  const navigation = useNavigation();
+
+  const viewableItemsChanged = useRef(({ viewableItems }) => {
+    setCurrentIndex(viewableItems[0].index);
+  }).current;
+
+  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 0 }).current;
 
   useEffect(() => {
     async function getMyEvents() {
@@ -39,14 +84,17 @@ export default function UserProfile() {
         const email = JSON.parse(emailString);
         // setCurrentUserEmail(email);
 
-        const response = await fetch(`${baseUrl}/event/myevents`, {
-          headers: {
-            "Content-Type": "application/json",
-            access_token: token,
+        const response = await fetch(
+          `https://0b4d-139-228-111-126.ngrok-free.app/event/myevents`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              access_token: token,
 
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
         const data = await response.json();
         // console.log(typeof data);
         if (data.upcomingEvents) {
@@ -61,38 +109,7 @@ export default function UserProfile() {
       }
     }
     getMyEvents();
-  }, []);
-
-  // console.log(myUpcomingEvents, "MY Upcoming");
-  const handleEdit = () => {
-    console.log("bisa edit");
-  };
-
-  const handleLogOut = () => {
-    console.log("bisa logout");
-  };
-  const navigation = useNavigation();
-
-  const viewableItemsChanged = useRef(({ viewableItems }) => {
-    setCurrentIndex(viewableItems[0].index);
-  }).current;
-
-  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 0 }).current;
-
-  const getImage = async () => {
-    try {
-      const dataString = await AsyncStorage.getItem("profile_picture");
-      const profPict = JSON.parse(dataString);
-      // console.log(profPict, "<<<<<");
-
-      setImage(<Image source={{ uri: profPict }} style={styles.icon} />);
-    } catch (error) {
-      console.log("failed to retrieve data : " + error);
-    }
-  };
-
-  useEffect(() => {
-    getImage();
+    getuserData();
   }, []);
 
   return (
@@ -101,6 +118,7 @@ export default function UserProfile() {
         <View
           style={{
             backgroundColor: "#191B23",
+            paddingTop: 50,
             marginBottom: 30,
             paddingBottom: 20,
           }}
@@ -112,14 +130,8 @@ export default function UserProfile() {
               alignItems: "center",
             }}
           >
-            {image ? (
-              image
-            ) : (
-              <Image
-                source={{ uri: "https://via.placeholder.com/150" }}
-                style={styles.icon}
-              />
-            )}
+            <Image source={{ uri: user?.pic }} style={styles.icon} />
+
             <View
               style={{
                 flex: 1,
@@ -136,7 +148,7 @@ export default function UserProfile() {
                   color: COLORS.primaryGreen,
                 }}
               >
-                Jennie Kim
+                {user?.name}
               </Text>
               <Text
                 style={{
@@ -145,7 +157,13 @@ export default function UserProfile() {
                   fontFamily: "IBM-Plex-Sans",
                 }}
               >
-                Beginner
+                {user?.score < 30
+                  ? "Beginner"
+                  : user?.score > 30
+                  ? "Intermediate"
+                  : user?.score > 60 && user?.score < 80
+                  ? "Pro Player"
+                  : "Ace in All Fields"}
               </Text>
               <Text
                 style={{
@@ -159,7 +177,13 @@ export default function UserProfile() {
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
-                Hi, i’m friendly! Badminton and tennis lover!
+                {user?.score < 30
+                  ? "Hi, i’m friendly! Beginner Sport lover!"
+                  : user?.score > 30
+                  ? "Wanna have friendly match?"
+                  : user?.score > 60 && user?.score < 80
+                  ? "Looking for a better match"
+                  : "Can somebody defeats me?"}
               </Text>
             </View>
           </View>
@@ -207,7 +231,7 @@ export default function UserProfile() {
                 flexDirection: "row",
                 marginTop: "5%",
                 marginLeft: "35%",
-                // backgroundColor: "white",
+
                 gap: 10,
               }}
             >
@@ -238,55 +262,63 @@ export default function UserProfile() {
           </View>
         </View>
         <View>
-          <View style={styles.card}>
-            <View style={styles.cardContent}>
-              <View
-                style={{
-                  marginLeft: "-5%",
-                  marginTop: "3%",
-                }}
-              >
-                <Text>Badminton</Text>
-                <Text style={{ fontWeight: "bold", fontSize: 30 }}>
-                  Intermediate
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderColor: "white",
-                  borderWidth: 10,
-                  borderRadius: 100,
-                  width: "30%",
-                  height: 80,
-                  marginLeft: "15%",
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: "IBM-Plex-Sans",
-                    fontSize: 28,
-                    fontWeight: "800",
-                    marginLeft: 15,
-                    marginBottom: -5,
-                    marginTop: 2,
-                  }}
-                >
-                  20
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "IBM-Plex-Sans",
-                    fontSize: 12,
-                    marginLeft: 13,
-                  }}
-                >
-                  Scores
-                </Text>
-              </View>
-            </View>
-          </View>
+          {user?.sport.map((el) => {
+            return (
+              <>
+                <View style={styles.card}>
+                  <View style={styles.cardContent}>
+                    <View
+                      style={{
+                        marginLeft: "-5%",
+                        marginTop: "3%",
+                      }}
+                    >
+                      <Text>{el.name?.name}</Text>
+                      <Text style={{ fontWeight: "bold", fontSize: 30 }}>
+                        {el.level}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        borderColor: "white",
+                        borderWidth: 10,
+                        borderRadius: 100,
+                        width: "29%",
+                        height: 80,
+                        position: "absolute",
+                        right: 20,
+                        top: 10,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "IBM-Plex-Sans",
+                          fontSize: 28,
+                          fontWeight: "800",
+                          marginLeft: 22,
+                          marginBottom: -5,
+                          marginTop: 2,
+                        }}
+                      >
+                        {user?.score}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: "IBM-Plex-Sans",
+                          fontSize: 12,
+                          marginLeft: 13,
+                        }}
+                      >
+                        Scores
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </>
+            );
+          })}
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, gap: 30 }}>
           <Text
             style={{
               fontSize: 14,

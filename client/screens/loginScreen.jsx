@@ -54,17 +54,18 @@ export default function LoginScreen() {
           googletoken: token,
         },
       });
-      // console.log(data, "<< ini data");
-      // await AsyncStorage.setItem("@user", JSON.stringify(data));
+
+      await AsyncStorage.setItem("user", JSON.stringify(data.data));
       await AsyncStorage.setItem(
         "access_token",
         JSON.stringify(data.access_token)
       );
 
-      if (data.score > 0) {
+      const dataString = await AsyncStorage.getItem("isLogged");
+      const so = JSON.parse(dataString);
+      // console.log(so, "<<<<< so");
+      if (so === true) {
         navigation.navigate("Main", { screen: "Home" });
-      } else {
-        navigation.navigate("WelcomeSport");
       }
     } catch (error) {
       console.log(error);
@@ -72,6 +73,7 @@ export default function LoginScreen() {
   };
 
   //GOOGLE LOGIN END
+
   const navigation = useNavigation();
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
@@ -81,28 +83,43 @@ export default function LoginScreen() {
       if (!email || !password) {
         throw new Error("Input Can't be Empty");
       }
-
+      console.log("masuk sini", email, password);
       const { data } = await axios.post(`${baseUrl}/user/login`, {
         email,
         password,
       });
-
+      console.log(data, "<<<< ini data");
       await AsyncStorage.setItem(
         "access_token",
         JSON.stringify(data.access_token)
       );
-      await AsyncStorage.setItem("email", JSON.stringify(email));
-      console.log("Data stored successfully");
 
-      console.log(data, "<<<<<<");
+      await AsyncStorage.setItem("user", JSON.stringify(data.user));
+
       onChangeEmail("");
       onChangePassword("");
-      return navigation.navigate("WelcomeSport");
+
+      const dataString = await AsyncStorage.getItem("isLogged");
+      const so = JSON.parse(dataString);
+
+      if (so === true) {
+        navigation.navigate("Main", { screen: "Home" });
+      } else {
+        navigation.navigate("WelcomeSport");
+      }
     } catch (error) {
       console.log("Failed to login & store data: ", error);
     }
   };
 
+  const checkisLogin = async () => {
+    const dataString = await AsyncStorage.getItem("isLogged");
+    const data = JSON.parse(dataString);
+    console.log(data, "<<<");
+    if (data === true) {
+      navigation.navigate("Main", { screen: "Home" });
+    }
+  };
   const handleRegister = () => {
     navigation.navigate("Register");
   };
@@ -112,85 +129,89 @@ export default function LoginScreen() {
     navigation.navigate("Main");
   };
 
-  // return <Text>Testing</Text>;
+  React.useEffect(() => {
+    checkisLogin();
+  });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.textHeader}>Enter Your Mobile Number</Text>
+      <View>
+        <Text style={styles.textHeader}>Enter Your Mobile Number</Text>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.Emailinput}
-          onChangeText={(text) => onChangeEmail(text)}
-          value={email}
-          placeholder="Your Email"
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.Emailinput}
+            onChangeText={(text) => onChangeEmail(text)}
+            value={email}
+            placeholder="Your Email"
+          />
+        </View>
 
-      <View
-        style={{
-          marginTop: 15,
-          alignItems: "center",
-        }}
-      >
-        <TextInput
-          style={styles.Passwordinput}
-          onChangeText={(text) => onChangePassword(text)}
-          value={password}
-          secureTextEntry={true}
-          placeholder="Your Password"
-        />
-      </View>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          return handleInput();
-        }}
-      >
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
-
-      <View
-        style={{
-          width: "95%",
-        }}
-      >
-        <Text
+        <View
           style={{
-            marginTop: 10,
-            marginLeft: 25,
-            color: "#565966",
+            marginTop: 15,
+            alignItems: "center",
           }}
         >
-          By proceeding, you consent to get calls, WhatsApp or SMS messages,
-          including by automated means, from App and its affiliates to the
-          number provided.
-        </Text>
+          <TextInput
+            style={styles.Passwordinput}
+            onChangeText={(text) => onChangePassword(text)}
+            value={password}
+            secureTextEntry={true}
+            placeholder="Your Password"
+          />
+        </View>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            return handleInput();
+          }}
+        >
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+
+        <View
+          style={{
+            width: "95%",
+          }}
+        >
+          <Text
+            style={{
+              marginTop: 10,
+              marginLeft: 25,
+              color: "#565966",
+            }}
+          >
+            By proceeding, you consent to get calls, WhatsApp or SMS messages,
+            including by automated means, from App and its affiliates to the
+            number provided.
+          </Text>
+        </View>
+
+        <View style={styles.line}>
+          <Divider text="or" />
+        </View>
+
+        <TouchableOpacity
+          style={styles.facebookButton}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text style={styles.loginText}>Login by Facebook</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={async () => {
+            await promtAsync();
+            return navigation.navigate("WelcomeSport");
+          }}
+        >
+          <Text style={styles.loginText}>Login by Google</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.line}>
-        <Divider text="or" />
-      </View>
-
-      <TouchableOpacity
-        style={styles.facebookButton}
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={styles.loginText}>Login by Facebook</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.googleButton}
-        onPress={async () => {
-          await promtAsync();
-          return navigation.navigate("WelcomeSport");
-        }}
-      >
-        <Text style={styles.loginText}>Login by Google</Text>
-      </TouchableOpacity>
-
-      <View style={{ width: "95%", position: "absolute", bottom: 30 }}>
+      <View style={{ width: "95%", marginBottom: 30 }}>
         <Text
           style={{
             marginTop: 10,
@@ -205,8 +226,6 @@ export default function LoginScreen() {
           style={{
             flexDirection: "row",
             marginLeft: "23%",
-            position: "absolute",
-            bottom: 0,
           }}
         >
           <TouchableOpacity onPress={handleRegister}>
@@ -253,6 +272,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+    justifyContent: "space-between",
   },
   textHeader: {
     position: "absolute",

@@ -164,12 +164,11 @@ export default function SportList() {
       });
 
       console.log(data);
-      // await AsyncStorage.setItem("sportData", JSON.stringify(data));
+      await AsyncStorage.setItem("sportData", JSON.stringify(data));
       console.log("Data stored successfully");
+      navigation.navigate("WelcomeProfile");
     } catch (error) {
       console.log(error);
-    } finally {
-      navigation.navigate("WelcomeProfile");
     }
   };
 

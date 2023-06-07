@@ -48,7 +48,7 @@
       "favicon": "./assets/favicon.png"
     },
     "scheme": [
-      "myGoogleApp"
+      "client"
     ]
   }
 }

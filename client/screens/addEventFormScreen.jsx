@@ -253,6 +253,7 @@ export default function AddEventFormScreen({ navigation, route }) {
                 address: data.description,
               });
               setIsLocationModalVisible(false);
+              console.log("heheheh");
             }}
             query={{
               key: GOOGLE_PLACES_API_KEY,

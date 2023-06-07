@@ -22,9 +22,12 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
   const [filteredData, setFilteredData] = useState();
   const [events, setEvents] = useState([]);
   const [accessToken, setAccessToken] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [emailLogger, setEmailLogger] = useState("");
+  const [isJoined, setIsJoined] = useState(false);
 
   async function handleJoin(id) {
-    console.log(id, "<<id Handle Join");
+    // console.log(id, "<<id Handle Join");
     try {
       const dataString = await AsyncStorage.getItem("access_token");
       const token = JSON.parse(dataString);
@@ -46,56 +49,21 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
   //   getData();
   // }, []);
 
-  // async function getData() {
-  //   try {
-  //     const dataString = await AsyncStorage.getItem("access_token");
-  //     const token = JSON.parse(dataString);
-  //     setAccessToken(token);
-  //     // Lakukan sesuatu menggunakan access_token
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   const greenSlots = !item?.participant ? 0 : item?.participant.length;
   const remainingSlots = 8 - greenSlots;
 
-  // FUNCTION VALIDATION UNTUK TRIGGER IS EVENT DONE
-  // async function validateAndStartEvent(startDateTime, endDateTime, eventId) {
-  //   // parsing data waktu dari string ke objek Date
-  //   const eventData = {
-  //     start: "2023-06-17T02:36:00.000Z",
-  //     end: "2023-06-17T04:36:00.000Z",
-  //   };
-  //   const eventDataStart = new Date(eventData.start);
-  //   const eventDataEnd = new Date(eventData.end);
-  //   const givenStart = new Date(startDateTime);
-  //   const givenEnd = new Date(endDateTime);
-
-  //   // validasi apakah waktu yang diberikan sama dengan waktu pada data event
-  //   if (
-  //     givenStart.getTime() === eventDataStart.getTime() &&
-  //     givenEnd.getTime() === eventDataEnd.getTime()
-  //   ) {
-  //     try {
-  //       // jika validasi sukses, trigger server untuk mengubah status event menjadi 'on-going'
-  //       const response = await axios.patch(`/api/event/${eventId}`);
-  //       console.log("Status event berhasil diubah");
-  //     } catch (error) {
-  //       console.error("Terjadi kesalahan saat mengubah status event:", error);
-  //     }
-  //   } else {
-  //     console.error("Waktu yang diberikan tidak sesuai dengan data event");
-  //   }
-  // }
-  // console.log(events);
+  // START FETCH DATA EVENTS
   useFocusEffect(
     useCallback(() => {
       async function fetchEvents() {
         try {
+          const dataString = await AsyncStorage.getItem("email");
+          const email = JSON.parse(dataString);
+          setEmailLogger(email);
+
           const response = await fetch(`${baseUrl}/eventlist`);
           const data = await response.json(); // parsing respons JSON
-          // console.log(data); // hasil respons JSON
+          // console.log(data, "< DATA"); // hasil respons JSON
           setEvents(data); // simpan data ke state events
         } catch (error) {
           console.log(error);
@@ -104,20 +72,8 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
       fetchEvents();
     }, [])
   );
-
-  // useEffect(() => {
-  //   async function fetchEvents() {
-  //     try {
-  //       const response = await fetch(`${baseUrl}/eventlist`);
-  //       const data = await response.json(); // parsing respons JSON
-  //       // console.log(data); // hasil respons JSON
-  //       setEvents(data); // simpan data ke state events
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   fetchEvents();
-  // }, []);
+  // END FETCH DATA EVENTS
+  // console.log(emailLogger, "<<Email logger");
 
   return (
     <>
@@ -128,13 +84,10 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
           alignItems: "center",
         }}
       >
+        {/* START CARD - HOME */}
         {events &&
           !horizontal &&
           events.map((el) => {
-            // console.log(el._id, "<<<<");
-            // const greenSlots = el.participant.length;
-            // const remainingSlots = 8 - greenSlots;
-            // console.log(el);
             return (
               <TouchableOpacity
                 key={el._id}
@@ -270,7 +223,15 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                       Court Booked - {el.place}
                     </Text>
                   </View>
-                  <TouchableOpacity onPress={() => handleJoin(el._id)}>
+
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("eventRoom", {
+                        id: el._id,
+                        status: el.status,
+                      })
+                    }
+                  >
                     <View
                       style={{
                         width: "30%",
@@ -289,22 +250,50 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                           marginLeft: "12%",
                         }}
                       >
-                        Join Now
+                        See Details
                       </Text>
                     </View>
                   </TouchableOpacity>
-                  {/* <PrimaryButton
-                onPress={() => {
-                  navigation.navigate("DetailsRoom");
-                }}
-                title="Join Event"
-              /> */}
+
+                  {/* {el.creator?.email !== emailLogger && isJoined && (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("eventRoom", {
+                          id: el._id,
+                          status: el.status,
+                        })
+                      }
+                    >
+                      <View
+                        style={{
+                          width: "30%",
+                          backgroundColor: "black",
+                          borderRadius: 10,
+                          marginLeft: "65%",
+                          marginTop: 15,
+                          marginBottom: 15,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "white",
+                            fontFamily: "IBM-Plex-Sans",
+                            fontWeight: "700",
+                            marginLeft: "12%",
+                          }}
+                        >
+                          See Details
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )} */}
                 </View>
               </TouchableOpacity>
             );
           })}
+        {/* END CARD - HOME */}
 
-        {/* {console.log(item, "iteeem")} */}
+        {/* START CARD - USER PROFILE */}
         {horizontal && item && (
           <TouchableOpacity
             key={item._id}
@@ -466,6 +455,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
             </View>
           </TouchableOpacity>
         )}
+        {/* END CARD - USER PROFILE */}
       </View>
     </>
   );
