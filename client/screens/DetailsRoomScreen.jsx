@@ -60,7 +60,7 @@ export default function DetailsRoom({ navigation, route }) {
   const handleCancel = async () => {
     try {
       const response = await fetch(
-        `https://5ea3-139-228-111-126.ngrok-free.app/event/${id}`,
+        `https://0b4d-139-228-111-126.ngrok-free.app/event/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -84,13 +84,12 @@ export default function DetailsRoom({ navigation, route }) {
       console.log("useEffect pertama Masuk Ke Try");
       console.log(typeof accessToken, "<<<accessTokennya");
       const response = await fetch(
-        `https://5ea3-139-228-111-126.ngrok-free.app/event/${id}`,
+        `https://0b4d-139-228-111-126.ngrok-free.app/event/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
 
-            access_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2YwZmUwZDI4OGJkYjM4ZjBjN2E2ZCIsImVtYWlsIjoiYmFtYmFuZ0BtYWlsLmNvbSIsImlhdCI6MTY4NjA3Mzg1MH0.0dxO5Fqq6Zd47I-szt1u0L7bOd0ofBXmVo8RXyYoYfo", // 'Content-Type': 'application/x-www-form-urlencoded',
+            access_token: accessToken,
           },
         }
       );
@@ -138,11 +137,16 @@ export default function DetailsRoom({ navigation, route }) {
   useEffect(() => {
     async function fetchData() {
       await getData();
-      await fetchByEvent();
-      setIsLoading(false);
     }
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchByEvent();
+      setIsLoading(false);
+    }
+  }, [accessToken]);
 
   if (isLoading) {
     return (

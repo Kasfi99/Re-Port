@@ -29,7 +29,7 @@ export default function UserProfile() {
     async function getMyEvents() {
       try {
         const response = await fetch(
-          `https://5ea3-139-228-111-126.ngrok-free.app/event/myevents`,
+          `https://0b4d-139-228-111-126.ngrok-free.app/event/myevents`,
           {
             headers: {
               "Content-Type": "application/json",

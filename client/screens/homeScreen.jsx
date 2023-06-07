@@ -36,7 +36,7 @@ export default function HomeScreen() {
     async function fetchEvents() {
       try {
         const response = await fetch(
-          "https://5ea3-139-228-111-126.ngrok-free.app/eventlist"
+          "https://0b4d-139-228-111-126.ngrok-free.app/eventlist"
         );
         const data = await response.json(); // parsing respons JSON
         // console.log(data); // hasil respons JSON

@@ -83,7 +83,7 @@ export default function AdminReview({ route }) {
       try {
         console.log("useEffect pertama Masuk Ke Try");
         const response = await fetch(
-          `https://5ea3-139-228-111-126.ngrok-free.app/event/${id}`,
+          `https://0b4d-139-228-111-126.ngrok-free.app/event/${id}`,
           {
             headers: {
               "Content-Type": "application/json",

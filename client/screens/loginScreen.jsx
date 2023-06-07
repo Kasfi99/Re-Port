@@ -47,7 +47,7 @@ export default function LoginScreen() {
     try {
       console.log("hei");
       const { data } = await axios({
-        url: `https://5ea3-139-228-111-126.ngrok-free.app/user/googleLogin`,
+        url: `https://0b4d-139-228-111-126.ngrok-free.app/user/googleLogin`,
         method: "POST",
         headers: {
           googletoken: token,
@@ -82,7 +82,7 @@ export default function LoginScreen() {
       }
 
       const { data } = await axios.post(
-        "https://5ea3-139-228-111-126.ngrok-free.app/user/login",
+        "https://0b4d-139-228-111-126.ngrok-free.app/user/login",
         { email, password }
       );
 

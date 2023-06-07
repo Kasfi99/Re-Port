@@ -72,7 +72,7 @@ export default function WelcomeProfile() {
 
       // console.log(access_token);
       const { data } = await axios.put(
-        "https://5ea3-139-228-111-126.ngrok-free.app/user/editGenderProf",
+        "https://0b4d-139-228-111-126.ngrok-free.app/user/editGenderProf",
         { gender: gender.name },
         { headers: { access_token } }
       );
