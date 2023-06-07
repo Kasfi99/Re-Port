@@ -45,20 +45,21 @@ export default function WelcomeLevel({}) {
       const access_token = JSON.parse(dataString);
       console.log(level, "<<<<<< ");
 
-      // const newData = {
-      //   sportList: level,
-      // };
+      const newData = {
+        sportList: level,
+      };
 
-      // const { data } = await axios({
-      //   method: "PUT",
-      //   url: `${baseUrl}/user/addSports`,
-      //   data: newData,
-      //   headers: {
-      //     access_token,
-      //   },
-      // });
+      const { data } = await axios({
+        method: "PUT",
+        url: `${baseUrl}/user/addSports`,
+        data: newData,
+        headers: {
+          access_token,
+        },
+      });
 
-      // console.log(data, "<<<< ini kembaliannya");
+      console.log(data, "<<<< ini kembaliannya");
+      await AsyncStorage.setItem("isLogged", JSON.stringify(true));
       navigation.navigate("Main", { screen: "Home" });
     } catch (error) {
       console.log(error);

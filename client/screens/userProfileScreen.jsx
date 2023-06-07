@@ -118,6 +118,7 @@ export default function UserProfile() {
         <View
           style={{
             backgroundColor: "#191B23",
+            paddingTop: 50,
             marginBottom: 30,
             paddingBottom: 20,
           }}
@@ -261,55 +262,63 @@ export default function UserProfile() {
           </View>
         </View>
         <View>
-          <View style={styles.card}>
-            <View style={styles.cardContent}>
-              <View
-                style={{
-                  marginLeft: "-5%",
-                  marginTop: "3%",
-                }}
-              >
-                <Text>Badminton</Text>
-                <Text style={{ fontWeight: "bold", fontSize: 30 }}>
-                  Intermediate
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderColor: "white",
-                  borderWidth: 10,
-                  borderRadius: 100,
-                  width: "30%",
-                  height: 80,
-                  marginLeft: "15%",
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: "IBM-Plex-Sans",
-                    fontSize: 28,
-                    fontWeight: "800",
-                    marginLeft: 15,
-                    marginBottom: -5,
-                    marginTop: 2,
-                  }}
-                >
-                  20
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "IBM-Plex-Sans",
-                    fontSize: 12,
-                    marginLeft: 13,
-                  }}
-                >
-                  Scores
-                </Text>
-              </View>
-            </View>
-          </View>
+          {user?.sport.map((el) => {
+            return (
+              <>
+                <View style={styles.card}>
+                  <View style={styles.cardContent}>
+                    <View
+                      style={{
+                        marginLeft: "-5%",
+                        marginTop: "3%",
+                      }}
+                    >
+                      <Text>{el.name?.name}</Text>
+                      <Text style={{ fontWeight: "bold", fontSize: 30 }}>
+                        {el.level}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        borderColor: "white",
+                        borderWidth: 10,
+                        borderRadius: 100,
+                        width: "29%",
+                        height: 80,
+                        position: "absolute",
+                        right: 20,
+                        top: 10,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "IBM-Plex-Sans",
+                          fontSize: 28,
+                          fontWeight: "800",
+                          marginLeft: 22,
+                          marginBottom: -5,
+                          marginTop: 2,
+                        }}
+                      >
+                        {user?.score}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: "IBM-Plex-Sans",
+                          fontSize: 12,
+                          marginLeft: 13,
+                        }}
+                      >
+                        Scores
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </>
+            );
+          })}
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, gap: 30 }}>
           <Text
             style={{
               fontSize: 14,

@@ -56,7 +56,6 @@ export default function LoginScreen() {
       });
 
       await AsyncStorage.setItem("user", JSON.stringify(data.data));
-      await AsyncStorage.setItem("isLogged", JSON.stringify(true));
       await AsyncStorage.setItem(
         "access_token",
         JSON.stringify(data.access_token)
@@ -133,81 +132,83 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.textHeader}>Enter Your Mobile Number</Text>
+      <View>
+        <Text style={styles.textHeader}>Enter Your Mobile Number</Text>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.Emailinput}
-          onChangeText={(text) => onChangeEmail(text)}
-          value={email}
-          placeholder="Your Email"
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.Emailinput}
+            onChangeText={(text) => onChangeEmail(text)}
+            value={email}
+            placeholder="Your Email"
+          />
+        </View>
 
-      <View
-        style={{
-          marginTop: 15,
-          alignItems: "center",
-        }}
-      >
-        <TextInput
-          style={styles.Passwordinput}
-          onChangeText={(text) => onChangePassword(text)}
-          value={password}
-          secureTextEntry={true}
-          placeholder="Your Password"
-        />
-      </View>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          return handleInput();
-        }}
-      >
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
-
-      <View
-        style={{
-          width: "95%",
-        }}
-      >
-        <Text
+        <View
           style={{
-            marginTop: 10,
-            marginLeft: 25,
-            color: "#565966",
+            marginTop: 15,
+            alignItems: "center",
           }}
         >
-          By proceeding, you consent to get calls, WhatsApp or SMS messages,
-          including by automated means, from App and its affiliates to the
-          number provided.
-        </Text>
+          <TextInput
+            style={styles.Passwordinput}
+            onChangeText={(text) => onChangePassword(text)}
+            value={password}
+            secureTextEntry={true}
+            placeholder="Your Password"
+          />
+        </View>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            return handleInput();
+          }}
+        >
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+
+        <View
+          style={{
+            width: "95%",
+          }}
+        >
+          <Text
+            style={{
+              marginTop: 10,
+              marginLeft: 25,
+              color: "#565966",
+            }}
+          >
+            By proceeding, you consent to get calls, WhatsApp or SMS messages,
+            including by automated means, from App and its affiliates to the
+            number provided.
+          </Text>
+        </View>
+
+        <View style={styles.line}>
+          <Divider text="or" />
+        </View>
+
+        <TouchableOpacity
+          style={styles.facebookButton}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text style={styles.loginText}>Login by Facebook</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={async () => {
+            await promtAsync();
+            return navigation.navigate("WelcomeSport");
+          }}
+        >
+          <Text style={styles.loginText}>Login by Google</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.line}>
-        <Divider text="or" />
-      </View>
-
-      <TouchableOpacity
-        style={styles.facebookButton}
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={styles.loginText}>Login by Facebook</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.googleButton}
-        onPress={async () => {
-          await promtAsync();
-          return navigation.navigate("WelcomeSport");
-        }}
-      >
-        <Text style={styles.loginText}>Login by Google</Text>
-      </TouchableOpacity>
-
-      <View style={{ width: "95%", position: "absolute", bottom: 30 }}>
+      <View style={{ width: "95%", marginBottom: 30 }}>
         <Text
           style={{
             marginTop: 10,
@@ -222,8 +223,6 @@ export default function LoginScreen() {
           style={{
             flexDirection: "row",
             marginLeft: "23%",
-            position: "absolute",
-            bottom: 0,
           }}
         >
           <TouchableOpacity onPress={handleRegister}>
@@ -270,6 +269,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+    justifyContent: "space-between",
   },
   textHeader: {
     position: "absolute",

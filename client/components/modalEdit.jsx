@@ -21,12 +21,13 @@ import axios from "axios";
 const ModalEdit = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
-
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState(user?.gender ? user.gender : "Male");
+
+  console.log(image, "<<< ini image anjir");
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -36,9 +37,7 @@ const ModalEdit = () => {
       quality: 1,
     });
 
-    setImage(<Image source={{ uri: image }} style={styles.icon} />);
-
-    await AsyncStorage.setItem("profile_picture", JSON.stringify(image));
+    // setImage(<Image source={{ uri: image }} style={styles.icon} />);
 
     if (!result.canceled) {
       const { uri } = result.assets[0];
@@ -54,6 +53,12 @@ const ModalEdit = () => {
 
   const handleSubmitEdit = async () => {
     try {
+      setName(name ? name : user?.name);
+      setUserName(userName ? userName : user?.userName);
+      setEmail(email ? email : user?.email);
+      setGender(gender ? gender : user?.gender);
+      setImage(image ? image.uri : user?.image);
+
       const body = new FormData();
       body.append("name", name);
       body.append("username", userName);
@@ -63,7 +68,14 @@ const ModalEdit = () => {
 
       const dataString = await AsyncStorage.getItem("access_token");
       const access_token = JSON.parse(dataString);
-      console.log(name, userName, email, pic, access_token, "<<<<< disini cok");
+      console.log(
+        name,
+        userName,
+        email,
+        image,
+        access_token,
+        "<<<<< disini cok"
+      );
 
       const { data } = await axios({
         method: "PUT",
@@ -154,7 +166,7 @@ const ModalEdit = () => {
               >
                 <Pressable onPress={() => pickImage()}>
                   <Image
-                    source={{ uri: image ? image : user?.pic }}
+                    source={{ uri: image ? image.uri : user?.pic }}
                     style={{
                       width: 85,
                       height: 85,
