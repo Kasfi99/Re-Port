@@ -12,6 +12,8 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import COLORS from "../consts/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import baseUrl from "../consts/ngrokUrl";
 
 const GOOGLE_PLACES_API_KEY = "AIzaSyDJCBwVAW27Z24KW63gvImv4NZVNIwaqSA";
 
@@ -113,24 +115,21 @@ export default function AddEventFormScreen({ navigation, route }) {
       const emailString = await AsyncStorage.getItem("email");
       const email = JSON.parse(emailString);
 
-      const response = await fetch(
-        "https://0b4d-139-228-111-126.ngrok-free.app/event",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            access_token: token,
-          },
-          body: JSON.stringify({
-            title: eventTitle,
-            location: JSON.stringify(selectedLocation),
-            date: JSON.stringify(eventData.date),
-            courtPrice,
-            limitParticipants: participants,
-            sport,
-          }),
-        }
-      );
+      const response = await fetch(`${baseUrl}/event`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          access_token: token,
+        },
+        body: JSON.stringify({
+          title: eventTitle,
+          location: JSON.stringify(selectedLocation),
+          date: JSON.stringify(eventData.date),
+          courtPrice,
+          limitParticipants: participants,
+          sport,
+        }),
+      });
       const data = await response.json();
       // console.log(data, "<<add data");
     } catch (error) {

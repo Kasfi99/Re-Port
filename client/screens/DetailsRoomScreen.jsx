@@ -15,9 +15,12 @@ import { useEffect } from "react";
 import { useState } from "react";
 import COLORS from "../consts/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import baseUrl from "../consts/ngrokUrl";
+import { useNavigation } from "@react-navigation/native";
 
-export default function DetailsRoom({ navigation, route }) {
+export default function DetailsRoom({ route }) {
   const { id } = route.params;
+  const navigation = useNavigation();
   const currentParticipant = 4;
   const userId = 4;
   // console.log(id, "<<<<<");
@@ -36,6 +39,7 @@ export default function DetailsRoom({ navigation, route }) {
   const [accessToken, setAccessToken] = useState("");
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isJoined, setIsJoined] = useState(false);
 
   const handleOpenMaps = () => {
     const { latitude, longitude } = region;
@@ -43,7 +47,8 @@ export default function DetailsRoom({ navigation, route }) {
     const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}&query_place_id=${label}`;
     Linking.openURL(url);
   };
-
+  console.log(creator, "<<<<<<<<<<");
+  //  TOKEN
   async function getData() {
     try {
       const dataString = await AsyncStorage.getItem("access_token");
@@ -57,20 +62,22 @@ export default function DetailsRoom({ navigation, route }) {
       console.log(error);
     }
   }
+
+  // CANCEL
   const handleCancel = async () => {
     try {
-      const response = await fetch(
-        `https://0b4d-139-228-111-126.ngrok-free.app/event/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            access_token: accessToken,
-          },
-        }
-      );
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      // console.log(id, "<<<< INI ID HANDLE CANCEL");
+      const response = await fetch(`${baseUrl}/event/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          access_token: token,
+        },
+      });
       const data = await response.json();
-      // console.log(data, "<< Handle Cancel");
+      console.log(data, "<< Handle Cancel");
       navigation.navigate("Main");
     } catch (error) {
       console.log(error);
@@ -81,21 +88,18 @@ export default function DetailsRoom({ navigation, route }) {
   const fetchByEvent = async () => {
     // console.log("useEffect pertama dijalankan");
     try {
-      console.log("useEffect pertama Masuk Ke Try");
-      console.log(typeof accessToken, "<<<accessTokennya");
-      const response = await fetch(
-        `https://0b4d-139-228-111-126.ngrok-free.app/event/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
+      // console.log("useEffect pertama Masuk Ke Try");
+      // console.log(typeof accessToken, "<<<accessTokennya");
+      const response = await fetch(`${baseUrl}/event/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
 
-            access_token: accessToken,
-          },
-        }
-      );
+          access_token: accessToken,
+        },
+      });
       const data = await response.json();
       // console.log(data.date, " DATA SEMUA <<<");
-      console.log(data, "Data dari API");
+      // console.log(data, "Data dari API");
       setPerEvent(data);
       if (data.location) {
         const location = JSON.parse(data.location);
@@ -122,7 +126,7 @@ export default function DetailsRoom({ navigation, route }) {
         const endTime = endDateTime.format("hh.mm A");
 
         const output = `${startMoment} | ${startTime} - ${endTime}`;
-        console.log(output, "ININIHHH");
+        // console.log(output, "ININIHHH");
         setFormattedDate(output);
       }
 
@@ -134,6 +138,7 @@ export default function DetailsRoom({ navigation, route }) {
     }
   };
 
+  // console.log(perEvent.participants, " <<<DARI DETAILS");
   useEffect(() => {
     async function fetchData() {
       await getData();
@@ -147,6 +152,25 @@ export default function DetailsRoom({ navigation, route }) {
       setIsLoading(false);
     }
   }, [accessToken]);
+
+  //
+  useEffect(() => {
+    (async () => {
+      const dataString = await AsyncStorage.getItem("email");
+      const email = JSON.parse(dataString);
+      console.log(email, "<<<<<EMAIL");
+      console.log(perEvent.participants, "<<");
+      if (perEvent) {
+        const _participant = perEvent.participants.find((participant) => {
+          console.log(participant.user.email, "tttt");
+          return participant.user.email === email;
+        });
+        if (_participant) {
+          setIsJoined(true);
+        }
+      }
+    })();
+  }, [perEvent]);
 
   if (isLoading) {
     return (
@@ -196,10 +220,10 @@ export default function DetailsRoom({ navigation, route }) {
             </Text>
           </View>
           <View style={{ marginBottom: 20 }}>
-            {creator?.role === "user" ? (
+            {creator?.role === "user" && isJoined ? (
               <PrimaryButton
                 onPress={() => {
-                  navigation.navigate("DetailsRoom");
+                  handleCancel();
                 }}
                 title="Cancel Booking"
               />
@@ -209,6 +233,15 @@ export default function DetailsRoom({ navigation, route }) {
                   <Text style={styles.title}>Join Booking</Text>
                 </View>
               </TouchableOpacity>
+            )}
+
+            {creator?.role === "admin" && (
+              <PrimaryButton
+                onPress={() => {
+                  console.log("KE DELETE");
+                }}
+                title="Delete Event"
+              />
             )}
           </View>
         </View>

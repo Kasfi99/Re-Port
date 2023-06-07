@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-export default function WelcomeLevel({ navigation }) {
+export default function WelcomeLevel() {
   const [level, setLevel] = useState([]);
   const navigation = useNavigation();
   const retrieveData = async () => {

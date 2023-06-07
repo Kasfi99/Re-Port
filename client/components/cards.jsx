@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { CardDivider } from "./Divider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import baseUrl from "../consts/ngrokUrl";
 
 export default function CardHome({ filter, item, idEvent, horizontal }) {
   // console.log(idEvent, "ID DI USER PROFILE");
@@ -24,16 +25,15 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
   async function handleJoin(id) {
     console.log(id, "<<id Handle Join");
     try {
-      const response = await fetch(
-        `https://0b4d-139-228-111-126.ngrok-free.app/event/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            access_token: accessToken,
-          },
-        }
-      );
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      const response = await fetch(`${baseUrl}/event/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          access_token: token,
+        },
+      });
       const data = await response.json();
       console.log(data, "<< Handle Join");
       navigation.navigate("eventRoom", { id: id });
@@ -41,20 +41,20 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
       console.log(error);
     }
   }
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
-  async function getData() {
-    try {
-      const dataString = await AsyncStorage.getItem("access_token");
-      const token = JSON.parse(dataString);
-      setAccessToken(token);
-      // Lakukan sesuatu menggunakan access_token
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // async function getData() {
+  //   try {
+  //     const dataString = await AsyncStorage.getItem("access_token");
+  //     const token = JSON.parse(dataString);
+  //     setAccessToken(token);
+  //     // Lakukan sesuatu menggunakan access_token
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   const greenSlots = !item?.participant ? 0 : item?.participant.length;
   const remainingSlots = 8 - greenSlots;
@@ -92,9 +92,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await fetch(
-          "https://0b4d-139-228-111-126.ngrok-free.app/eventlist"
-        );
+        const response = await fetch(`${baseUrl}/eventlist`);
         const data = await response.json(); // parsing respons JSON
         // console.log(data); // hasil respons JSON
         setEvents(data); // simpan data ke state events

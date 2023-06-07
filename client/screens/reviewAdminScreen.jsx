@@ -10,6 +10,7 @@ import { Checkbox } from "react-native-paper";
 import { Rating } from "react-native-elements";
 import COLORS from "../consts/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import baseUrl from "../consts/ngrokUrl";
 
 const data = [
   { id: 1, name: "Jennie Kim", rating: 0 },
@@ -79,49 +80,36 @@ export default function AdminReview({ route }) {
 
   useEffect(() => {
     async function fetchByEvent() {
-      console.log("useEffect di Review pertama dijalankan");
+      // console.log("useEffect di Review pertama dijalankan");
       try {
+        const dataString = await AsyncStorage.getItem("access_token");
+        const access_token = JSON.parse(dataString);
         console.log("useEffect pertama Masuk Ke Try");
-        const response = await fetch(
-          `https://0b4d-139-228-111-126.ngrok-free.app/event/${id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              access_token:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODYwNDU2MTl9.VuMJmgR26rJmsfVQsgqcefisbQ3pynoHKkupnCYMIdU",
-              // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          }
-        );
+        const response = await fetch(`${baseUrl}/event/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            access_token: access_token,
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
         const data = await response.json();
-        // console.log(" DATA SEMUA <<<");
+        // console.log(data, " DATA DI HALAMAN REVIEW ADMIN <<<");
         setDataReview(data);
-        // console.log(data.participants, "Data di REVIEW ADMIN");
-        setTeamData[data.participants];
+        // console.log(data.participants, "Data PARTICPANt REVIEW ADMIN");
+        setTeamData(data.participants);
       } catch (error) {
         console.error(error);
       }
     }
-    getData();
     fetchByEvent();
   }, []);
 
-  async function getData() {
-    try {
-      const dataString = await AsyncStorage.getItem("access_token");
-      const access_token = JSON.parse(dataString);
-      // console.log(access_token, "<<< ACCESS TOKEN");
-      // Lakukan sesuatu menggunakan access_token
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  console.log(dataReview);
+  // console.log(teamData, "<<<DATA TEAM");
   return (
     <ScrollView>
       <View style={styles.container}>
         <View>
-          {dataReview?.creator?.role === "Admin" && (
+          {dataReview?.creator?.role === "user" && (
             <View>
               <View style={styles.header}>
                 <Text style={styles.headerText}>Who's Coming?</Text>
