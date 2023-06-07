@@ -109,6 +109,7 @@ export default function LoginScreen() {
 
   const handleGuest = () => {
     console.log("masuk sebagai user"); // Jangan lupa ditambah ganti
+    navigation.navigate("Main")
   };
 
   // return <Text>Testing</Text>;

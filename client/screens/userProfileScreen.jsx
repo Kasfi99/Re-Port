@@ -11,7 +11,6 @@ import {
   FlatList,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
-import React, { useState, useRef, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import COLORS from "../consts/colors";
 import CardHome from "../components/cards";

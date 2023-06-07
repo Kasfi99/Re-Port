@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Image,
   Modal,
-  TouchableOpacity,
+  TouchableOpacity, ScrollView
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 // import { TouchableOpacity } from "react-native-gesture-handler";
@@ -76,7 +76,7 @@ export default function WelcomeProfile() {
       const access_token = JSON.parse(dataString);
 
       const { data } = await axios.put(
-        "https://5ea3-139-228-111-126.ngrok-free.app/user/editGenderProf",
+        "https://1b97-111-95-114-225.ngrok-free.app/user/editGenderProf",
         { gender: gender.name },
         `${baseUrl}/user/editGenderProf`,
         { gender: gender.name, pic: image },
@@ -92,6 +92,7 @@ export default function WelcomeProfile() {
   };
 
   return (
+    <ScrollView>
     <View
       style={{
         flex: 1,
@@ -393,6 +394,7 @@ export default function WelcomeProfile() {
         </Text>
       </TouchableOpacity>
     </View>
+    </ScrollView>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -11,11 +11,20 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ChatBubble from "./ChatBubble";
+import io from "socket.io-client"
+import baseUrl from "../consts/ngrokUrl";
+const socket = io.connect(baseUrl)
 
 export default function ChatScreen() {
   const navigation = useNavigation();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    socket.on("message-stored", data => {
+      console.log(data)
+    })
+  }, [socket])
 
   // const handleSend = () => {
   //   console.log("Pesan yang dikirim:", message);
@@ -26,6 +35,7 @@ export default function ChatScreen() {
   //   setMessage("");
   // };
   const handleSend = () => {
+    socket.emit("message-received", {eventId: "id", userEmail: "user11@mail.com", message: message })
     console.log("Pesan yang dikirim:", message);
     setMessages([
       ...messages,
