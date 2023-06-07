@@ -16,6 +16,7 @@ import COLORS from "../consts/colors";
 import CardHome from "../components/cards";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ModalEdit from "../components/modalEdit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function UserProfile() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -28,13 +29,21 @@ export default function UserProfile() {
   useEffect(() => {
     async function getMyEvents() {
       try {
+        const dataString = await AsyncStorage.getItem("access_token");
+        const token = JSON.parse(dataString);
+        // setAccessToken(token);
+
+        const emailString = await AsyncStorage.getItem("email");
+        const email = JSON.parse(emailString);
+        // setCurrentUserEmail(email);
+
         const response = await fetch(
           `https://0b4d-139-228-111-126.ngrok-free.app/event/myevents`,
           {
             headers: {
               "Content-Type": "application/json",
-              access_token:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODYwNDU2MTl9.VuMJmgR26rJmsfVQsgqcefisbQ3pynoHKkupnCYMIdU",
+              access_token: token,
+
               // 'Content-Type': 'application/x-www-form-urlencoded',
             },
           }
