@@ -22,23 +22,41 @@ export default function ChatScreen({route}) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [userEmail, setUserEmail] = useState("")
-
-
+  const [discussion, setDiscussion] = useState([])
 
   useEffect(() => {
+    console.log(id)
     const getEmail = async()=> {
       try {
-        const userData = await AsyncStorage.getItem("email");
+      const userData = await AsyncStorage.getItem("email");
       const userEmail = JSON.parse(userData);
       setUserEmail(userEmail)
      } catch(err){
       console.log(err)
      }
       }
-      
-    getEmail();
+    getEmail(); 
+
+    const getDiscussion = async() => {
+      try {
+        const response = await fetch(`${baseUrl}/discussion/${id}`);
+        const data = await response.json()
+        setDiscussion(data)
+        console.log(data)
+
+      }catch(err){
+        console.log(err)
+      }
+    }
+
+    getDiscussion();
+    
     socket.on("message-stored", data => {
       console.log(data, "message stored")
+      setDiscussion([
+        ...discussion,
+        data
+      ])
     })
   }, [socket])
 
@@ -51,10 +69,6 @@ export default function ChatScreen({route}) {
   //   setMessage("");
   // };
   const handleSend = () => {
-
-    // console.log(getEmail())
-    // let email =  getEmail()
-    // console.log(email, "email")
     socket.emit("message-received", {eventId: id, userEmail: userEmail, message: message })
     console.log("Pesan yang dikirim:", message);
     setMessages([
@@ -73,10 +87,21 @@ export default function ChatScreen({route}) {
   const renderMessage = ({ item }) => {
     return (
       <ChatBubble
-        message={item.text}
+        message={item.text} 
         isMe={item.isMe}
         senderName={item.senderName}
         avatar={item.avatar}
+      />
+    );
+  };
+
+  const renderThread = ({ item }) => {
+    return (
+
+      <ChatBubble
+        message={item.content}
+        senderName={item?.sender?.name}
+        avatar={item?.sender?.pic}
       />
     );
   };
@@ -86,6 +111,7 @@ export default function ChatScreen({route}) {
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
+      <FlatList style={styles.messageList} data={discussion} renderItem={renderThread} keyExtractor={(item => item._id.toString())} />
       <FlatList
         style={styles.messageList}
         data={messages}
