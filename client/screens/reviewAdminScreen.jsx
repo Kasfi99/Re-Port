@@ -39,7 +39,7 @@ export default function AdminReview({ route }) {
   const [usersRating, setUsersRating] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  console.log(teamData, "<< Team Data");
+  // console.log(teamData, "<< Team Data");
 
   const handleSelectAll = () => {
     const newCheckedItems = {};
@@ -63,32 +63,23 @@ export default function AdminReview({ route }) {
     newCheckedItems[id] = !newCheckedItems[id];
     setCheckedItems(newCheckedItems);
   };
-  // console.log(checkedItems, "<<<<");
 
-  // const handleRatingChange = (id, rating) => {
-  //   console.log(rating);
-  //   // const newData = [...teamData]; // membuat copy baru dari teamData
-  //   // const index = newData.findIndex((item) => item.id === id);
-  //   // newData[index].rating = rating;
-  //   // setTeamData(newData); // memperbarui state teamData dengan copy yang baru
+  // const handleSubmit = () => {
+  //   const selectedItems = teamData.filter((item) => checkedItems[item.id]);
+  //   // console.log("Selected items:", selectedItems);
+
+  //   const ratings = selectedItems.map((item) => ({
+  //     memberId: item.id,
+  //     rating: item.rating,
+  //   }));
+  //   console.log("Ratings:", ratings);
+
+  //   const data = {
+  //     attendees: selectedItems,
+  //     ratings: ratings,
+  //   };
+  //   console.log("Data to be sent:", data);
   // };
-
-  const handleSubmit = () => {
-    const selectedItems = teamData.filter((item) => checkedItems[item.id]);
-    // console.log("Selected items:", selectedItems);
-
-    const ratings = selectedItems.map((item) => ({
-      memberId: item.id,
-      rating: item.rating,
-    }));
-    console.log("Ratings:", ratings);
-
-    const data = {
-      attendees: selectedItems,
-      ratings: ratings,
-    };
-    console.log("Data to be sent:", data);
-  };
 
   useEffect(() => {
     async function fetchByEvent() {
@@ -148,7 +139,7 @@ export default function AdminReview({ route }) {
           rating: rating,
         },
       });
-      console.log(response.data, "<<<<");
+      // console.log(response.data, "<<<<");
     } catch (error) {
       console.log(error);
     }
