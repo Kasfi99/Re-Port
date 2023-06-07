@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Alert,
   Modal,
@@ -13,10 +13,15 @@ import {
 import COLORS from "../consts/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as ImagePicker from "expo-image-picker";
+import PickerSport from "./pickerSport";
+import baseUrl from "../consts/ngrokUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios, { Axios } from "axios";
 
 const ModalEdit = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
+  const [pic, setPic] = useState(null);
 
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
@@ -31,8 +36,8 @@ const ModalEdit = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
+    setPic(result);
+    setImage(<Image source={{ uri: image }} style={styles.icon} />);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -40,19 +45,42 @@ const ModalEdit = () => {
   };
 
   const handleSubmitEdit = async () => {
-    setName("");
-    setUserName("");
-    setEmail("");
-    setGender("Male");
-    const newObj = {
-      name,
-      userName,
-      email,
-      gender,
-    };
-    console.log(newObj, "<<<<<");
-    setModalVisible(false);
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const access_token = JSON.parse(dataString);
+      console.log(name, userName, email, pic, access_token, "<<<<< disini cok");
+      const { data } = await axios.put(
+        `${baseUrl}/user/editProfile`,
+        {
+          name,
+          userName,
+          email,
+          pic,
+        },
+        { headers: { access_token } }
+      );
+
+      console.log(data, "<< ini user habis di edit");
+      setName("");
+      setUserName("");
+      setEmail("");
+      setGender("Male");
+      setModalVisible(false);
+    } catch (error) {
+      console.log("editnya gagal karena : ", error);
+    }
   };
+
+  const getImage = async () => {
+    const dataString = await AsyncStorage.getItem("profile_picture");
+    const profPict = JSON.parse(dataString);
+    setPic(profPict);
+    setImage(<Image source={{ uri: profPict }} style={styles.icon} />);
+  };
+
+  useEffect(() => {
+    getImage();
+  }, []);
 
   return (
     <View style={styles.centeredView}>
@@ -104,19 +132,7 @@ const ModalEdit = () => {
                       }}
                     />
                   )}
-                  {image && (
-                    <Image
-                      source={{ uri: image }}
-                      style={{
-                        width: 85,
-                        height: 85,
-                        borderRadius: 50,
-                        marginLeft: "32%",
-                        marginRight: 20,
-                        marginTop: 10,
-                      }}
-                    />
-                  )}
+                  {image && image}
                   <Ionicons
                     name="create"
                     size={32}
@@ -255,6 +271,7 @@ const ModalEdit = () => {
                   }}
                 />
               </Pressable>
+              {/* <PickerSport /> */}
               <Pressable
                 style={{
                   width: 20,
@@ -343,6 +360,14 @@ const styles = StyleSheet.create({
     fontFamily: "IBM-Plex-Sans",
     color: "white",
     fontWeight: "700",
+  },
+  icon: {
+    width: 85,
+    height: 85,
+    borderRadius: 50,
+    marginLeft: "32%",
+    marginRight: 20,
+    marginTop: 10,
   },
   input: {
     height: 40,

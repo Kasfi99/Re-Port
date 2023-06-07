@@ -16,12 +16,16 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import COLORS from "../consts/colors";
+import baseUrl from "../consts/ngrokUrl";
 
 export default function WelcomeProfile() {
   const [image, setImage] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
   // console.log(image, "<<<ini images");
+  const [profImage, setProfImage] = useState(null);
+
+  console.log(image, "<<<ini images");
   const [profiles, setProfiles] = useState([
     {
       id: 1,
@@ -43,7 +47,6 @@ export default function WelcomeProfile() {
   const navigation = useNavigation();
   const GOOGLE_PLACES_API_KEY = "AIzaSyDJCBwVAW27Z24KW63gvImv4NZVNIwaqSA";
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -53,6 +56,9 @@ export default function WelcomeProfile() {
 
     console.log(result);
 
+    setProfImage(<Image source={{ uri: image }} style={styles.icon} />);
+
+    await AsyncStorage.setItem("profile_picture", JSON.stringify(image));
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -65,15 +71,15 @@ export default function WelcomeProfile() {
   const onSubmit = async () => {
     try {
       const gender = profiles.find((el) => el.isPressed === true);
-      // console.log(gender.name);
 
       const dataString = await AsyncStorage.getItem("access_token");
       const access_token = JSON.parse(dataString);
 
-      // console.log(access_token);
       const { data } = await axios.put(
         "https://5ea3-139-228-111-126.ngrok-free.app/user/editGenderProf",
         { gender: gender.name },
+        `${baseUrl}/user/editGenderProf`,
+        { gender: gender.name, pic: image },
         { headers: { access_token } }
       );
 
@@ -138,7 +144,11 @@ export default function WelcomeProfile() {
             marginBottom: 20,
           }}
         >
-          {profiles[0].isPressed ? profiles[0].image : profiles[1].image}
+          {image
+            ? profImage
+            : profiles[0].isPressed
+            ? profiles[0].image
+            : profiles[1].image}
         </View>
       </TouchableOpacity>
       <Ionicons
@@ -474,3 +484,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+/*
+---------------Important Note--------
+- Untuk melakukan pengetasan pick image, silahkan download dulu sebuah gambar
+  di ponsel kalian entah melalui google chrome dan semacamnya
+- Ketika melakukan pick image dan ternyata gambarnya belum keganti, coba pick image sekali lagi, seharusnya berganti.
+
+*/
