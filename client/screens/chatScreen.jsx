@@ -14,15 +14,31 @@ import ChatBubble from "./ChatBubble";
 import io from "socket.io-client"
 import baseUrl from "../consts/ngrokUrl";
 const socket = io.connect(baseUrl)
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function ChatScreen() {
+export default function ChatScreen({route}) {
   const navigation = useNavigation();
+  const { id } = route.params;
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [userEmail, setUserEmail] = useState("")
+
+
 
   useEffect(() => {
+    const getEmail = async()=> {
+      try {
+        const userData = await AsyncStorage.getItem("email");
+      const userEmail = JSON.parse(userData);
+      setUserEmail(userEmail)
+     } catch(err){
+      console.log(err)
+     }
+      }
+      
+    getEmail();
     socket.on("message-stored", data => {
-      console.log(data)
+      console.log(data, "message stored")
     })
   }, [socket])
 
@@ -35,7 +51,11 @@ export default function ChatScreen() {
   //   setMessage("");
   // };
   const handleSend = () => {
-    socket.emit("message-received", {eventId: "id", userEmail: "user11@mail.com", message: message })
+
+    // console.log(getEmail())
+    // let email =  getEmail()
+    // console.log(email, "email")
+    socket.emit("message-received", {eventId: id, userEmail: userEmail, message: message })
     console.log("Pesan yang dikirim:", message);
     setMessages([
       ...messages,

@@ -24,11 +24,11 @@ export default function EventRoom({ route }) {
           component={ChatScreen}
           initialParams={{ id }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="AdminReview"
           component={AdminReview}
           initialParams={{ id }}
-        />
+        /> */}
       </Tab.Navigator>
     </View>
   );
