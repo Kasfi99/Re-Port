@@ -8,10 +8,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 export default function WelcomeLevel({ navigation }) {
   const [level, setLevel] = useState([]);
-
+  const navigation = useNavigation();
   const retrieveData = async () => {
     try {
       const dataString = await AsyncStorage.getItem("sportData");
@@ -26,7 +28,7 @@ export default function WelcomeLevel({ navigation }) {
     }
   };
 
-  console.log(level)
+  console.log(level);
 
   const handleLevelPress = (index, value) => {
     setLevel((prevLevel) => {
@@ -37,6 +39,10 @@ export default function WelcomeLevel({ navigation }) {
   };
 
   const handleSubmit = () => {
+<<<<<<< HEAD
+=======
+    console.log(level, "<< kita submit yah");
+>>>>>>> f7b5b7ce083bac585ef33d8bacc9494d670c913d
     navigation.navigate("Main", { screen: "Home" });
   };
   useEffect(() => {

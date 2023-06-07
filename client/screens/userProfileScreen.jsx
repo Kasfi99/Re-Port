@@ -17,9 +17,162 @@ import CardHome from "../components/cards";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ModalEdit from "../components/modalEdit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+<<<<<<< HEAD
+=======
+
+const dummyData = [
+  {
+    id: 1,
+    name: "MABAR BADMINTON SELASA PETANG (BEGINNER) ONLY",
+    url: "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Nnx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80",
+    sport: "Badminton",
+    participant: ["kasfi", "chris", "benita", "nadel"],
+    price: 40000,
+    status: "One-Time only",
+    place: "Lapangan Bulu Tangkis Grogol",
+    time: "05/06/2022",
+  },
+  {
+    id: 2,
+    name: "MABAR FUTSAL RABU SORE (INTERMEDIATE) ONLY",
+    url: "https://images.unsplash.com/photo-1523905338453-2a4d3093353f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGZ1dHNhbCUyMHNvcnNjaGFpbmclMjBmdXRzYWx8ZW58MHx8fHwxNjIzMTYwODc0&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Futsal",
+    participant: ["john", "michael", "lisa", "sarah"],
+    price: 50000,
+    status: "One-Time only",
+    place: "Futsal Court ABC",
+    time: "06/06/2022",
+  },
+  {
+    id: 3,
+    name: "BASKETBALL PICK-UP GAME",
+    url: "https://images.unsplash.com/photo-1531919320171-41a44d07d523?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YmFza2V0YmFsbCUyMGJhc2tldGJhbGx8ZW58MHx8fHwxNjIzMTYwODc0&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Basketball",
+    participant: ["david", "emily", "james"],
+    price: 30000,
+    status: "One-Time only",
+    place: "Basketball Court XYZ",
+    time: "06/06/2022",
+  },
+  {
+    id: 4,
+    name: "YOGA CLASS",
+    url: "https://images.unsplash.com/photo-1564030358-bc3b8f587ce6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8eW9nYSUyMGNsYXNzJTIwZnJpZW5kc3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Yoga",
+    participant: ["olivia", "samuel"],
+    price: 25000,
+    status: "One-Time only",
+    place: "Yoga Studio",
+    time: "07/06/2022",
+  },
+  {
+    id: 5,
+    name: "RUNNING CLUB",
+    url: "https://images.unsplash.com/photo-1565299024-8b3a2911f0f2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8cmVhbCUyMGJhc2tldGJhbGwlMjBjbHVifGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Running",
+    participant: ["oliver"],
+    price: 0,
+    status: "Recurring",
+    place: "City Park",
+    time: "08/06/2022",
+  },
+  {
+    id: 6,
+    name: "CYCLING GROUP",
+    url: "https://images.unsplash.com/photo-1519317676404-99f32a63e7f5?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGN5Y2xpbmclMjBncm91cHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Cycling",
+    participant: ["william", "sophia", "oliver", "ava", "mia"],
+    price: 15000,
+    status: "Recurring",
+    place: "Cycling Track",
+    time: "09/06/2022",
+  },
+  {
+    id: 7,
+    name: "TENNIS LESSONS",
+    url: "https://images.unsplash.com/photo-1551224909-0c9e382b22b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fHRlbm5pcyUyMGRldGFpbHN8ZW58MHx8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Tennis",
+    participant: ["emma", "noah", "mia", "alexander", "ava"],
+    price: 60000,
+    status: "Recurring",
+    place: "Tennis Court",
+    time: "10/06/2022",
+  },
+  {
+    id: 8,
+    name: "SWIMMING TRAINING",
+    url: "https://images.unsplash.com/photo-1578312751262-992386b1a97b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8c3dpbW1pbmclMjBzdHJhaW5pbmd8ZW58MHx8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Swimming",
+    participant: ["olivia", "jack", "charlotte", "jacob"],
+    price: 45000,
+    status: "Recurring",
+    place: "Swimming Pool",
+    time: "11/06/2022",
+  },
+];
+
+const dummyData2 = [
+  {
+    id: 1,
+    name: "MABAR BADMINTON SELASA PETANG (BEGINNER) ONLY",
+    url: "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Nnx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80",
+    sport: "Badminton",
+    participant: ["kasfi", "chris", "benita", "nadel"],
+    price: 40000,
+    status: "One-Time only",
+    place: "Lapangan Bulu Tangkis Grogol",
+    time: "05/06/2022",
+  },
+  {
+    id: 2,
+    name: "MABAR FUTSAL RABU SORE (INTERMEDIATE) ONLY",
+    url: "https://images.unsplash.com/photo-1523905338453-2a4d3093353f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGZ1dHNhbCUyMHNvcnNjaGFpbmclMjBmdXRzYWx8ZW58MHx8fHwxNjIzMTYwODc0&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Futsal",
+    participant: ["john", "michael", "lisa", "sarah"],
+    price: 50000,
+    status: "One-Time only",
+    place: "Futsal Court ABC",
+    time: "06/06/2022",
+  },
+  {
+    id: 3,
+    name: "BASKETBALL PICK-UP GAME",
+    url: "https://images.unsplash.com/photo-1531919320171-41a44d07d523?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YmFza2V0YmFsbCUyMGJhc2tldGJhbGx8ZW58MHx8fHwxNjIzMTYwODc0&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Basketball",
+    participant: ["david", "emily", "james"],
+    price: 30000,
+    status: "One-Time only",
+    place: "Basketball Court XYZ",
+    time: "06/06/2022",
+  },
+  {
+    id: 4,
+    name: "YOGA CLASS",
+    url: "https://images.unsplash.com/photo-1564030358-bc3b8f587ce6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8eW9nYSUyMGNsYXNzJTIwZnJpZW5kc3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Yoga",
+    participant: ["olivia", "samuel"],
+    price: 25000,
+    status: "One-Time only",
+    place: "Yoga Studio",
+    time: "07/06/2022",
+  },
+  {
+    id: 5,
+    name: "RUNNING CLUB",
+    url: "https://images.unsplash.com/photo-1565299024-8b3a2911f0f2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8cmVhbCUyMGJhc2tldGJhbGwlMjBjbHVifGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
+    sport: "Running",
+    participant: ["oliver"],
+    price: 0,
+    status: "Recurring",
+    place: "City Park",
+    time: "08/06/2022",
+  },
+];
+>>>>>>> f7b5b7ce083bac585ef33d8bacc9494d670c913d
 
 export default function UserProfile() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [image, setImage] = useState(null);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [myUpcomingEvents, setUpcomingEvents] = useState([]);
@@ -80,6 +233,22 @@ export default function UserProfile() {
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 0 }).current;
 
+  const getImage = async () => {
+    try {
+      const dataString = await AsyncStorage.getItem("profile_picture");
+      const profPict = JSON.parse(dataString);
+      // console.log(profPict, "<<<<<");
+
+      setImage(<Image source={{ uri: profPict }} style={styles.icon} />);
+    } catch (error) {
+      console.log("failed to retrieve data : " + error);
+    }
+  };
+
+  useEffect(() => {
+    getImage();
+  }, []);
+
   return (
     <ScrollView>
       <SafeAreaView style={{ flex: 1 }}>
@@ -97,17 +266,14 @@ export default function UserProfile() {
               alignItems: "center",
             }}
           >
-            <Image
-              source={{ uri: "https://via.placeholder.com/150" }}
-              style={{
-                width: 65,
-                height: 65,
-                borderRadius: 50,
-                marginLeft: 20,
-                marginRight: 20,
-                marginTop: 30,
-              }}
-            />
+            {image ? (
+              image
+            ) : (
+              <Image
+                source={{ uri: "https://via.placeholder.com/150" }}
+                style={styles.icon}
+              />
+            )}
             <View
               style={{
                 flex: 1,
@@ -398,4 +564,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
   },
+  icon: {
+    width: 65,
+    height: 65,
+    borderRadius: 50,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 30,
+  },
 });
+
+/*
+---------------Important Note--------
+- Untuk melakukan pengetasan pick image, silahkan download dulu sebuah gambar
+  di ponsel kalian entah melalui google chrome dan semacamnya
+- Ketika melakukan pick image dan ternyata gambarnya belum keganti, coba pick image sekali lagi, seharusnya berganti.
+
+*/
