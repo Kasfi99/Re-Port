@@ -6,11 +6,11 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  Touchable,
   Modal,
+  TouchableOpacity,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -72,7 +72,7 @@ export default function WelcomeProfile() {
 
       // console.log(access_token);
       const { data } = await axios.put(
-        "https://0b4d-139-228-111-126.ngrok-free.app/user/editGenderProf",
+        "https://5ea3-139-228-111-126.ngrok-free.app/user/editGenderProf",
         { gender: gender.name },
         { headers: { access_token } }
       );
@@ -156,7 +156,8 @@ export default function WelcomeProfile() {
         style={{
           width: "60%",
           flexDirection: "row",
-          marginLeft: "18%",
+          marginLeft: "10%",
+          marginRight: "10%",
           marginTop: 0,
         }}
       >
@@ -257,10 +258,16 @@ export default function WelcomeProfile() {
           {selectedLocation ? selectedLocation.address : "Enter Location"}
         </Text>
       </TouchableOpacity>
+      {/* MODAL */}
       <Modal visible={isLocationModalVisible} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
-            <TouchableOpacity onPress={() => setIsLocationModalVisible(false)}>
+            <TouchableOpacity
+              onPress={() => {
+                console.log("ke cancelll");
+                setIsLocationModalVisible(false);
+              }}
+            >
               <Text style={styles.modalHeaderText}>Cancel</Text>
             </TouchableOpacity>
             {/* <Text style={styles.modalHeaderText}>Select Location</Text>
@@ -268,6 +275,7 @@ export default function WelcomeProfile() {
               <Text style={styles.modalHeaderText}>Done yaa</Text>
             </TouchableOpacity> */}
           </View>
+
           <GooglePlacesAutocomplete
             placeholder="Enter Location"
             minLength={1}

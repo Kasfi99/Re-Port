@@ -106,14 +106,20 @@ export default function AddEventFormScreen({ navigation, route }) {
     console.log(eventData, "<< KIRIM DATA");
 
     try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      // setAccessToken(token);
+
+      const emailString = await AsyncStorage.getItem("email");
+      const email = JSON.parse(emailString);
+
       const response = await fetch(
         "https://0b4d-139-228-111-126.ngrok-free.app/event",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            access_token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NkMGM4ZTU4YjliNDg5OTk3M2Y4NCIsImVtYWlsIjoidGVzdDFAbWFpbC5jb20iLCJpYXQiOjE2ODU5MDM2MTB9.wTXqGh0tNPxL4gWfOY4KQmkjYdEfCCbH6OiE93pXvio",
+            access_token: token,
           },
           body: JSON.stringify({
             title: eventTitle,
