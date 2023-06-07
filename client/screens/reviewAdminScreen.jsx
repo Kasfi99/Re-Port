@@ -8,9 +8,12 @@ import {
 } from "react-native";
 import { Checkbox } from "react-native-paper";
 import { Rating } from "react-native-elements";
+// import { AirbnbRating } from "@rneui/themed";
 import COLORS from "../consts/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import baseUrl from "../consts/ngrokUrl";
+import RatingCustom from "../components/ratings";
+import axios from "axios";
 
 const data = [
   { id: 1, name: "Jennie Kim", rating: 0 },
@@ -30,7 +33,13 @@ export default function AdminReview({ route }) {
       return acc;
     }, {})
   );
+
   const [teamData, setTeamData] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [usersRating, setUsersRating] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  console.log(teamData, "<< Team Data");
 
   const handleSelectAll = () => {
     const newCheckedItems = {};
@@ -49,17 +58,20 @@ export default function AdminReview({ route }) {
   };
 
   const handleSelectItem = (id) => {
+    // console.log(id, "cehclis");
     const newCheckedItems = { ...checkedItems };
     newCheckedItems[id] = !newCheckedItems[id];
     setCheckedItems(newCheckedItems);
   };
+  // console.log(checkedItems, "<<<<");
 
-  const handleRatingChange = (id, rating) => {
-    const newData = [...teamData]; // membuat copy baru dari teamData
-    const index = newData.findIndex((item) => item.id === id);
-    newData[index].rating = rating;
-    setTeamData(newData); // memperbarui state teamData dengan copy yang baru
-  };
+  // const handleRatingChange = (id, rating) => {
+  //   console.log(rating);
+  //   // const newData = [...teamData]; // membuat copy baru dari teamData
+  //   // const index = newData.findIndex((item) => item.id === id);
+  //   // newData[index].rating = rating;
+  //   // setTeamData(newData); // memperbarui state teamData dengan copy yang baru
+  // };
 
   const handleSubmit = () => {
     const selectedItems = teamData.filter((item) => checkedItems[item.id]);
@@ -69,7 +81,7 @@ export default function AdminReview({ route }) {
       memberId: item.id,
       rating: item.rating,
     }));
-    // console.log("Ratings:", ratings);
+    console.log("Ratings:", ratings);
 
     const data = {
       attendees: selectedItems,
@@ -84,7 +96,10 @@ export default function AdminReview({ route }) {
       try {
         const dataString = await AsyncStorage.getItem("access_token");
         const access_token = JSON.parse(dataString);
-        console.log("useEffect pertama Masuk Ke Try");
+
+        const emailString = await AsyncStorage.getItem("email");
+        const email = JSON.parse(emailString);
+        // console.log("useEffect pertama Masuk Ke Try");
         const response = await fetch(`${baseUrl}/event/${id}`, {
           headers: {
             "Content-Type": "application/json",
@@ -95,7 +110,12 @@ export default function AdminReview({ route }) {
         const data = await response.json();
         // console.log(data, " DATA DI HALAMAN REVIEW ADMIN <<<");
         setDataReview(data);
-        // console.log(data.participants, "Data PARTICPANt REVIEW ADMIN");
+
+        if (data) {
+          if (data.creator.email === email) {
+            setIsAdmin(true);
+          }
+        }
         setTeamData(data.participants);
       } catch (error) {
         console.error(error);
@@ -105,11 +125,40 @@ export default function AdminReview({ route }) {
   }, []);
 
   // console.log(teamData, "<<<DATA TEAM");
+  const team = teamData.map((data) => {
+    const user = { userId: data.user._id, rating: null };
+    return user;
+  });
+  // setUsersRating(team);
+
+  // console.log(team, "TEAM");
+  ratingCompleted = async (rating, id) => {
+    // console.log("Rating is: " + id, rating);
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      const response = await axios({
+        url: `${baseUrl}/rating`,
+        method: "Post",
+        headers: {
+          access_token: token,
+        },
+        data: {
+          userId: id,
+          rating: rating,
+        },
+      });
+      console.log(response.data, "<<<<");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
-        <View>
-          {dataReview?.creator?.role === "user" && (
+        {isAdmin && (
+          <View>
             <View>
               <View style={styles.header}>
                 <Text style={styles.headerText}>Who's Coming?</Text>
@@ -122,48 +171,47 @@ export default function AdminReview({ route }) {
                 </TouchableOpacity>
               </View>
             </View>
-          )}
 
-          <ScrollView>
-            {teamData.map((item) => (
-              <View style={styles.item} key={item.id}>
-                <View>
-                  <Text style={styles.itemText}>{item.name}</Text>
+            <ScrollView>
+              {teamData?.map((item) => (
+                <View style={styles.item} key={item.id}>
+                  <View>
+                    <Text style={styles.itemText}>{item.user.name}</Text>
+                  </View>
+
+                  <Checkbox
+                    status={
+                      checkedItems[item.user._id] ? "checked" : "unchecked"
+                    }
+                    onPress={() => handleSelectItem(item.user._id)}
+                    color={COLORS.primaryGreen}
+                  />
                 </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
 
-                <Checkbox
-                  status={checkedItems[item.id] ? "checked" : "unchecked"}
-                  onPress={() => handleSelectItem(item.id)}
-                  color={COLORS.primaryGreen}
-                />
-              </View>
-            ))}
-          </ScrollView>
-        </View>
         <View style={{ flex: 1, marginTop: 30 }}>
           <Text style={styles.headerText}>Review Your Teammates</Text>
           <ScrollView>
-            {teamData.map((item) => (
+            {teamData?.map((item) => (
               <View style={styles.card} key={item.id}>
-                <Text style={styles.cardTitle}>{item.name}</Text>
-                <Rating
-                  type="star"
-                  fractions={1}
-                  startingValue={item.rating || 0}
-                  imageSize={30}
-                  onFinishRating={(rating) =>
-                    handleRatingChange(item.id, rating)
-                  }
-                  containerStyle={{ backgroundColor: "transparent" }}
-                  style={{ backgroundColor: "transparent" }}
+                <Text style={styles.cardTitle}>{item.user.name}</Text>
+
+                <RatingCustom
+                  ratingScore={item.user.rating}
+                  handleChange={(rating) => {
+                    ratingCompleted(rating, item.user._id);
+                  }}
                 />
               </View>
             ))}
           </ScrollView>
         </View>
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        {/* <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
@@ -221,6 +269,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+    textAlign: "center",
   },
   submitButton: {
     backgroundColor: COLORS.primaryGreen,

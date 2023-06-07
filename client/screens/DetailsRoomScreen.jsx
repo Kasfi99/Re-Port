@@ -266,14 +266,21 @@ export default function DetailsRoom({ route }) {
             {isAdmin && perEvent.status === "Open" && (
               <Button
                 onPress={() => {
-                  Alert.alert("Alert Title", "My Alert Msg", [
-                    {
-                      text: "Cancel",
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "cancel",
-                    },
-                    { text: "OK", onPress: () => handleChangeStatus("start") },
-                  ]);
+                  Alert.alert(
+                    "Start The Event",
+                    "Do you want to start the event now?",
+                    [
+                      {
+                        text: "Cancel",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel",
+                      },
+                      {
+                        text: "Start Event",
+                        onPress: () => handleChangeStatus("start"),
+                      },
+                    ]
+                  );
                 }}
                 title="Start"
               />
@@ -281,14 +288,21 @@ export default function DetailsRoom({ route }) {
             {isAdmin && perEvent.status === "Ongoing" && (
               <Button
                 onPress={() => {
-                  Alert.alert("Alert Title", "My Alert Msg", [
-                    {
-                      text: "Cancel",
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "cancel",
-                    },
-                    { text: "OK", onPress: () => handleChangeStatus("close") },
-                  ]);
+                  Alert.alert(
+                    "Close The Event",
+                    "Do you want to finish the event now?",
+                    [
+                      {
+                        text: "Cancel",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel",
+                      },
+                      {
+                        text: "Close Event",
+                        onPress: () => handleChangeStatus("close"),
+                      },
+                    ]
+                  );
                 }}
                 title="Close"
               />
