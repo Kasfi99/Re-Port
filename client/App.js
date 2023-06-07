@@ -122,6 +122,11 @@ export default function App() {
             component={EventRoom}
             // options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="Thankyou"
+            component={ThankYouScreen}
+            // options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

@@ -32,7 +32,7 @@ export default function LoginScreen() {
   }, [response]);
 
   async function handleSignInWithGoogle() {
-    console.log("MASUK PAK");
+    // console.log("MASUK PAK");
     // await AsyncStorage.removeItem("@user");
 
     if (response?.type === "success") {
@@ -43,7 +43,7 @@ export default function LoginScreen() {
   }
 
   const getUserInfo = async (token) => {
-    console.log("hei wak");
+    // console.log("hei wak");
     if (!token) return;
     try {
       console.log("hei");
@@ -109,7 +109,7 @@ export default function LoginScreen() {
 
   const handleGuest = () => {
     console.log("masuk sebagai user"); // Jangan lupa ditambah ganti
-    navigation.navigate("Main")
+    navigation.navigate("Main");
   };
 
   // return <Text>Testing</Text>;

@@ -9,11 +9,12 @@ import COLORS from "../consts/colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import PrimaryButton from "../components/button";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { CardDivider } from "./Divider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import baseUrl from "../consts/ngrokUrl";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function CardHome({ filter, item, idEvent, horizontal }) {
   // console.log(idEvent, "ID DI USER PROFILE");
@@ -35,7 +36,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
         },
       });
       const data = await response.json();
-      console.log(data, "<< Handle Join");
+      // console.log(data, "<< Handle Join");
       navigation.navigate("eventRoom", { id: id });
     } catch (error) {
       console.log(error);
@@ -88,20 +89,35 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
   //   }
   // }
   // console.log(events);
-
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const response = await fetch(`${baseUrl}/eventlist`);
-        const data = await response.json(); // parsing respons JSON
-        // console.log(data); // hasil respons JSON
-        setEvents(data); // simpan data ke state events
-      } catch (error) {
-        console.log(error);
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchEvents() {
+        try {
+          const response = await fetch(`${baseUrl}/eventlist`);
+          const data = await response.json(); // parsing respons JSON
+          // console.log(data); // hasil respons JSON
+          setEvents(data); // simpan data ke state events
+        } catch (error) {
+          console.log(error);
+        }
       }
-    }
-    fetchEvents();
-  }, []);
+      fetchEvents();
+    }, [])
+  );
+
+  // useEffect(() => {
+  //   async function fetchEvents() {
+  //     try {
+  //       const response = await fetch(`${baseUrl}/eventlist`);
+  //       const data = await response.json(); // parsing respons JSON
+  //       // console.log(data); // hasil respons JSON
+  //       setEvents(data); // simpan data ke state events
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  //   fetchEvents();
+  // }, []);
 
   return (
     <>
@@ -122,7 +138,12 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
             return (
               <TouchableOpacity
                 key={el._id}
-                onPress={() => navigation.navigate("eventRoom", { id: el._id })}
+                onPress={() =>
+                  navigation.navigate("eventRoom", {
+                    id: el._id,
+                    status: el.status,
+                  })
+                }
               >
                 <View
                   style={{
@@ -206,7 +227,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                         fontFamily: "IBM-Plex-Sans",
                       }}
                     >
-                      Court Price {el.courtPrice}
+                      Court Price {el.status}
                     </Text>
                   </View>
                   <View

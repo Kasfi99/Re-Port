@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Button,
+  Alert,
 } from "react-native";
 import moment from "moment";
 import MapView from "react-native-maps";
@@ -40,6 +42,7 @@ export default function DetailsRoom({ route }) {
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isJoined, setIsJoined] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleOpenMaps = () => {
     const { latitude, longitude } = region;
@@ -47,7 +50,6 @@ export default function DetailsRoom({ route }) {
     const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}&query_place_id=${label}`;
     Linking.openURL(url);
   };
-  console.log(creator, "<<<<<<<<<<");
   //  TOKEN
   async function getData() {
     try {
@@ -138,6 +140,30 @@ export default function DetailsRoom({ route }) {
     }
   };
 
+  const handleChangeStatus = async (status) => {
+    // console.log("useEffect pertama dijalankan");
+    try {
+      const response = await fetch(`${baseUrl}/event/${status}/${id}`, {
+        method: "Patch",
+        headers: {
+          "Content-Type": "application/json",
+
+          access_token: accessToken,
+        },
+      });
+      const data = await response.json();
+      if (data.status === "Close") {
+        navigation.navigate("Thankyou", {
+          id: perEvent._id,
+          status: perEvent.status,
+        });
+      }
+      await fetchByEvent();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // console.log(perEvent.participants, " <<<DARI DETAILS");
   useEffect(() => {
     async function fetchData() {
@@ -158,15 +184,20 @@ export default function DetailsRoom({ route }) {
     (async () => {
       const dataString = await AsyncStorage.getItem("email");
       const email = JSON.parse(dataString);
-      console.log(email, "<<<<<EMAIL");
-      console.log(perEvent.participants, "<<");
+      // console.log(email, "<<<<<EMAIL");
+      // console.log(perEvent.participants, "<<");
+
       if (perEvent) {
         const _participant = perEvent.participants.find((participant) => {
-          console.log(participant.user.email, "tttt");
+          // console.log(participant.user.email, "tttt");
           return participant.user.email === email;
         });
         if (_participant) {
           setIsJoined(true);
+        }
+        console.log(perEvent.creator.email, "<<<<< creator email");
+        if (perEvent.creator.email === email) {
+          setIsAdmin(true);
         }
       }
     })();
@@ -179,6 +210,10 @@ export default function DetailsRoom({ route }) {
       </View>
     );
   }
+
+  console.log(creator, "DATA CREATOR");
+  console.log(perEvent, "<<EVENT");
+
   return (
     <ScrollView>
       <SafeAreaView
@@ -220,7 +255,62 @@ export default function DetailsRoom({ route }) {
             </Text>
           </View>
           <View style={{ marginBottom: 20 }}>
-            {creator?.role === "user" && isJoined ? (
+            {isAdmin && (
+              <Button
+                onPress={() => {
+                  handleCancel();
+                }}
+                title="Delete Event"
+              />
+            )}
+            {isAdmin && perEvent.status === "Open" && (
+              <Button
+                onPress={() => {
+                  Alert.alert("Alert Title", "My Alert Msg", [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel",
+                    },
+                    { text: "OK", onPress: () => handleChangeStatus("start") },
+                  ]);
+                }}
+                title="Start"
+              />
+            )}
+            {isAdmin && perEvent.status === "Ongoing" && (
+              <Button
+                onPress={() => {
+                  Alert.alert("Alert Title", "My Alert Msg", [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel",
+                    },
+                    { text: "OK", onPress: () => handleChangeStatus("close") },
+                  ]);
+                }}
+                title="Close"
+              />
+            )}
+            {!isAdmin && isJoined && (
+              <Button
+                onPress={() => {
+                  handleCancel();
+                }}
+                title="Leave Event"
+              />
+            )}
+            {!isAdmin && !isJoined && (
+              <Button
+                onPress={() => {
+                  handleCancel();
+                }}
+                title="Join Event"
+              />
+            )}
+
+            {/* {creator?.role === "user" && isJoined ? (
               <PrimaryButton
                 onPress={() => {
                   handleCancel();
@@ -233,16 +323,16 @@ export default function DetailsRoom({ route }) {
                   <Text style={styles.title}>Join Booking</Text>
                 </View>
               </TouchableOpacity>
-            )}
+            )} */}
 
-            {creator?.role === "admin" && (
+            {/* {creator?.role === "admin" && (
               <PrimaryButton
                 onPress={() => {
                   console.log("KE DELETE");
                 }}
                 title="Delete Event"
               />
-            )}
+            )} */}
           </View>
         </View>
       </SafeAreaView>

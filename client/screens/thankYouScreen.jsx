@@ -2,7 +2,8 @@ import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import COLORS from "../consts/colors";
 import PrimaryButton from "../components/button";
 
-export default function ThankYouScreen() {
+export default function ThankYouScreen({ navigation, routes }) {
+  const { id, status } = routes.params;
   return (
     <SafeAreaView
       style={{
@@ -68,7 +69,12 @@ export default function ThankYouScreen() {
         <Text style={{ fontSize: 18, fontWeight: 500, textAlign: "center" }}>
           Please take a moment to review your teammates now
         </Text>
-        <PrimaryButton title={"Review Teammates"} />
+        <PrimaryButton
+          onPress={() => {
+            navigation.navigate("eventRoom", { id, status });
+          }}
+          title={"Review Teammates"}
+        />
       </View>
     </SafeAreaView>
   );

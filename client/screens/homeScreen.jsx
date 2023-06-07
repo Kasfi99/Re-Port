@@ -20,6 +20,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import baseUrl from "../consts/ngrokUrl";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const [filter, setfilter] = useState("");
@@ -32,20 +33,6 @@ export default function HomeScreen() {
   const handleSeeAllEvents = () => {
     console.log("Ayo kita see all");
   };
-
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const response = await fetch(`${baseUrl}/eventlist`);
-        const data = await response.json(); // parsing respons JSON
-        // console.log(data); // hasil respons JSON
-        // setEvents(data); // simpan data ke state events
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchEvents();
-  }, []);
 
   useEffect(() => {
     getData();
@@ -64,7 +51,6 @@ export default function HomeScreen() {
 
   // console.log(accessToken, "<<TOKEEEn");
 
-  // console.log();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View>

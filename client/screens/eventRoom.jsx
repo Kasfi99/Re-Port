@@ -8,7 +8,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function EventRoom({ route }) {
   // console.log(route.params, "routee");
-  const { id } = route.params;
+  const { id, status } = route.params;
   // console.log(event);
 
   return (
@@ -24,11 +24,13 @@ export default function EventRoom({ route }) {
           component={ChatScreen}
           initialParams={{ id }}
         />
-        <Tab.Screen
-          name="AdminReview"
-          component={AdminReview}
-          initialParams={{ id }}
-        />
+        {status === "Close" && (
+          <Tab.Screen
+            name="AdminReview"
+            component={AdminReview}
+            initialParams={{ id }}
+          />
+        )}
       </Tab.Navigator>
     </View>
   );
