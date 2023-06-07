@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import COLORS from "../consts/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import baseUrl from "../consts/ngrokUrl";
 
 export default function DetailsRoom({ navigation, route }) {
   const { id } = route.params;
@@ -59,16 +60,15 @@ export default function DetailsRoom({ navigation, route }) {
   }
   const handleCancel = async () => {
     try {
-      const response = await fetch(
-        `https://0b4d-139-228-111-126.ngrok-free.app/event/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            access_token: accessToken,
-          },
-        }
-      );
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      const response = await fetch(`${baseUrl}/event/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          access_token: token,
+        },
+      });
       const data = await response.json();
       // console.log(data, "<< Handle Cancel");
       navigation.navigate("Main");
@@ -81,18 +81,15 @@ export default function DetailsRoom({ navigation, route }) {
   const fetchByEvent = async () => {
     // console.log("useEffect pertama dijalankan");
     try {
-      console.log("useEffect pertama Masuk Ke Try");
-      console.log(typeof accessToken, "<<<accessTokennya");
-      const response = await fetch(
-        `https://0b4d-139-228-111-126.ngrok-free.app/event/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
+      // console.log("useEffect pertama Masuk Ke Try");
+      // console.log(typeof accessToken, "<<<accessTokennya");
+      const response = await fetch(`${baseUrl}/event/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
 
-            access_token: accessToken,
-          },
-        }
-      );
+          access_token: accessToken,
+        },
+      });
       const data = await response.json();
       // console.log(data.date, " DATA SEMUA <<<");
       console.log(data, "Data dari API");

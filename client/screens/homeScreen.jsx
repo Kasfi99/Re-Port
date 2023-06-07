@@ -19,6 +19,7 @@ import CardHome from "../components/cards";
 import { ScrollView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import baseUrl from "../consts/ngrokUrl";
 
 export default function HomeScreen() {
   const [filter, setfilter] = useState("");
@@ -35,9 +36,7 @@ export default function HomeScreen() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await fetch(
-          "https://0b4d-139-228-111-126.ngrok-free.app/eventlist"
-        );
+        const response = await fetch(`${baseUrl}/eventlist`);
         const data = await response.json(); // parsing respons JSON
         // console.log(data); // hasil respons JSON
         // setEvents(data); // simpan data ke state events
