@@ -10,8 +10,9 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import baseUrl from "../consts/ngrokUrl";
 
-export default function WelcomeLevel({ navigation }) {
+export default function WelcomeLevel({}) {
   const [level, setLevel] = useState([]);
   const navigation = useNavigation();
   const retrieveData = async () => {
@@ -38,13 +39,32 @@ export default function WelcomeLevel({ navigation }) {
     });
   };
 
-  const handleSubmit = () => {
-<<<<<<< HEAD
-=======
-    console.log(level, "<< kita submit yah");
->>>>>>> f7b5b7ce083bac585ef33d8bacc9494d670c913d
-    navigation.navigate("Main", { screen: "Home" });
+  const handleSubmit = async () => {
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const access_token = JSON.parse(dataString);
+      console.log(level, "<<<<<< ");
+
+      // const newData = {
+      //   sportList: level,
+      // };
+
+      // const { data } = await axios({
+      //   method: "PUT",
+      //   url: `${baseUrl}/user/addSports`,
+      //   data: newData,
+      //   headers: {
+      //     access_token,
+      //   },
+      // });
+
+      // console.log(data, "<<<< ini kembaliannya");
+      navigation.navigate("Main", { screen: "Home" });
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   useEffect(() => {
     retrieveData();
   }, []);

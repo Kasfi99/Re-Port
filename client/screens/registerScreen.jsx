@@ -54,17 +54,19 @@ export default function RegisterScreen() {
           googletoken: token,
         },
       });
-      // console.log(data, "<< ini data");
-      // await AsyncStorage.setItem("@user", JSON.stringify(data));
+
+      await AsyncStorage.setItem("user", JSON.stringify(data.data));
+      await AsyncStorage.setItem("user", JSON.stringify(data.data));
       await AsyncStorage.setItem(
         "access_token",
         JSON.stringify(data.access_token)
       );
 
-      if (data.score > 0) {
+      const dataString = await AsyncStorage.getItem("isLogged");
+      const so = JSON.parse(dataString);
+
+      if (so === true) {
         navigation.navigate("Main", { screen: "Home" });
-      } else {
-        navigation.navigate("WelcomeSport");
       }
     } catch (error) {
       console.log(error);

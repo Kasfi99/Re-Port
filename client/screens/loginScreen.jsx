@@ -48,27 +48,25 @@ export default function LoginScreen() {
     try {
       console.log("hei");
       const { data } = await axios({
-<<<<<<< HEAD
-        url: `https://0b4d-139-228-111-126.ngrok-free.app/user/googleLogin`,
-=======
         url: `${baseUrl}/user/googleLogin`,
->>>>>>> f7b5b7ce083bac585ef33d8bacc9494d670c913d
         method: "POST",
         headers: {
           googletoken: token,
         },
       });
-      // console.log(data, "<< ini data");
-      // await AsyncStorage.setItem("@user", JSON.stringify(data));
+
+      await AsyncStorage.setItem("user", JSON.stringify(data.data));
+      await AsyncStorage.setItem("isLogged", JSON.stringify(true));
       await AsyncStorage.setItem(
         "access_token",
         JSON.stringify(data.access_token)
       );
 
-      if (data.score > 0) {
+      const dataString = await AsyncStorage.getItem("isLogged");
+      const so = JSON.parse(dataString);
+      // console.log(so, "<<<<< so");
+      if (so === true) {
         navigation.navigate("Main", { screen: "Home" });
-      } else {
-        navigation.navigate("WelcomeSport");
       }
     } catch (error) {
       console.log(error);
@@ -86,34 +84,41 @@ export default function LoginScreen() {
         throw new Error("Input Can't be Empty");
       }
 
-<<<<<<< HEAD
-      const { data } = await axios.post(
-        "https://0b4d-139-228-111-126.ngrok-free.app/user/login",
-        { email, password }
-      );
-=======
       const { data } = await axios.post(`${baseUrl}/user/login`, {
         email,
         password,
       });
->>>>>>> f7b5b7ce083bac585ef33d8bacc9494d670c913d
 
       await AsyncStorage.setItem(
         "access_token",
         JSON.stringify(data.access_token)
       );
-      await AsyncStorage.setItem("email", JSON.stringify(email));
-      console.log("Data stored successfully");
 
-      console.log(data, "<<<<<<");
+      await AsyncStorage.setItem("user", JSON.stringify(data.data));
+      await AsyncStorage.setItem("isLogged", JSON.stringify(true));
+
       onChangeEmail("");
       onChangePassword("");
-      return navigation.navigate("WelcomeSport");
+
+      const dataString = await AsyncStorage.getItem("isLogged");
+      const so = JSON.parse(dataString);
+
+      if (so === true) {
+        navigation.navigate("Main", { screen: "Home" });
+      }
     } catch (error) {
       console.log("Failed to login & store data: ", error);
     }
   };
 
+  const checkisLogin = async () => {
+    const dataString = await AsyncStorage.getItem("isLogged");
+    const data = JSON.parse(dataString);
+    console.log(data, "<<<");
+    if (data === true) {
+      navigation.navigate("Main", { screen: "Home" });
+    }
+  };
   const handleRegister = () => {
     navigation.navigate("Register");
   };
@@ -122,7 +127,9 @@ export default function LoginScreen() {
     console.log("masuk sebagai user"); // Jangan lupa ditambah ganti
   };
 
-  // return <Text>Testing</Text>;
+  React.useEffect(() => {
+    checkisLogin();
+  });
 
   return (
     <View style={styles.container}>
@@ -149,7 +156,6 @@ export default function LoginScreen() {
           value={password}
           secureTextEntry={true}
           placeholder="Your Password"
-          secureTextEntry={true}
         />
       </View>
 

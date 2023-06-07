@@ -114,7 +114,7 @@ export default function AddEventFormScreen({ navigation, route }) {
       const email = JSON.parse(emailString);
 
       const response = await fetch(
-        "https://0b4d-139-228-111-126.ngrok-free.app/event",
+        "https://72f1-139-228-111-126.ngrok-free.app/event",
         {
           method: "POST",
           headers: {
@@ -254,6 +254,7 @@ export default function AddEventFormScreen({ navigation, route }) {
                 address: data.description,
               });
               setIsLocationModalVisible(false);
+              console.log("heheheh");
             }}
             query={{
               key: GOOGLE_PLACES_API_KEY,

@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
   Image,
   Modal,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 // import { TouchableOpacity } from "react-native-gesture-handler";
@@ -22,10 +23,16 @@ export default function WelcomeProfile() {
   const [image, setImage] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
-  // console.log(image, "<<<ini images");
   const [profImage, setProfImage] = useState(null);
 
-  console.log(image, "<<<ini images");
+  console.log(
+    image,
+    "<<<ini images",
+    selectedLocation,
+    "<<<< ini selected location",
+    "fksdjfklsd"
+  );
+
   const [profiles, setProfiles] = useState([
     {
       id: 1,
@@ -46,6 +53,7 @@ export default function WelcomeProfile() {
   ]);
   const navigation = useNavigation();
   const GOOGLE_PLACES_API_KEY = "AIzaSyDJCBwVAW27Z24KW63gvImv4NZVNIwaqSA";
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -54,13 +62,19 @@ export default function WelcomeProfile() {
       quality: 1,
     });
 
-    console.log(result);
-
-    setProfImage(<Image source={{ uri: image }} style={styles.icon} />);
+    setProfImage(<Image source={{ uri: result.uri }} style={styles.icon} />);
 
     await AsyncStorage.setItem("profile_picture", JSON.stringify(image));
+
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      const { uri } = result.assets[0];
+      const ext = uri.split(".").pop();
+      const name = uri.split("/").pop();
+      setImage({
+        uri: uri,
+        type: `image/${ext}`,
+        name,
+      });
     }
   };
 
@@ -71,23 +85,34 @@ export default function WelcomeProfile() {
   const onSubmit = async () => {
     try {
       const gender = profiles.find((el) => el.isPressed === true);
+      const body = new FormData();
+      body.append("gender", gender.name);
+      body.append("location", selectedLocation.address);
+      body.append("images", image.uri);
 
       const dataString = await AsyncStorage.getItem("access_token");
       const access_token = JSON.parse(dataString);
 
-      const { data } = await axios.put(
-        "https://5ea3-139-228-111-126.ngrok-free.app/user/editGenderProf",
-        { gender: gender.name },
-        { headers: { access_token } }
-      );
+      console.log(body);
+      const { data } = await axios({
+        method: "PUT",
+        url: `${baseUrl}/user/editGenderProf`,
+        data: body,
+        headers: {
+          access_token,
+          "Content-Type": `multipart/form-data`,
+        },
+      });
 
-      // console.log(data, "<<<< masuk");
-      // write here for onSubmit
       navigation.navigate("WelcomeLevel");
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    console.log("Re-render Welcome Profile");
+  }, [profImage]);
 
   return (
     <View
@@ -164,14 +189,14 @@ export default function WelcomeProfile() {
         style={{
           width: "60%",
           flexDirection: "row",
-          marginLeft: "10%",
+          marginLeft: "15%",
           marginRight: "10%",
           marginTop: 0,
         }}
       >
         <TouchableOpacity
           style={{
-            width: "100%",
+            width: "50%",
             backgroundColor: profiles[0].isPressed ? "#CEF249" : "#FFFFFF",
             borderColor: profiles[0].isPressed ? "#FFFFFF" : "#CEF249",
             borderWidth: 2,
@@ -198,7 +223,7 @@ export default function WelcomeProfile() {
 
         <TouchableOpacity
           style={{
-            width: "100%",
+            width: "55%",
             backgroundColor: profiles[1].isPressed ? "#CEF249" : "#FFFFFF",
             borderColor: profiles[1].isPressed ? "#FFFFFF" : "#CEF249",
             borderWidth: 2,
@@ -270,12 +295,7 @@ export default function WelcomeProfile() {
       <Modal visible={isLocationModalVisible} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
-            <TouchableOpacity
-              onPress={() => {
-                console.log("ke cancelll");
-                setIsLocationModalVisible(false);
-              }}
-            >
+            <TouchableOpacity onPress={() => setIsLocationModalVisible(false)}>
               <Text style={styles.modalHeaderText}>Cancel</Text>
             </TouchableOpacity>
             {/* <Text style={styles.modalHeaderText}>Select Location</Text>
@@ -283,7 +303,6 @@ export default function WelcomeProfile() {
               <Text style={styles.modalHeaderText}>Done yaa</Text>
             </TouchableOpacity> */}
           </View>
-
           <GooglePlacesAutocomplete
             placeholder="Enter Location"
             minLength={1}
@@ -298,6 +317,7 @@ export default function WelcomeProfile() {
                 address: data.description,
               });
               setIsLocationModalVisible(false);
+              console.log("heheheh");
             }}
             query={{
               key: GOOGLE_PLACES_API_KEY,
@@ -347,49 +367,55 @@ export default function WelcomeProfile() {
 
       <View
         style={{
-          marginBottom: 70,
+          paddingTop: 20,
+          paddingBottom: 30,
+          flexDirection: "row",
+          // marginLeft: "10%",
         }}
-      ></View>
-      <TouchableOpacity
-        style={{
-          width: "90%",
-          backgroundColor: "#6F7380",
-          marginLeft: "5%",
-          borderRadius: 10,
-          paddingVertical: 10,
-        }}
-        onPress={() => onSubmit()}
       >
-        <Text
+        <TouchableOpacity
           style={{
-            color: "white",
-            fontSize: 18,
-            paddingLeft: "45%",
+            width: "35%",
+            backgroundColor: "#6F7380",
+            marginLeft: "12%",
+            borderRadius: 10,
+            paddingVertical: 10,
           }}
+          onPress={() => onSubmit()}
         >
-          Submit
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          width: "90%",
-          backgroundColor: "#6F7380",
-          marginLeft: "5%",
-          borderRadius: 10,
-          paddingVertical: 10,
-        }}
-        onPress={() => navigation.navigate("WelcomeLevel")}
-      >
-        <Text
+          <Text
+            style={{
+              color: "white",
+              fontSize: 18,
+              paddingLeft: "30%",
+              fontFamily: "IBM-Plex-Sans",
+            }}
+          >
+            Submit
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           style={{
-            color: "white",
-            fontSize: 18,
-            paddingLeft: "45%",
+            width: "35%",
+            backgroundColor: "#6F7380",
+            marginLeft: "5%",
+            borderRadius: 10,
+            paddingVertical: 10,
           }}
+          onPress={() => navigation.navigate("WelcomeLevel")}
         >
-          Skip
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 18,
+              paddingLeft: "38%",
+              fontFamily: "IBM-Plex-Sans",
+            }}
+          >
+            Skip
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -445,7 +471,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: "flex-start",
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     marginTop: 20,
     backgroundColor: "#fff",
     shadowColor: "#000",
@@ -473,13 +499,14 @@ const styles = StyleSheet.create({
   locationButton: {
     borderColor: "#CEF249",
     borderWidth: 2,
-    marginLeft: "15%",
+    marginLeft: "20%",
     paddingVertical: 10,
-    width: "70%",
+    width: "55%",
     borderRadius: 10,
   },
   locationButtonText: {
     fontSize: 16,
+    marginLeft: "25%",
   },
 });
 

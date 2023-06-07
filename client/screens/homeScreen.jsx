@@ -19,8 +19,10 @@ import CardHome from "../components/cards";
 import { ScrollView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import baseUrl from "../consts/ngrokUrl";
 
 export default function HomeScreen() {
+  const [user, setUser] = useState(null);
   const [filter, setfilter] = useState("");
   const [accessToken, setAccessToken] = useState("");
 
@@ -30,6 +32,32 @@ export default function HomeScreen() {
 
   const handleSeeAllEvents = () => {
     console.log("Ayo kita see all");
+  };
+
+  const getuserData = async () => {
+    try {
+      const dataString = await AsyncStorage.getItem("user");
+      const dataString2 = await AsyncStorage.getItem("access_token");
+      if (dataString) {
+        const user = JSON.parse(dataString);
+        const accessToken = JSON.parse(dataString2);
+
+        console.log(user, "<< ini user");
+        const { data } = await axios({
+          method: "GET",
+          url: `${baseUrl}/user/data/${user.id}`,
+          headers: {
+            accessToken,
+          },
+        });
+        console.log(data, "<<< data user");
+        setUser(data);
+      } else {
+        console.log("No data found");
+      }
+    } catch (error) {
+      console.log("Failed to retrieve data:", error);
+    }
   };
 
   useEffect(() => {
@@ -50,6 +78,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getData();
+    getuserData();
   }, []);
 
   async function getData() {
@@ -117,7 +146,11 @@ export default function HomeScreen() {
                 }}
               >
                 <Image
-                  source={require("../assets/Male.png")}
+                  source={{
+                    uri: user?.pic
+                      ? user.pic
+                      : "https://img.freepik.com/premium-vector/head-fox-mascot-sport-logo_167235-1031.jpg?w=2000",
+                  }}
                   style={{
                     height: 80,
                     width: 80,
@@ -140,7 +173,7 @@ export default function HomeScreen() {
                     fontWeight: "700",
                   }}
                 >
-                  Hi kasfi
+                  Hi, {user?.name ? user.name : "User"}
                 </Text>
                 <Text
                   style={{
@@ -149,7 +182,7 @@ export default function HomeScreen() {
                     fontWeight: "700",
                   }}
                 >
-                  Jakarta
+                  {user?.location ? user.location : "Somewhere In Earth"}
                 </Text>
               </View>
             </View>

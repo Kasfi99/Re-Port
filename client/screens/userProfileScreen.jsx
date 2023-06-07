@@ -16,168 +16,62 @@ import COLORS from "../consts/colors";
 import CardHome from "../components/cards";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ModalEdit from "../components/modalEdit";
+import axios from "axios";
+import baseUrl from "../consts/ngrokUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-<<<<<<< HEAD
-=======
-
-const dummyData = [
-  {
-    id: 1,
-    name: "MABAR BADMINTON SELASA PETANG (BEGINNER) ONLY",
-    url: "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Nnx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80",
-    sport: "Badminton",
-    participant: ["kasfi", "chris", "benita", "nadel"],
-    price: 40000,
-    status: "One-Time only",
-    place: "Lapangan Bulu Tangkis Grogol",
-    time: "05/06/2022",
-  },
-  {
-    id: 2,
-    name: "MABAR FUTSAL RABU SORE (INTERMEDIATE) ONLY",
-    url: "https://images.unsplash.com/photo-1523905338453-2a4d3093353f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGZ1dHNhbCUyMHNvcnNjaGFpbmclMjBmdXRzYWx8ZW58MHx8fHwxNjIzMTYwODc0&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Futsal",
-    participant: ["john", "michael", "lisa", "sarah"],
-    price: 50000,
-    status: "One-Time only",
-    place: "Futsal Court ABC",
-    time: "06/06/2022",
-  },
-  {
-    id: 3,
-    name: "BASKETBALL PICK-UP GAME",
-    url: "https://images.unsplash.com/photo-1531919320171-41a44d07d523?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YmFza2V0YmFsbCUyMGJhc2tldGJhbGx8ZW58MHx8fHwxNjIzMTYwODc0&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Basketball",
-    participant: ["david", "emily", "james"],
-    price: 30000,
-    status: "One-Time only",
-    place: "Basketball Court XYZ",
-    time: "06/06/2022",
-  },
-  {
-    id: 4,
-    name: "YOGA CLASS",
-    url: "https://images.unsplash.com/photo-1564030358-bc3b8f587ce6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8eW9nYSUyMGNsYXNzJTIwZnJpZW5kc3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Yoga",
-    participant: ["olivia", "samuel"],
-    price: 25000,
-    status: "One-Time only",
-    place: "Yoga Studio",
-    time: "07/06/2022",
-  },
-  {
-    id: 5,
-    name: "RUNNING CLUB",
-    url: "https://images.unsplash.com/photo-1565299024-8b3a2911f0f2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8cmVhbCUyMGJhc2tldGJhbGwlMjBjbHVifGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Running",
-    participant: ["oliver"],
-    price: 0,
-    status: "Recurring",
-    place: "City Park",
-    time: "08/06/2022",
-  },
-  {
-    id: 6,
-    name: "CYCLING GROUP",
-    url: "https://images.unsplash.com/photo-1519317676404-99f32a63e7f5?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGN5Y2xpbmclMjBncm91cHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Cycling",
-    participant: ["william", "sophia", "oliver", "ava", "mia"],
-    price: 15000,
-    status: "Recurring",
-    place: "Cycling Track",
-    time: "09/06/2022",
-  },
-  {
-    id: 7,
-    name: "TENNIS LESSONS",
-    url: "https://images.unsplash.com/photo-1551224909-0c9e382b22b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fHRlbm5pcyUyMGRldGFpbHN8ZW58MHx8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Tennis",
-    participant: ["emma", "noah", "mia", "alexander", "ava"],
-    price: 60000,
-    status: "Recurring",
-    place: "Tennis Court",
-    time: "10/06/2022",
-  },
-  {
-    id: 8,
-    name: "SWIMMING TRAINING",
-    url: "https://images.unsplash.com/photo-1578312751262-992386b1a97b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8c3dpbW1pbmclMjBzdHJhaW5pbmd8ZW58MHx8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Swimming",
-    participant: ["olivia", "jack", "charlotte", "jacob"],
-    price: 45000,
-    status: "Recurring",
-    place: "Swimming Pool",
-    time: "11/06/2022",
-  },
-];
-
-const dummyData2 = [
-  {
-    id: 1,
-    name: "MABAR BADMINTON SELASA PETANG (BEGINNER) ONLY",
-    url: "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Nnx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80",
-    sport: "Badminton",
-    participant: ["kasfi", "chris", "benita", "nadel"],
-    price: 40000,
-    status: "One-Time only",
-    place: "Lapangan Bulu Tangkis Grogol",
-    time: "05/06/2022",
-  },
-  {
-    id: 2,
-    name: "MABAR FUTSAL RABU SORE (INTERMEDIATE) ONLY",
-    url: "https://images.unsplash.com/photo-1523905338453-2a4d3093353f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGZ1dHNhbCUyMHNvcnNjaGFpbmclMjBmdXRzYWx8ZW58MHx8fHwxNjIzMTYwODc0&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Futsal",
-    participant: ["john", "michael", "lisa", "sarah"],
-    price: 50000,
-    status: "One-Time only",
-    place: "Futsal Court ABC",
-    time: "06/06/2022",
-  },
-  {
-    id: 3,
-    name: "BASKETBALL PICK-UP GAME",
-    url: "https://images.unsplash.com/photo-1531919320171-41a44d07d523?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YmFza2V0YmFsbCUyMGJhc2tldGJhbGx8ZW58MHx8fHwxNjIzMTYwODc0&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Basketball",
-    participant: ["david", "emily", "james"],
-    price: 30000,
-    status: "One-Time only",
-    place: "Basketball Court XYZ",
-    time: "06/06/2022",
-  },
-  {
-    id: 4,
-    name: "YOGA CLASS",
-    url: "https://images.unsplash.com/photo-1564030358-bc3b8f587ce6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8eW9nYSUyMGNsYXNzJTIwZnJpZW5kc3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Yoga",
-    participant: ["olivia", "samuel"],
-    price: 25000,
-    status: "One-Time only",
-    place: "Yoga Studio",
-    time: "07/06/2022",
-  },
-  {
-    id: 5,
-    name: "RUNNING CLUB",
-    url: "https://images.unsplash.com/photo-1565299024-8b3a2911f0f2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8cmVhbCUyMGJhc2tldGJhbGwlMjBjbHVifGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    sport: "Running",
-    participant: ["oliver"],
-    price: 0,
-    status: "Recurring",
-    place: "City Park",
-    time: "08/06/2022",
-  },
-];
->>>>>>> f7b5b7ce083bac585ef33d8bacc9494d670c913d
 
 export default function UserProfile() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [image, setImage] = useState(null);
+  const [user, setUser] = useState(null);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [myUpcomingEvents, setUpcomingEvents] = useState([]);
   const [myPreviousEvents, setmyPreviousEvents] = useState([]);
   const [profile, setMyProfile] = useState();
+
+  const getuserData = async () => {
+    try {
+      const dataString = await AsyncStorage.getItem("user");
+      const dataString2 = await AsyncStorage.getItem("access_token");
+      if (dataString) {
+        const user = JSON.parse(dataString);
+        const accessToken = JSON.parse(dataString2);
+
+        console.log(user, "<< ini user");
+        const { data } = await axios({
+          method: "GET",
+          url: `${baseUrl}/user/data/${user.id}`,
+          headers: {
+            accessToken,
+          },
+        });
+        console.log(data, "<<< data user di profile");
+        setUser(data);
+      } else {
+        console.log("No data found");
+      }
+    } catch (error) {
+      console.log("Failed to retrieve data:", error);
+    }
+  };
+
+  const handleEdit = () => {
+    console.log("bisa edit");
+  };
+
+  const handleLogOut = async () => {
+    await AsyncStorage.removeItem("@user");
+    await AsyncStorage.removeItem("user");
+    await AsyncStorage.removeItem("isLogged");
+    return navigation.navigate("Login");
+  };
+  const navigation = useNavigation();
+
+  const viewableItemsChanged = useRef(({ viewableItems }) => {
+    setCurrentIndex(viewableItems[0].index);
+  }).current;
+
+  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 0 }).current;
 
   useEffect(() => {
     async function getMyEvents() {
@@ -215,38 +109,7 @@ export default function UserProfile() {
       }
     }
     getMyEvents();
-  }, []);
-
-  // console.log(myUpcomingEvents, "MY Upcoming");
-  const handleEdit = () => {
-    console.log("bisa edit");
-  };
-
-  const handleLogOut = () => {
-    console.log("bisa logout");
-  };
-  const navigation = useNavigation();
-
-  const viewableItemsChanged = useRef(({ viewableItems }) => {
-    setCurrentIndex(viewableItems[0].index);
-  }).current;
-
-  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 0 }).current;
-
-  const getImage = async () => {
-    try {
-      const dataString = await AsyncStorage.getItem("profile_picture");
-      const profPict = JSON.parse(dataString);
-      // console.log(profPict, "<<<<<");
-
-      setImage(<Image source={{ uri: profPict }} style={styles.icon} />);
-    } catch (error) {
-      console.log("failed to retrieve data : " + error);
-    }
-  };
-
-  useEffect(() => {
-    getImage();
+    getuserData();
   }, []);
 
   return (
@@ -266,14 +129,8 @@ export default function UserProfile() {
               alignItems: "center",
             }}
           >
-            {image ? (
-              image
-            ) : (
-              <Image
-                source={{ uri: "https://via.placeholder.com/150" }}
-                style={styles.icon}
-              />
-            )}
+            <Image source={{ uri: user?.pic }} style={styles.icon} />
+
             <View
               style={{
                 flex: 1,
@@ -290,7 +147,7 @@ export default function UserProfile() {
                   color: COLORS.primaryGreen,
                 }}
               >
-                Jennie Kim
+                {user?.name}
               </Text>
               <Text
                 style={{
@@ -299,7 +156,13 @@ export default function UserProfile() {
                   fontFamily: "IBM-Plex-Sans",
                 }}
               >
-                Beginner
+                {user?.score < 30
+                  ? "Beginner"
+                  : user?.score > 30
+                  ? "Intermediate"
+                  : user?.score > 60 && user?.score < 80
+                  ? "Pro Player"
+                  : "Ace in All Fields"}
               </Text>
               <Text
                 style={{
@@ -313,7 +176,13 @@ export default function UserProfile() {
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
-                Hi, i’m friendly! Badminton and tennis lover!
+                {user?.score < 30
+                  ? "Hi, i’m friendly! Beginner Sport lover!"
+                  : user?.score > 30
+                  ? "Wanna have friendly match?"
+                  : user?.score > 60 && user?.score < 80
+                  ? "Looking for a better match"
+                  : "Can somebody defeats me?"}
               </Text>
             </View>
           </View>
@@ -361,7 +230,7 @@ export default function UserProfile() {
                 flexDirection: "row",
                 marginTop: "5%",
                 marginLeft: "35%",
-                // backgroundColor: "white",
+
                 gap: 10,
               }}
             >
