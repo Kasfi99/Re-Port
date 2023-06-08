@@ -20,14 +20,16 @@ import axios from "axios";
 
 const ModalEdit = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(image ? image : user?.pic);
   const [user, setUser] = useState(null);
-  const [name, setName] = useState("");
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(name ? name : user?.name);
+  const [userName, setUserName] = useState(
+    userName ? userName : user?.username
+  );
+  const [email, setEmail] = useState(email ? email : user?.email);
   const [gender, setGender] = useState(user?.gender ? user.gender : "Male");
 
-  console.log(image, "<<< ini image anjir");
+  // console.log(image, "<<< ini image anjir");
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -36,8 +38,6 @@ const ModalEdit = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    // setImage(<Image source={{ uri: image }} style={styles.icon} />);
 
     if (!result.canceled) {
       const { uri } = result.assets[0];
@@ -53,18 +53,12 @@ const ModalEdit = () => {
 
   const handleSubmitEdit = async () => {
     try {
-      setName(name ? name : user?.name);
-      setUserName(userName ? userName : user?.userName);
-      setEmail(email ? email : user?.email);
-      setGender(gender ? gender : user?.gender);
-      setImage(image ? image.uri : user?.image);
-
       const body = new FormData();
       body.append("name", name);
       body.append("username", userName);
       body.append("email", email);
       body.append("gender", gender);
-      body.append("images", image);
+      body.append("images", image?.uri);
 
       const dataString = await AsyncStorage.getItem("access_token");
       const access_token = JSON.parse(dataString);
@@ -88,10 +82,6 @@ const ModalEdit = () => {
       });
 
       console.log(data, "<< ini user habis di edit");
-      setName("");
-      setUserName("");
-      setEmail("");
-      setGender("Male");
       setModalVisible(false);
     } catch (error) {
       console.log("editnya gagal karena : ", error);

@@ -370,7 +370,7 @@ export default function DetailsRoom({ route }) {
                 title="Close"
               />
             )}
-            {!isAdmin && isJoined && (
+            {creator?.role === "user" && !isAdmin && isJoined && (
               <Button
                 onPress={() => {
                   handleCancel();
@@ -378,7 +378,7 @@ export default function DetailsRoom({ route }) {
                 title="Leave Event"
               />
             )}
-            {!isAdmin && !isJoined && (
+            {creator?.role === "user" && !isAdmin && !isJoined && (
               <Button
                 onPress={() => {
                   handleJoin();

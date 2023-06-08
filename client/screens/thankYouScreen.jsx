@@ -1,10 +1,12 @@
 import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import COLORS from "../consts/colors";
 import PrimaryButton from "../components/button";
+import { useRoute } from "@react-navigation/native";
 
-export default function ThankYouScreen({ navigation, routes }) {
+export default function ThankYouScreen({ navigation }) {
+  const routes = useRoute();
   const { id, status } = routes.params;
-  console.log(id, status, "<< DARI THANKYOU ");
+  // console.log(id, status, "<< DARI THANKYOU ");
   return (
     <SafeAreaView
       style={{

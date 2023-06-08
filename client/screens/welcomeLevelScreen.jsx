@@ -43,7 +43,7 @@ export default function WelcomeLevel() {
     try {
       const dataString = await AsyncStorage.getItem("access_token");
       const access_token = JSON.parse(dataString);
-      console.log(level, "<<<<<< ");
+      console.log(level, access_token, "<<<<<< ");
 
       const newData = {
         sportList: level,

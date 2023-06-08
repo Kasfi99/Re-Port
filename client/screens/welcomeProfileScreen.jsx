@@ -87,8 +87,8 @@ export default function WelcomeProfile() {
       const gender = profiles.find((el) => el.isPressed === true);
       const body = new FormData();
       body.append("gender", gender.name);
-      body.append("location", selectedLocation.address);
-      body.append("images", image.uri);
+      body.append("location", selectedLocation?.address);
+      body.append("images", image?.uri);
 
       const dataString = await AsyncStorage.getItem("access_token");
       const access_token = JSON.parse(dataString);

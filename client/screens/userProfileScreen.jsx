@@ -60,7 +60,7 @@ export default function UserProfile() {
   };
 
   const handleLogOut = async () => {
-    await AsyncStorage.removeItem("@user");
+    // await AsyncStorage.removeItem("@user");
     await AsyncStorage.removeItem("user");
     await AsyncStorage.removeItem("access_token");
     await AsyncStorage.removeItem("isLogged");
@@ -85,19 +85,16 @@ export default function UserProfile() {
         const email = JSON.parse(emailString);
         // setCurrentUserEmail(email);
 
-        const response = await fetch(
-          `https://0b4d-139-228-111-126.ngrok-free.app/event/myevents`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              access_token: token,
+        const response = await fetch(`${baseUrl}/event/myevents`, {
+          headers: {
+            "Content-Type": "application/json",
+            access_token: token,
 
-              // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          }
-        );
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
         const data = await response.json();
-        // console.log(typeof data);
+        // console.log(data, "<<< MY DATAA");
         if (data.upcomingEvents) {
           console.log("MASHOOOk");
           setUpcomingEvents(data.upcomingEvents);
@@ -160,9 +157,9 @@ export default function UserProfile() {
               >
                 {user?.score < 30
                   ? "Beginner"
-                  : user?.score > 30
+                  : user?.score >= 30 && user?.score < 60
                   ? "Intermediate"
-                  : user?.score > 60 && user?.score < 80
+                  : user?.score >= 60 && user?.score < 80
                   ? "Pro Player"
                   : "Ace in All Fields"}
               </Text>
@@ -224,7 +221,7 @@ export default function UserProfile() {
                   bottom: 0.5,
                 }}
               >
-                4.7
+                {user?.rating}
               </Text>
             </View>
             <View

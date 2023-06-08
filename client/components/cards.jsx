@@ -49,8 +49,19 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
   //   getData();
   // }, []);
 
-  const greenSlots = !item?.participant ? 0 : item?.participant.length;
-  const remainingSlots = 8 - greenSlots;
+  let greenSlots = !item?.participant ? 0 : item?.participant.length;
+  let remainingSlots = 8 - greenSlots;
+
+  async function handleDate(dateya) {
+    // console.log(dateya, "<<<<< got the date");
+    const date = JSON.parse(dateya);
+    const startDateTime = moment.utc(date.start);
+
+    const startMoment = startDateTime.format("dddd, D MMMM");
+
+    const output = `${startMoment}`;
+    return output;
+  }
 
   // START FETCH DATA EVENTS
   useFocusEffect(
@@ -63,7 +74,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
 
           const response = await fetch(`${baseUrl}/eventlist`);
           const data = await response.json(); // parsing respons JSON
-          // console.log(data, "< DATA"); // hasil respons JSON
+          // console.log(data, "< DATA EVENTS"); // hasil respons JSON
           setEvents(data); // simpan data ke state events
         } catch (error) {
           console.log(error);
@@ -119,7 +130,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                       marginLeft: 10,
                     }}
                   >
-                    {el.title}
+                    {el.creator.name}
                   </Text>
                   <Text
                     style={{
@@ -130,7 +141,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                       width: "95%",
                     }}
                   >
-                    {el.name}
+                    {el.title}
                   </Text>
                   <View
                     style={{
@@ -139,8 +150,12 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                       marginTop: 5,
                     }}
                   >
-                    {/* <View style={{ flexDirection: "row" }}>
-                      {[...Array(greenSlots)].map((_, index) => (
+                    <View style={{ flexDirection: "row" }}>
+                      {[
+                        ...Array(
+                          el.totalParticipants > 8 ? 8 : el.totalParticipants
+                        ),
+                      ].map((_, index) => (
                         <Ionicons
                           key={index}
                           name="person-circle-outline"
@@ -148,7 +163,19 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                           color={"green"}
                         />
                       ))}
-                      {[...Array(remainingSlots)].map((_, index) => (
+                      {[
+                        ...Array(
+                          // 8 - el.totalParticipants <= 0
+                          //   ? 0
+                          //   : 8 - el.totalParticipants > 0 &&
+                          //     el.totalParticipants >= 8
+                          //   ? 8 - el.totalParticipants
+                          //   : 0
+                          el?.totalParticipants && el.totalParticipants <= 8
+                            ? 8 - el.totalParticipants
+                            : 0
+                        ),
+                      ].map((_, index) => (
                         <Ionicons
                           key={index + greenSlots}
                           name="person-circle-outline"
@@ -156,7 +183,10 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                           color={"black"}
                         />
                       ))}
-                    </View> */}
+                      {el.totalParticipants > 8 ? (
+                        <Text>+{el.totalParticipants - 8}</Text>
+                      ) : null}
+                    </View>
                   </View>
                   <View
                     style={{
@@ -172,7 +202,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                         fontFamily: "IBM-Plex-Sans",
                       }}
                     >
-                      {/* {el.participant.length}/8 Playing */}
+                      {el.totalParticipants}/{el.limitParticipants} Playing
                     </Text>
                     <Text
                       style={{
@@ -180,7 +210,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                         fontFamily: "IBM-Plex-Sans",
                       }}
                     >
-                      Court Price {el.status}
+                      Court Price {el.courtPrice}
                     </Text>
                   </View>
                   <View
@@ -203,7 +233,7 @@ export default function CardHome({ filter, item, idEvent, horizontal }) {
                         fontWeight: "700",
                       }}
                     >
-                      Date : {el.time}
+                      Date : {() => handleDate(el?.date)}
                     </Text>
                     <Text
                       style={{
