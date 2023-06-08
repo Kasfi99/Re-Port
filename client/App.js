@@ -120,6 +120,7 @@ export default function App() {
           <Stack.Screen
             name="eventRoom"
             component={EventRoom}
+            options={{ title: "Event Room" }}
             // options={{ headerShown: false }}
           />
           <Stack.Screen

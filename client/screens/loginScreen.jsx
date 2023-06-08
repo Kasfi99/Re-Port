@@ -88,7 +88,7 @@ export default function LoginScreen() {
         email,
         password,
       });
-      console.log(data, "<<<< ini data");
+      console.log(data, "<<<< HASIL LOGIN");
       await AsyncStorage.setItem(
         "access_token",
         JSON.stringify(data.access_token)

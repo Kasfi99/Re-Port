@@ -43,7 +43,7 @@ export default function HomeScreen() {
         const user = JSON.parse(dataString);
         const accessToken = JSON.parse(dataString2);
 
-        console.log(user, "<< ini user");
+        // console.log(user, "<< ini user");
         const { data } = await axios({
           method: "GET",
           url: `${baseUrl}/user/data/${user.id}`,
@@ -51,7 +51,7 @@ export default function HomeScreen() {
             accessToken,
           },
         });
-        console.log(data, "<<< data user");
+        // console.log(data, "<<< data user");
         setUser(data);
       } else {
         console.log("No data found");

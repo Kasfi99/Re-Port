@@ -4,6 +4,7 @@ import PrimaryButton from "../components/button";
 
 export default function ThankYouScreen({ navigation, routes }) {
   const { id, status } = routes.params;
+  console.log(id, status, "<< DARI THANKYOU ");
   return (
     <SafeAreaView
       style={{

@@ -44,13 +44,15 @@ export default function DetailsRoom({ route }) {
   const [isJoined, setIsJoined] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  /*  */
   const handleOpenMaps = () => {
     const { latitude, longitude } = region;
     const label = "My Location";
     const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}&query_place_id=${label}`;
     Linking.openURL(url);
   };
-  //  TOKEN
+
+  /* START GET TOKEN */
   async function getData() {
     try {
       const dataString = await AsyncStorage.getItem("access_token");
@@ -64,15 +66,42 @@ export default function DetailsRoom({ route }) {
       console.log(error);
     }
   }
+  /* END GET TOKEN */
 
-  // CANCEL
+  /* START HANDLE CANCEL */
+  const handleJoin = async () => {
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      // const token =
+      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODBmNGVlNTBmYzM0MGE0NjY3YjlkYiIsImVtYWlsIjoiYmliaUBtYWlsLmNvbSIsImlhdCI6MTY4NjE3MzA2NH0.6n3dkteWAJoEWI6MAF280A4RkR77e3bMdNOT1uSRd1k";
+      console.log(token, "<<<< INI TOKEN DI HANDLE JOIN");
+      console.log(id, "<<<< INI ID DI HANDLE CANCEL");
+      const response = await fetch(`${baseUrl}/event/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          access_token: token,
+        },
+      });
+      const data = await response.json();
+      console.log(data, "<< Handle JOIN");
+      navigation.navigate("Main");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /* END HANDLE CANCEL */
+
+  /* START HANDLE CANCEL */
   const handleCancel = async () => {
     try {
       const dataString = await AsyncStorage.getItem("access_token");
       const token = JSON.parse(dataString);
-      // console.log(id, "<<<< INI ID HANDLE CANCEL");
-      const response = await fetch(`${baseUrl}/event/${id}`, {
-        method: "DELETE",
+      // console.log(token, "<<<< INI TOKEN DI HANDLE CANCEL");
+      console.log(id, "<<<< INI ID DI HANDLE CANCEL");
+      const response = await fetch(`${baseUrl}/event/${id}/leave`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           access_token: token,
@@ -85,7 +114,32 @@ export default function DetailsRoom({ route }) {
       console.log(error);
     }
   };
+  /* END HANDLE CANCEL */
 
+  /* START HANDLE DELETE */
+  const handleDelete = async () => {
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+      // console.log(token, "<<<< INI TOKEN DI HANDLE CANCEL");
+      console.log(id, "<<<< INI ID DI HANDLE CANCEL");
+      const response = await fetch(`${baseUrl}/event/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          access_token: token,
+        },
+      });
+      const data = await response.json();
+      console.log(data, "<< Handle DELETE");
+      navigation.navigate("Main");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /* END HANDLE DELETE */
+
+  /* START FETCH PER EVENT */
   const fetchByEvent = async () => {
     const dataString = await AsyncStorage.getItem("access_token");
     const token = JSON.parse(dataString);
@@ -102,7 +156,7 @@ export default function DetailsRoom({ route }) {
       });
       const data = await response.json();
       // console.log(data.date, " DATA SEMUA <<<");
-      console.log(data, "Data dari API");
+
       setPerEvent(data);
       if (data.location) {
         const location = JSON.parse(data.location);
@@ -140,7 +194,9 @@ export default function DetailsRoom({ route }) {
       console.error(error);
     }
   };
+  /* END FETCH PER EVENT */
 
+  /* START HANDLE CHANGE STATUS */
   const handleChangeStatus = async (status) => {
     // console.log("useEffect pertama dijalankan");
     try {
@@ -153,9 +209,10 @@ export default function DetailsRoom({ route }) {
         },
       });
       const data = await response.json();
+      // console.log(perEvent?._id, "<<ID EVENT DI DETAILS ROOM CHANGE STATUS");
       if (data.status === "Close") {
         navigation.navigate("Thankyou", {
-          id: perEvent._id,
+          id: perEvent?._id,
           status: perEvent.status,
         });
       }
@@ -164,8 +221,8 @@ export default function DetailsRoom({ route }) {
       console.error(error);
     }
   };
+  /* END HANDLE CHANGE STATUS */
 
-  // console.log(perEvent.participants, " <<<DARI DETAILS");
   useEffect(() => {
     async function fetchData() {
       await getData();
@@ -183,10 +240,11 @@ export default function DetailsRoom({ route }) {
   //
   useEffect(() => {
     (async () => {
-      const dataString = await AsyncStorage.getItem("email");
-      const email = JSON.parse(dataString);
-      // console.log(email, "<<<<<EMAIL");
-      // console.log(perEvent.participants, "<<");
+      const dataString = await AsyncStorage.getItem("user");
+      // console.log(dataString, "<<<access_token");
+      const parsedDataString = JSON.parse(dataString);
+      const email = parsedDataString.email;
+      console.log(email, "<<< EMAIL YG LAGI LOGIN");
 
       if (perEvent) {
         const _participant = perEvent.participants.find((participant) => {
@@ -256,10 +314,14 @@ export default function DetailsRoom({ route }) {
             </Text>
           </View>
           <View style={{ marginBottom: 20 }}>
-            {isAdmin && (
+            {isAdmin && !perEvent.status === "Close" && (
               <Button
                 onPress={() => {
-                  handleCancel();
+                  handleDelete();
+                }}
+                style={{
+                  borderRadius: 10,
+                  backgroundColor: COLORS.primaryGreen,
                 }}
                 title="Delete Event"
               />
@@ -319,7 +381,7 @@ export default function DetailsRoom({ route }) {
             {!isAdmin && !isJoined && (
               <Button
                 onPress={() => {
-                  handleCancel();
+                  handleJoin();
                 }}
                 title="Join Event"
               />

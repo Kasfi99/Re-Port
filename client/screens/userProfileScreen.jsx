@@ -62,6 +62,7 @@ export default function UserProfile() {
   const handleLogOut = async () => {
     await AsyncStorage.removeItem("@user");
     await AsyncStorage.removeItem("user");
+    await AsyncStorage.removeItem("access_token");
     await AsyncStorage.removeItem("isLogged");
     return navigation.navigate("Login");
   };

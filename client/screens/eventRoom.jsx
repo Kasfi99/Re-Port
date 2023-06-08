@@ -16,6 +16,7 @@ export default function EventRoom({ route }) {
       <Tab.Navigator>
         <Tab.Screen
           name="Details"
+          options={{ title: "Event" }}
           component={DetailsRoom}
           initialParams={{ id }}
         />
@@ -27,6 +28,7 @@ export default function EventRoom({ route }) {
         {status === "Close" && (
           <Tab.Screen
             name="AdminReview"
+            options={{ title: "Review" }}
             component={AdminReview}
             initialParams={{ id }}
           />

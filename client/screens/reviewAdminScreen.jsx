@@ -26,60 +26,11 @@ const data = [
 export default function AdminReview({ route }) {
   const { id } = route.params;
   const [dataReview, setDataReview] = useState({});
-  const [checkedItems, setCheckedItems] = useState(
-    // Inisialisasi checkedItems dengan nilai awal false pada semua id
-    data.reduce((acc, curr) => {
-      acc[curr.id] = false;
-      return acc;
-    }, {})
-  );
-
   const [teamData, setTeamData] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [checkedItems, setCheckedItems] = useState({});
   const [usersRating, setUsersRating] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-
-  // console.log(teamData, "<< Team Data");
-
-  const handleSelectAll = () => {
-    const newCheckedItems = {};
-    if (Object.keys(checkedItems).length === teamData.length) {
-      // Jika semua item sudah dipilih, maka uncheck semua
-      teamData.forEach((item) => {
-        newCheckedItems[item.id] = false;
-      });
-    } else {
-      // Jika ada item yang belum dipilih, maka check semua
-      teamData.forEach((item) => {
-        newCheckedItems[item.id] = true;
-      });
-    }
-    setCheckedItems(newCheckedItems);
-  };
-
-  const handleSelectItem = (id) => {
-    // console.log(id, "cehclis");
-    const newCheckedItems = { ...checkedItems };
-    newCheckedItems[id] = !newCheckedItems[id];
-    setCheckedItems(newCheckedItems);
-  };
-
-  // const handleSubmit = () => {
-  //   const selectedItems = teamData.filter((item) => checkedItems[item.id]);
-  //   // console.log("Selected items:", selectedItems);
-
-  //   const ratings = selectedItems.map((item) => ({
-  //     memberId: item.id,
-  //     rating: item.rating,
-  //   }));
-  //   console.log("Ratings:", ratings);
-
-  //   const data = {
-  //     attendees: selectedItems,
-  //     ratings: ratings,
-  //   };
-  //   console.log("Data to be sent:", data);
-  // };
 
   useEffect(() => {
     async function fetchByEvent() {
@@ -88,9 +39,12 @@ export default function AdminReview({ route }) {
         const dataString = await AsyncStorage.getItem("access_token");
         const access_token = JSON.parse(dataString);
 
-        const emailString = await AsyncStorage.getItem("email");
-        const email = JSON.parse(emailString);
-        // console.log("useEffect pertama Masuk Ke Try");
+        const userString = await AsyncStorage.getItem("user");
+        const userParsed = JSON.parse(userString);
+        const userEmail = userParsed.email;
+
+        // const emailString = await AsyncStorage.getItem("email");
+        // const email = JSON.parse(emailString);
         const response = await fetch(`${baseUrl}/event/${id}`, {
           headers: {
             "Content-Type": "application/json",
@@ -103,7 +57,7 @@ export default function AdminReview({ route }) {
         setDataReview(data);
 
         if (data) {
-          if (data.creator.email === email) {
+          if (data.creator.email === userEmail) {
             setIsAdmin(true);
           }
         }
@@ -114,15 +68,83 @@ export default function AdminReview({ route }) {
     }
     fetchByEvent();
   }, []);
+  // CLOSE FETCH EVENT
 
-  // console.log(teamData, "<<<DATA TEAM");
-  const team = teamData.map((data) => {
-    const user = { userId: data.user._id, rating: null };
-    return user;
-  });
-  // setUsersRating(team);
+  const handleSelectItem = (id) => {
+    const newCheckedItems = { ...checkedItems, [id]: !checkedItems[id] };
+    setCheckedItems(newCheckedItems);
+    sendChecklistData(id, newCheckedItems[id]);
+  };
 
-  // console.log(team, "TEAM");
+  const sendChecklistData = async (userId, status) => {
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+
+      // const data = { userId, status, eventId: id };
+      // console.log(data, "<<< SEND CHECLIST");
+      const response = await axios({
+        url: `${baseUrl}/user/${userId}`,
+        method: "PATCH",
+        headers: {
+          access_token: token,
+        },
+        data: {
+          id,
+        },
+      });
+      console.log(response.data, "RESPONSE CHECKLIST");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSelectAll = () => {
+    const newCheckedItems = {};
+    if (Object.keys(checkedItems).length === teamData.length) {
+      teamData.forEach((item) => {
+        newCheckedItems[item.user._id] = false;
+      });
+    } else {
+      teamData.forEach((item) => {
+        newCheckedItems[item.user._id] = true;
+      });
+    }
+    setCheckedItems(newCheckedItems);
+  };
+
+  attendanceCompleted = async (id) => {
+    // console.log("Rating is: " + id, rating);
+    try {
+      const dataString = await AsyncStorage.getItem("access_token");
+      const token = JSON.parse(dataString);
+
+      const userString = await AsyncStorage.getItem("user");
+      const userParsed = JSON.parse(userString);
+      console.log(userParsed, "<< userParsedd");
+
+      const newCheckedItems = { ...checkedItems };
+      newCheckedItems[id] = !newCheckedItems[id];
+      console.log(newCheckedItems, "dgudusuds");
+      // const userEmail = userParsed.email;
+
+      // const response = await axios({
+      //   url: `${baseUrl}/rating`,
+      //   method: "Patch",
+      //   headers: {
+      //     access_token: token,
+      //   },
+      //   data: {
+      //     userId: id,
+      //     rating: rating,
+      //   },
+      // });
+      // console.log(response.data, "<<<<");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   ratingCompleted = async (rating, id) => {
     // console.log("Rating is: " + id, rating);
     try {
